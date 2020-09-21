@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, jsonify
+from flask import Flask, redirect, url_for, jsonify, request
 
 from modules.response import Response
 from modules.service import StockService
@@ -16,6 +16,7 @@ def home():
 
 @app.route('/company-outlook/<string:stock_ticker_symbol>')
 def get_company_outlook(stock_ticker_symbol):
+    print(request.url)
     try:
         return Response.ok(StockService.get_company_outlook(stock_ticker_symbol))
     except Response.NotFoundException:
@@ -24,6 +25,7 @@ def get_company_outlook(stock_ticker_symbol):
 
 @app.route('/stock-summary/<string:stock_ticker_symbol>')
 def get_stock_summary(stock_ticker_symbol):
+    print(request.url)
     try:
         return Response.ok(StockService.get_stock_summary(stock_ticker_symbol))
     except Response.NotFoundException:
@@ -32,6 +34,7 @@ def get_stock_summary(stock_ticker_symbol):
 
 @app.route('/chart-data/<string:stock_ticker_symbol>')
 def get_chart_data(stock_ticker_symbol):
+    print(request.url)
     try:
         return Response.ok(jsonify(StockService.get_chart_data(stock_ticker_symbol)))
     except Response.NotFoundException:
@@ -40,6 +43,7 @@ def get_chart_data(stock_ticker_symbol):
 
 @app.route('/latest-news/<string:stock_ticker_symbol>')
 def get_latest_news(stock_ticker_symbol):
+    print(request.url)
     try:
         return Response.ok(jsonify(StockService.get_latest_news(stock_ticker_symbol)))
     except Response.NotFoundException:

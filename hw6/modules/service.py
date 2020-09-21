@@ -26,18 +26,18 @@ class StockService:
         if len(response) == 0:
             raise Response.NotFoundException
         response = response[0]
-        summary = {
+        return {
             'stockTickerSymbol': response['ticker'],
+            'tradingDay': str(response['timestamp']).split('T')[0],
             'previousClosingPrice': response['prevClose'],
             'openingPrice': response['open'],
             'highPrice': response['high'],
             'lowPrice': response['low'],
+            'lastPrice': response['last'],
+            'change': round(response['last'] - response['prevClose'], 2),
+            'changePercent': round(((response['last'] - response['prevClose']) / response['prevClose']) * 100, 2),
             'numberOfSharesTraded': response['volume'],
-            'tradingDay': str(response['timestamp']).split('T')[0],
-            'change': round(response['last'] - response['open'], 2)
         }
-        summary['changePercent'] = round((summary['change'] / response['open']) * 100, 2)
-        return summary
 
     @staticmethod
     def get_chart_data(stock_ticker_symbol):
@@ -60,6 +60,8 @@ class StockService:
     @staticmethod
     def get_latest_news(stock_ticker_symbol):
         response = NewsApi.get_everything(stock_ticker_symbol)
+        if len(response['articles']) == 0:
+            raise Response.NotFoundException
         articles = []
         for article in response['articles']:
             try:
@@ -73,6 +75,8 @@ class StockService:
                 date_object = datetime.fromisoformat(date_string)
                 parsed_article['date'] = date_object.strftime('%m/%d/%Y')
                 articles.append(parsed_article)
+                if len(articles) == 5:
+                    break
             except StockService.ValueAbsentException:
                 continue
         return articles[:5]
