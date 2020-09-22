@@ -26,51 +26,64 @@ class StockService:
         if len(response) == 0:
             raise Response.NotFoundException
         response = response[0]
-        return {
-            'stockTickerSymbol': response['ticker'],
-            'tradingDay': str(response['timestamp']).split('T')[0],
-            'previousClosingPrice': response['prevClose'],
-            'openingPrice': response['open'],
-            'highPrice': response['high'],
-            'lowPrice': response['low'],
-            'lastPrice': response['last'],
-            'change': round(response['last'] - response['prevClose'], 2),
-            'changePercent': round(((response['last'] - response['prevClose']) / response['prevClose']) * 100, 2),
-            'numberOfSharesTraded': response['volume'],
-        }
+
+        def parse_value(value):
+            if value is None:
+                raise StockService.ValueAbsentException
+            return value
+
+        try:
+            stock_summary = {
+                'stockTickerSymbol': parse_value(response['ticker']),
+                'tradingDay': str(parse_value(response['timestamp'])).split('T')[0],
+                'previousClosingPrice': parse_value(response['prevClose']),
+                'openingPrice': parse_value(response['open']),
+                'highPrice': parse_value(response['high']),
+                'lowPrice': parse_value(response['low']),
+                'lastPrice': parse_value(response['last']),
+                'change': round(parse_value(response['last']) - parse_value(response['prevClose']), 2),
+                'changePercent': round(
+                    ((parse_value(response['last']) - parse_value(response['prevClose'])) / parse_value(
+                        response['prevClose'])) * 100, 2),
+                'numberOfSharesTraded': parse_value(response['volume']),
+            }
+        except StockService.ValueAbsentException:
+            raise Response.NotFoundException
+
+        return stock_summary
 
     @staticmethod
     def get_chart_data(stock_ticker_symbol):
         response = Tiingo.get_historical_intraday_prices(stock_ticker_symbol)
-        parsed_prices = []
+        chart_data = []
         for price in response:
-            parsed_prices.append({
+            chart_data.append({
                 'date': price['date'],
                 'stockPrice': price['close'],
                 'volume': price['volume']
             })
-        return parsed_prices
-
-    @staticmethod
-    def _parse_value(value):
-        if type(value) != str or len(value) == 0:
-            raise StockService.ValueAbsentException
-        return value
+        return chart_data
 
     @staticmethod
     def get_latest_news(stock_ticker_symbol):
         response = NewsApi.get_everything(stock_ticker_symbol)
         if len(response['articles']) == 0:
             raise Response.NotFoundException
+
+        def parse_value(value):
+            if type(value) != str or len(value) == 0:
+                raise StockService.ValueAbsentException
+            return value
+
         articles = []
         for article in response['articles']:
             try:
                 parsed_article = {
-                    'image': StockService._parse_value(article['urlToImage']),
-                    'title': StockService._parse_value(article['title']),
-                    'linkToOriginalPost': StockService._parse_value(article['url'])
+                    'image': parse_value(article['urlToImage']),
+                    'title': parse_value(article['title']),
+                    'linkToOriginalPost': parse_value(article['url'])
                 }
-                date_string = StockService._parse_value(article['publishedAt'])
+                date_string = parse_value(article['publishedAt'])
                 date_string = date_string.replace("Z", "+00:00")
                 date_object = datetime.fromisoformat(date_string)
                 parsed_article['date'] = date_object.strftime('%m/%d/%Y')

@@ -3,7 +3,7 @@ from modules.request import Request
 
 class NewsApi:
     BASE_URL = 'https://newsapi.org/v2'
-    KEY = 'fdf56dd5e25046118f12c4626ceac170'
+    API_KEY = 'fdf56dd5e25046118f12c4626ceac170'
 
     @staticmethod
     def _build_url(resource):
@@ -13,7 +13,7 @@ class NewsApi:
     def get(url, params=None):
         if params is None:
             params = {}
-        params['apiKey'] = NewsApi.KEY
+        params['apiKey'] = NewsApi.API_KEY
         return Request.get(url, params)
 
     @staticmethod

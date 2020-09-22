@@ -32,7 +32,7 @@ def get_stock_summary(stock_ticker_symbol):
         return Response.not_found()
 
 
-@app.route('/chart-data/<string:stock_ticker_symbol>')
+@app.route('/charts/<string:stock_ticker_symbol>')
 def get_chart_data(stock_ticker_symbol):
     print(request.url)
     try:
