@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from modules.newsapi import NewsApi
+from modules.newsapi import NewsAPI
 from modules.response import Response
 from modules.tiingo import Tiingo
 
@@ -66,30 +66,42 @@ class StockService:
 
     @staticmethod
     def get_latest_news(stock_ticker_symbol):
-        response = NewsApi.get_everything(stock_ticker_symbol)
-        if len(response['articles']) == 0:
-            raise Response.NotFoundException
-
         def parse_value(value):
             if type(value) != str or len(value) == 0:
                 raise StockService.ValueAbsentException
             return value
 
         articles = []
-        for article in response['articles']:
-            try:
-                parsed_article = {
-                    'image': parse_value(article['urlToImage']),
-                    'title': parse_value(article['title']),
-                    'linkToOriginalPost': parse_value(article['url'])
-                }
-                date_string = parse_value(article['publishedAt'])
-                date_string = date_string.replace("Z", "+00:00")
-                date_object = datetime.fromisoformat(date_string)
-                parsed_article['date'] = date_object.strftime('%m/%d/%Y')
-                articles.append(parsed_article)
-                if len(articles) == 5:
-                    break
-            except StockService.ValueAbsentException:
-                continue
-        return articles[:5]
+
+        page = 1
+        while True:
+            response = NewsAPI.get_everything(stock_ticker_symbol, page)
+            if len(response) == 0:
+                break
+            for article in response['articles']:
+                try:
+                    parsed_article = {
+                        'image': parse_value(article['urlToImage']),
+                        'title': parse_value(article['title']),
+                        'linkToOriginalPost': parse_value(article['url'])
+                    }
+                    date_string = parse_value(article['publishedAt'])
+                    date_string = date_string.replace("Z", "+00:00")
+                    date_object = datetime.fromisoformat(date_string)
+                    parsed_article['date'] = date_object.strftime('%m/%d/%Y')
+                    articles.append(parsed_article)
+                    if len(articles) == 5:
+                        break
+                except StockService.ValueAbsentException:
+                    continue
+            if len(articles) == 5:
+                break
+            # Free plan can retrieve a max of 100 articles (5 pages with 20 articles per page)
+            if page == 5:
+                break
+            page += 1
+
+        if len(articles) == 0:
+            raise Response.NotFoundException
+
+        return articles

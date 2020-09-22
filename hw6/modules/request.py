@@ -15,6 +15,5 @@ class Request:
         print(response.url)
         if response.status_code == Response.NOT_FOUND:
             raise Response.NotFoundException
-        data = json.loads(response.text)
-        print(json.dumps(data, indent=4, sort_keys=True))
-        return data
+        return json.loads(response.text)
+

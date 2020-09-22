@@ -18,7 +18,8 @@ def home():
 def get_company_outlook(stock_ticker_symbol):
     print(request.url)
     try:
-        return Response.ok(StockService.get_company_outlook(stock_ticker_symbol))
+        data = StockService.get_company_outlook(stock_ticker_symbol)
+        return Response.ok(data)
     except Response.NotFoundException:
         return Response.not_found()
 
@@ -27,7 +28,8 @@ def get_company_outlook(stock_ticker_symbol):
 def get_stock_summary(stock_ticker_symbol):
     print(request.url)
     try:
-        return Response.ok(StockService.get_stock_summary(stock_ticker_symbol))
+        data = StockService.get_stock_summary(stock_ticker_symbol)
+        return Response.ok(data)
     except Response.NotFoundException:
         return Response.not_found()
 
@@ -36,7 +38,8 @@ def get_stock_summary(stock_ticker_symbol):
 def get_chart_data(stock_ticker_symbol):
     print(request.url)
     try:
-        return Response.ok(jsonify(StockService.get_chart_data(stock_ticker_symbol)))
+        data = StockService.get_chart_data(stock_ticker_symbol)
+        return Response.ok(jsonify(data))
     except Response.NotFoundException:
         return Response.not_found()
 
@@ -45,7 +48,8 @@ def get_chart_data(stock_ticker_symbol):
 def get_latest_news(stock_ticker_symbol):
     print(request.url)
     try:
-        return Response.ok(jsonify(StockService.get_latest_news(stock_ticker_symbol)))
+        data = StockService.get_latest_news(stock_ticker_symbol)
+        return Response.ok(jsonify(data))
     except Response.NotFoundException:
         return Response.not_found()
 
