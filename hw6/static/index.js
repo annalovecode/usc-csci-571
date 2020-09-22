@@ -5,6 +5,8 @@ const App = (function () {
     let searchButton = null;
     let clearButton = null;
 
+    let searchQuery = null;
+
     let resultSuccess = null;
     let resultError = null;
 
@@ -37,6 +39,10 @@ const App = (function () {
 
     function unselectTab(tabElement) {
         tabElement.classList.remove(selectedTabClass);
+    }
+
+    function showing(element) {
+        return !(element.hasClass(hideClass));
     }
 
     function buildCompanyOutlook(data) {
@@ -173,26 +179,32 @@ const App = (function () {
     //     }
     // }
 
-    function searchButtonClickHandler() {
+    function searchButtonClickHandler(event) {
         const ticker = searchInput.value;
         if (ticker.length > 0) {
-            clearResult();
-            Promise.all(sections.map(function (section) {
-                return fetch(`${section}/${ticker}`);
-            })).then(function (responses) {
-                return Promise.all(responses.map(function (response) {
-                    return response.json();
-                }))
-            }).then(function ([companyOutlookData, stockSummaryData, chartsData, latestNewsData]) {
-                buildCompanyOutlook(companyOutlookData);
-                buildStockSummary(stockSummaryData);
-                buildCharts(chartsData);
-                buildLatestNews(latestNewsData);
+            event.preventDefault();
+            if (ticker !== searchQuery) {
+                searchQuery = ticker;
+                clearResult();
+                Promise.all(sections.map(function (section) {
+                    return fetch(`${section}/${ticker}`);
+                })).then(function (responses) {
+                    return Promise.all(responses.map(function (response) {
+                        return response.json();
+                    }))
+                }).then(function ([companyOutlookData, stockSummaryData, chartsData, latestNewsData]) {
+                    buildCompanyOutlook(companyOutlookData);
+                    buildStockSummary(stockSummaryData);
+                    buildCharts(chartsData);
+                    buildLatestNews(latestNewsData);
+                    showSection(companyOutlook);
+                    showResultSuccess();
+                }).catch(function () {
+                    showResultError();
+                })
+            } else if (showing(resultSuccess)) {
                 showSection(companyOutlook);
-                showResultSuccess();
-            }).catch(function () {
-                showResultError();
-            })
+            }
         }
     }
 
@@ -220,11 +232,10 @@ const App = (function () {
         showSection(section);
     }
 
-
     function init() {
-        searchInput = document.querySelector('#search-input-tag > input');
+        searchInput = document.querySelector('#search-field-input > input');
 
-        searchButton = document.getElementById('search-button');
+        searchButton = document.querySelector('#search-button > input');
         searchButton.addEventListener("click", searchButtonClickHandler);
 
         clearButton = document.getElementById('clear-button');
