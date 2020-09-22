@@ -11,142 +11,63 @@
 </head>
 
 <body>
-    <div id="content">
-        <div id="search">
-            <div id="search-header">
-                Stock Search
+<div id="content">
+    <div id="search">
+        <div id="search-header">
+            Stock Search
+        </div>
+        <div id="search-input-container">
+            <div id="search-input-label">
+                Enter Stock Ticker Symbol <span style="color: red; padding-left: 5px">*</span>
             </div>
-            <div id="search-input-container">
-                <div id="search-input-label">
-                    Enter Stock Ticker Symbol <span style="color: red; padding-left: 5px">*</span>
-                </div>
-                <div id="search-input-tag">
-                    <input type="text">
-                </div>
-            </div>
-            <div id="search-buttons">
-                <div id="search-button">
-                    Search
-                </div>
-                <div id="clear-button">
-                    Clear
-                </div>
+            <div id="search-input-tag">
+                <input type="text">
             </div>
         </div>
-        <div id="ruler"></div>
-        <div id="result-success">
-            <div id="result-tab-switcher">
-                <div id="result-tab-outlook" class="selected-tab">
-                    Company Outlook
-                </div>
-                <div id="result-tab-summary">
-                    Stock Summary
-                </div>
-                <div id="result-tab-chart">
-                    Charts
-                </div>
-                <div id="result-tab-news">
-                    Latest News
-                </div>
+        <div id="search-buttons">
+            <div id="search-button">
+                Search
             </div>
-            <div class="result-content table" id="result-content-outlook">
-                <div>
-                    <div>Company Name</div>
-                    <div>Apple Inc</div>
-                </div>
-                <div>
-                    <div>Stock Ticker Symbol</div>
-                    <div>AAPL</div>
-                </div>
-                <div>
-                    <div>Stock Exchange Code</div>
-                    <div>NASDAQ</div>
-                </div>
-                <div>
-                    <div>Company Start Date</div>
-                    <div>1980-12-12</div>
-                </div>
-                <div>
-                    <div>Description</div>
-                    <div>Apple Inc. (Apple) designs, manufactures and markets mobile communication and media devices, personal computers, and portable digital music players, and a variety of related software, services, peripherals, networking solutions, and
-                        third-party digital content and applications. The Company's products and services include iPhone, iPad, Mac, iPod, Apple TV, a portfolio of consumer and professional software applications, the iOS and OS X operating systems, iCloud,
-                        and a variety of accessory, service and support offerings. The Company also delivers digital content and applications through the iTunes Store, App StoreSM, iBookstoreSM, and Mac App Store. The Company distributes its products
-                        worldwide through its retail stores, online stores, and direct sales force, as well as through third-party cellular network carriers, wholesalers, retailers, and value-added resellers. In February 2012, the Company acquired app-search
-                        engine Chomp.</div>
-                </div>
-            </div>
-            <div class="result-content table" id="result-content-summary">
-                <div>
-                    <div>Stock Ticker Symbol</div>
-                    <div>AAPL</div>
-                </div>
-                <div>
-                    <div>Trading Day</div>
-                    <div>2020-09-18</div>
-                </div>
-                <div>
-                    <div>Previous Closing Price</div>
-                    <div>110.34</div>
-                </div>
-                <div>
-                    <div>Opening Price</div>
-                    <div>110.4</div>
-                </div>
-                <div>
-                    <div>High Price</div>
-                    <div>110.88</div>
-                </div>
-                <div>
-                    <div>Low Price</div>
-                    <div>106.09</div>
-                </div>
-                <div>
-                    <div>Last Price</div>
-                    <div>106.84</div>
-                </div>
-                <div>
-                    <div>Change</div>
-                    <div>-3.5 <img src="https://csci571.com/hw/hw6/images/RedArrowDown.jpg"></div>
-                </div>
-                <div>
-                    <div>Change Percent</div>
-                    <div>-3.17%</div>
-                </div>
-                <div>
-                    <div>Number of Shares Traded</div>
-                    <div>287104882</div>
-                </div>
-            </div>
-            <div class="result-content" id="result-content-chart"></div>
-            <div class="result-content" id="result-content-news">
-                <div>
-                    <div style="background-image: url(https://images.macrumors.com/article-new/2020/08/top_stories_22aug2020.jpg);">
-                    </div>
-                    <div>
-                        <div>Top Stories: Epic vs. Apple Escalates, AAPL Worth $2T, iOS 14 Beta 5 Changes</div>
-                        <div>Published Date: 08/22/2020</div>
-                        <div>
-                            <a href="https://www.macrumors.com/2020/08/22/top-stories-epic-apple-escalation/" target="_blank">See Original Post</a>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div style="background-image: url(https://images.macrumors.com/article-new/2020/08/top_stories_22aug2020.jpg);">
-                    </div>
-                    <div>
-                        <div>Top Stories: Epic vs. Apple Escalates, AAPL Worth $2T, iOS 14 Beta 5 Changes</div>
-                        <div>Published Date: 08/22/2020</div>
-                        <div>
-                            <a href="https://www.macrumors.com/2020/08/22/top-stories-epic-apple-escalation/" target="_blank">See Original Post</a>
-                        </div>
-                    </div>
-                </div>
+            <div id="clear-button">
+                Clear
             </div>
         </div>
-        <!-- <div id="result-error">
-            Error : No record has been found, please enter a valid symbol
-        </div> -->
     </div>
+    <div id="ruler"></div>
+    <div id="result-success" class="hide">
+        <div id="result-tabs">
+            <div id="result-tab-company-outlook">
+                Company Outlook
+            </div>
+            <div id="result-tab-stock-summary">
+                Stock Summary
+            </div>
+            <div id="result-tab-charts">
+                Charts
+            </div>
+            <div id="result-tab-latest-news">
+                Latest News
+            </div>
+        </div>
+        <div class="result-content table hide" id="result-company-outlook">
+        </div>
+        <div class="result-content table hide" id="result-stock-summary">
+        </div>
+        <div class="result-content hide" id="result-charts"></div>
+        <div class="result-content hide" id="result-latest-news">
+        </div>
+    </div>
+    <div id="result-error" class="hide">
+        Error : No record has been found, please enter a valid symbol
+    </div>
+</div>
 </body>
+<script>
+    function onBodyLoad() {
+        App.init();
+    }
+
+    window.addEventListener('load', onBodyLoad);
+</script>
 
 </html>
