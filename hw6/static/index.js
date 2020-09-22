@@ -42,7 +42,7 @@ const App = (function () {
     }
 
     function showing(element) {
-        return !(element.hasClass(hideClass));
+        return !(element.classList.contains(hideClass));
     }
 
     function buildCompanyOutlook(data) {
@@ -125,14 +125,18 @@ const App = (function () {
         resultSuccessContent[latestNews].innerHTML = innerHTML;
     }
 
+    function hideSection(section) {
+        unselectTab(resultSuccessTab[section]);
+        hide(resultSuccessContent[section]);
+    }
+
     function showSection(section) {
         if (selectedSection !== null) {
-            unselectTab(resultSuccessTab[selectedSection]);
-            hide(resultSuccessContent[selectedSection]);
+            hideSection(selectedSection);
         }
+        selectedSection = section;
         selectTab(resultSuccessTab[section]);
         show(resultSuccessContent[section]);
-        selectedSection = section;
     }
 
     function showResultSuccess() {
@@ -210,12 +214,12 @@ const App = (function () {
 
     function clearInput() {
         searchInput.value = '';
+        searchQuery = null;
     }
 
     function clearResult() {
-        if (selectedSection != null) {
-            unselectTab(resultSuccessTab[selectedSection]);
-            hide(resultSuccessContent[selectedSection]);
+        if (selectedSection !== null) {
+            hideSection(selectedSection);
             selectedSection = null;
         }
         hide(resultSuccess);
