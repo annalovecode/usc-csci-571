@@ -111,6 +111,7 @@ body {
 
 .result-content {
     margin-top: 40px;
+    margin-bottom: 50px;
 }
 
 .result-content.table {
@@ -124,7 +125,7 @@ body {
     border-bottom: 1px solid #ddd9d9;
 }
 
-.result-content.table > div div {
+.result-content.table > div > div {
     padding-top: 5px;
     padding-bottom: 5px;
 }
@@ -151,11 +152,11 @@ body {
     justify-content: center;
 }
 
-#result-company-outlook > div:last-child > div:last-child {
+#result-company-outlook > div:last-child > div:last-child > p {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    max-height: 105px;
+    max-height: 100px;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
 }
@@ -170,7 +171,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: 50px;
 }
 
 #result-latest-news > div {

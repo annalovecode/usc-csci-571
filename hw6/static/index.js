@@ -49,7 +49,7 @@ const App = (function () {
         function buildRow(key, value) {
             return `<div>
                         <div>${key}</div>
-                        <div>${value}</div>
+                        <div><p>${value}</p></div>
                     </div>`;
         }
 
@@ -65,7 +65,7 @@ const App = (function () {
         function buildRow(key, value) {
             return `<div>
                         <div>${key}</div>
-                        <div>${value}</div>
+                        <div><p>${value}</p></div>
                     </div>`;
         }
 
