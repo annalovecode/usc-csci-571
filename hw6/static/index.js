@@ -174,10 +174,10 @@ const App = (function () {
                 }
             })
         }).catch(function (error) {
-            if (!(error instanceof CheckedError)) {
-                throw "Network error";
+            if (error instanceof CheckedError) {
+                throw error.message;
             }
-            throw error.message;
+            throw "Network error";
         })
     }
 
