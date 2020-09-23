@@ -10,5 +10,7 @@ class Response:
         return data, Response.OK
 
     @staticmethod
-    def not_found():
-        return 'Error : No record has been found, please enter a valid symbol', Response.NOT_FOUND
+    def not_found(message='Error : No record has been found, please enter a valid symbol'):
+        return {
+                   'message': message
+               }, Response.NOT_FOUND

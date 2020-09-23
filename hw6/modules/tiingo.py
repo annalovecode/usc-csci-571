@@ -6,7 +6,7 @@ from modules.request import Request
 
 
 class Tiingo:
-    BASE_URL = 'https://api.tiingo.com/'
+    BASE_URL = 'https://api.tiingo.com'
     TOKEN = '79455133c32a6429cfac6c56469a919a11b5041e'
 
     @staticmethod
@@ -31,7 +31,7 @@ class Tiingo:
         return Tiingo.get(url, {
             'startDate': (date.today() - relativedelta(months=6)).strftime("%Y-%m-%d"),
             'resampleFreq': '12hour',
-            'columns': 'open,high,low,close,volume'
+            'columns': ','.join(['open', 'high', 'low', 'close', 'volume'])
         })
 
     @staticmethod

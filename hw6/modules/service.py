@@ -11,29 +11,36 @@ class StockService:
 
     @staticmethod
     def get_company_outlook(stock_ticker_symbol):
-        response = Tiingo.get_ticker_metadata(stock_ticker_symbol)
-        return {
-            'companyName': response['name'],
-            'stockTickerSymbol': response['ticker'],
-            'stockExchangeCode': response['exchangeCode'],
-            'companyStartDate': response['startDate'],
-            'description': response['description']
-        }
-
-    @staticmethod
-    def get_stock_summary(stock_ticker_symbol):
-        response = Tiingo.get_current_top_of_book_and_last_price(stock_ticker_symbol)
-        if len(response) == 0:
-            raise Response.NotFoundException
-        response = response[0]
-
         def parse_value(value):
             if value is None:
                 raise StockService.ValueAbsentException
             return value
 
+        response = Tiingo.get_ticker_metadata(stock_ticker_symbol)
         try:
-            stock_summary = {
+            return {
+                'companyName': parse_value(response['name']),
+                'stockTickerSymbol': parse_value(response['ticker']),
+                'stockExchangeCode': parse_value(response['exchangeCode']),
+                'companyStartDate': parse_value(response['startDate']),
+                'description': parse_value(response['description'])
+            }
+        except StockService.ValueAbsentException:
+            raise Response.NotFoundException
+
+    @staticmethod
+    def get_stock_summary(stock_ticker_symbol):
+        def parse_value(value):
+            if value is None:
+                raise StockService.ValueAbsentException
+            return value
+
+        response = Tiingo.get_current_top_of_book_and_last_price(stock_ticker_symbol)
+        if len(response) == 0:
+            raise Response.NotFoundException
+        response = response[0]
+        try:
+            parsed_stock_summary = {
                 'stockTickerSymbol': parse_value(response['ticker']),
                 'tradingDay': str(parse_value(response['timestamp'])).split('T')[0],
                 'previousClosingPrice': parse_value(response['prevClose']),
@@ -49,36 +56,45 @@ class StockService:
             }
         except StockService.ValueAbsentException:
             raise Response.NotFoundException
-
-        return stock_summary
+        return parsed_stock_summary
 
     @staticmethod
     def get_chart_data(stock_ticker_symbol):
+        def parse_value(value):
+            if value is None:
+                raise StockService.ValueAbsentException
+            return value
+
         response = Tiingo.get_historical_intraday_prices(stock_ticker_symbol)
+        if len(response) == 0:
+            raise Response.NotFoundException
         chart_data = []
         for price in response:
-            chart_data.append({
-                'date': price['date'],
-                'stockPrice': price['close'],
-                'volume': price['volume']
-            })
+            try:
+                chart_data.append({
+                    'date': parse_value(price['date']),
+                    'stockPrice': parse_value(price['close']),
+                    'volume': parse_value(price['volume'])
+                })
+            except StockService.ValueAbsentException:
+                raise Response.NotFoundException
         return chart_data
 
     @staticmethod
     def get_latest_news(stock_ticker_symbol):
         def parse_value(value):
-            if type(value) != str or len(value) == 0:
+            if value is None or type(value) != str or len(value) == 0:
                 raise StockService.ValueAbsentException
             return value
 
-        articles = []
-
+        parsed_articles = []
         page = 1
         while True:
             response = NewsAPI.get_everything(stock_ticker_symbol, page)
-            if len(response) == 0:
+            articles = response['articles']
+            if len(articles) == 0:
                 break
-            for article in response['articles']:
+            for article in articles:
                 try:
                     parsed_article = {
                         'image': parse_value(article['urlToImage']),
@@ -89,19 +105,15 @@ class StockService:
                     date_string = date_string.replace("Z", "+00:00")
                     date_object = datetime.fromisoformat(date_string)
                     parsed_article['date'] = date_object.strftime('%m/%d/%Y')
-                    articles.append(parsed_article)
-                    if len(articles) == 5:
+                    parsed_articles.append(parsed_article)
+                    if len(parsed_articles) == 5:
                         break
                 except StockService.ValueAbsentException:
                     continue
-            if len(articles) == 5:
-                break
             # Free plan can retrieve a max of 100 articles (5 pages with 20 articles per page)
-            if page == 5:
+            if len(parsed_articles) == 5 or page == 5:
                 break
             page += 1
-
-        if len(articles) == 0:
+        if len(parsed_articles) == 0:
             raise Response.NotFoundException
-
-        return articles
+        return parsed_articles

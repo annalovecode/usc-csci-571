@@ -41,7 +41,7 @@ def get_chart_data(stock_ticker_symbol):
         data = StockService.get_chart_data(stock_ticker_symbol)
         return Response.ok(jsonify(data))
     except Response.NotFoundException:
-        return Response.not_found()
+        return Response.not_found('No data available')
 
 
 @app.route('/latest-news/<string:stock_ticker_symbol>')
@@ -51,7 +51,7 @@ def get_latest_news(stock_ticker_symbol):
         data = StockService.get_latest_news(stock_ticker_symbol)
         return Response.ok(jsonify(data))
     except Response.NotFoundException:
-        return Response.not_found()
+        return Response.not_found('No news available')
 
 
 if __name__ == '__main__':
