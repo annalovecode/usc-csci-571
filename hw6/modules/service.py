@@ -40,7 +40,7 @@ class StockService:
             raise Response.NotFoundException
         response = response[0]
         try:
-            parsed_stock_summary = {
+            return {
                 'stockTickerSymbol': parse_value(response['ticker']),
                 'tradingDay': str(parse_value(response['timestamp'])).split('T')[0],
                 'previousClosingPrice': parse_value(response['prevClose']),
@@ -56,7 +56,6 @@ class StockService:
             }
         except StockService.ValueAbsentException:
             raise Response.NotFoundException
-        return parsed_stock_summary
 
     @staticmethod
     def get_chart_data(stock_ticker_symbol):
