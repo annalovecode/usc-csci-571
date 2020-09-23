@@ -170,7 +170,7 @@ body {
 #result-latest-news {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 #result-latest-news > div {
@@ -209,6 +209,12 @@ body {
     text-align: center;
     margin-top: 25px;
     margin-bottom: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.result-content > p {
+    text-align: center;
     font-size: 1.2em;
     font-weight: bold;
 }

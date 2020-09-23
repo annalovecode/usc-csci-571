@@ -17,8 +17,6 @@ const App = (function () {
     let charts = 'charts';
     let latestNews = 'latest-news';
 
-    const sections = [companyOutlook, stockSummary, charts, latestNews];
-
     const resultSuccessTab = {};
     const resultSuccessContent = {};
 
@@ -99,7 +97,8 @@ const App = (function () {
             buildRow('Number of Shares Traded', data['numberOfSharesTraded']);
     }
 
-    function buildCharts(chartsData) {
+    function buildCharts(data) {
+
     }
 
     function buildLatestNews(data) {
@@ -125,6 +124,13 @@ const App = (function () {
         resultSuccessContent[latestNews].innerHTML = innerHTML;
     }
 
+    function buildSectionError(section, message) {
+        resultSuccessContent[section].innerHTML =
+            `<p>
+                ${message}
+             </p>`
+    }
+
     function hideSection(section) {
         unselectTab(resultSuccessTab[section]);
         hide(resultSuccessContent[section]);
@@ -144,44 +150,70 @@ const App = (function () {
         hide(resultError);
     }
 
-    function showResultError() {
+    function showResultError(message) {
         hide(resultSuccess);
+        resultError.innerHTML = message;
         show(resultError);
     }
 
-    // function fetch(resource, ticker, successCallback) {
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.addEventListener("loadend", function () {
-    //         if (xhr.status === 200) {
-    //             successCallback(JSON.parse(xhr.responseText));
-    //         } else {
-    //             showResultError();
-    //         }
-    //     });
-    //     xhr.open("GET", `${resource}/${ticker}`);
-    //     xhr.send();
-    // }
-    //
-    // function searchButtonClickHandler() {
-    //     const ticker = searchInput.value;
-    //     if (ticker.length > 0) {
-    //         clearResult();
-    //         fetch(companyOutlook, ticker, function (companyOutlookData) {
-    //             buildCompanyOutlook(companyOutlookData);
-    //             fetch(stockSummary, ticker, function (stocksSummaryData) {
-    //                 buildStockSummary(stocksSummaryData);
-    //                 fetch(charts, ticker, function (chartsData) {
-    //                     buildCharts(chartsData);
-    //                     fetch(latestNews, ticker, function (latestNewsData) {
-    //                         buildLatestNews(latestNewsData);
-    //                         showSection(companyOutlook);
-    //                         showResultSuccess();
-    //                     });
-    //                 });
-    //             });
-    //         });
-    //     }
-    // }
+    function fetchSection(ticker, section) {
+        class CheckedError extends Error {
+            constructor(message) {
+                super(message);
+            }
+        }
+
+        return fetch(`${section}/${ticker}`).then(function (response) {
+            return response.json().then(function (data) {
+                if (response.status === 200) {
+                    return data;
+                } else if (response.status === 404) {
+                    throw new CheckedError(data['message']);
+                } else {
+                    throw new CheckedError("Internal server error");
+                }
+            })
+        }).catch(function (error) {
+            if (!(error instanceof CheckedError)) {
+                throw "Network error";
+            }
+            throw error.message;
+        })
+    }
+
+    function search(ticker) {
+        function isResolved(response) {
+            return response.status === 'fulfilled';
+        }
+
+        function buildSection(section, response, builder) {
+            if (isResolved(response)) {
+                builder(response.value);
+            } else {
+                buildSectionError(section, response.reason);
+            }
+        }
+
+        Promise.allSettled([
+            fetchSection(ticker, companyOutlook),
+            fetchSection(ticker, stockSummary),
+            fetchSection(ticker, charts),
+            fetchSection(ticker, latestNews)
+        ]).then(function ([companyOutlookResponse, stockSummaryResponse, chartsResponse, latestNewsResponse]) {
+            if (!isResolved(companyOutlookResponse)) {
+                showResultError(companyOutlookResponse.reason);
+            } else if (!isResolved(stockSummaryResponse)) {
+                showResultError(stockSummaryResponse.reason);
+            } else {
+                buildSection(companyOutlook, companyOutlookResponse, buildCompanyOutlook);
+                buildSection(stockSummary, stockSummaryResponse, buildStockSummary);
+                buildSection(charts, chartsResponse, buildCharts);
+                buildSection(latestNews, latestNewsResponse, buildLatestNews);
+                showSection(companyOutlook);
+                showResultSuccess();
+            }
+        })
+    }
 
     function searchButtonClickHandler(event) {
         const ticker = searchInput.value;
@@ -190,22 +222,7 @@ const App = (function () {
             if (ticker !== searchQuery) {
                 searchQuery = ticker;
                 clearResult();
-                Promise.all(sections.map(function (section) {
-                    return fetch(`${section}/${ticker}`);
-                })).then(function (responses) {
-                    return Promise.all(responses.map(function (response) {
-                        return response.json();
-                    }))
-                }).then(function ([companyOutlookData, stockSummaryData, chartsData, latestNewsData]) {
-                    buildCompanyOutlook(companyOutlookData);
-                    buildStockSummary(stockSummaryData);
-                    buildCharts(chartsData);
-                    buildLatestNews(latestNewsData);
-                    showSection(companyOutlook);
-                    showResultSuccess();
-                }).catch(function () {
-                    showResultError();
-                })
+                search(ticker);
             } else if (showing(resultSuccess)) {
                 showSection(companyOutlook);
             }
@@ -246,7 +263,7 @@ const App = (function () {
         clearButton.addEventListener("click", clearButtonClickHandler);
 
         resultSuccess = document.getElementById('result-success');
-        sections.forEach(function (section) {
+        [companyOutlook, stockSummary, charts, latestNews].forEach(function (section) {
             resultSuccessTab[section] = document.getElementById(`result-tab-${section}`);
             resultSuccessTab[section].addEventListener("click", tabClickHandler);
             resultSuccessContent[section] = document.getElementById(`result-${section}`);
