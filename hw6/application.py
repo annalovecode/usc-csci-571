@@ -3,17 +3,17 @@ from flask import Flask, redirect, url_for, jsonify, request
 from modules.response import Response
 from modules.service import StockService
 
-app = Flask(__name__,
-            static_url_path='',
-            static_folder='static')
+application = Flask(__name__,
+                    static_url_path='',
+                    static_folder='static')
 
 
-@app.route('/')
+@application.route('/')
 def home():
     return redirect(url_for('static', filename='index.html'))
 
 
-@app.route('/company-outlook/<string:stock_ticker_symbol>')
+@application.route('/company-outlook/<string:stock_ticker_symbol>')
 def get_company_outlook(stock_ticker_symbol):
     print(request.url)
     try:
@@ -23,7 +23,7 @@ def get_company_outlook(stock_ticker_symbol):
         return Response.not_found()
 
 
-@app.route('/stock-summary/<string:stock_ticker_symbol>')
+@application.route('/stock-summary/<string:stock_ticker_symbol>')
 def get_stock_summary(stock_ticker_symbol):
     print(request.url)
     try:
@@ -33,7 +33,7 @@ def get_stock_summary(stock_ticker_symbol):
         return Response.not_found()
 
 
-@app.route('/charts/<string:stock_ticker_symbol>')
+@application.route('/charts/<string:stock_ticker_symbol>')
 def get_chart_data(stock_ticker_symbol):
     print(request.url)
     try:
@@ -43,7 +43,7 @@ def get_chart_data(stock_ticker_symbol):
         return Response.not_found('No data available')
 
 
-@app.route('/latest-news/<string:stock_ticker_symbol>')
+@application.route('/latest-news/<string:stock_ticker_symbol>')
 def get_latest_news(stock_ticker_symbol):
     print(request.url)
     try:
@@ -63,5 +63,5 @@ def get_latest_news(stock_ticker_symbol):
 
 if __name__ == '__main__':
     # # TODO: Remove debug mode
-    # app.run(debug=True)
-    app.run()
+    # application.run(debug=True)
+    application.run()
