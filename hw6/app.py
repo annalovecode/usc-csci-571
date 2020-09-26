@@ -5,8 +5,7 @@ from modules.service import StockService
 
 app = Flask(__name__,
             static_url_path='',
-            static_folder='static',
-            template_folder='templates')
+            static_folder='static')
 
 
 @app.route('/')
@@ -54,14 +53,15 @@ def get_latest_news(stock_ticker_symbol):
         return Response.not_found('No news available')
 
 
-# TODO: Remove cors
-@app.after_request
-def after_request(response):
-    header = response.headers
-    header['Access-Control-Allow-Origin'] = '*'
-    return response
+# # TODO: Remove cors
+# @app.after_request
+# def after_request(response):
+#     header = response.headers
+#     header['Access-Control-Allow-Origin'] = '*'
+#     return response
 
 
 if __name__ == '__main__':
-    # TODO: Remove debug mode
-    app.run(debug=True)
+    # # TODO: Remove debug mode
+    # app.run(debug=True)
+    app.run()
