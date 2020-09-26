@@ -98,7 +98,111 @@ const App = (function () {
     }
 
     function buildCharts(data) {
+        const priceData = [];
+        const volumeData = [];
+        data.forEach(function ({ date, stockPrice, volume }) {
+            const epochDate = Date.parse(date.split("T")[0]);
+            priceData.push([epochDate, stockPrice]);
+            volumeData.push([epochDate, volume]);
+        });
 
+        const ticker = searchQuery.toUpperCase();
+        Highcharts.stockChart(`result-${charts}`, {
+            time: {
+                timezone: 'America/Los_Angeles'
+            },
+
+            title: {
+                text: `Stock Price ${searchQuery.toUpperCase()} ${(new Date()).toISOString().slice(0, 10)}`
+            },
+
+            subtitle: {
+                text: '<div style="margin-top: 10px;"><a href="https://api.tiingo.com/" target="_blank">Source: Tiingo</a></div>',
+                useHTML: true
+            },
+
+            yAxis: [{
+                title: {
+                    text: 'Stock Price'
+                },
+                opposite: false
+            }, {
+                title: {
+                    text: 'Volume'
+                },
+                opposite: true
+            }],
+
+            xAxis: {
+                max: null,
+                min: null,
+                startOnTick: true,
+                endOnTick: true,
+                minPadding: 0,
+                maxPadding: 0
+            },
+
+            rangeSelector: {
+                allButtonsEnabled: true,
+                buttons: [{
+                    type: 'day',
+                    text: '7d',
+                    count: 7
+                }, {
+                    type: 'day',
+                    text: '15d',
+                    count: 15
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                }, {
+                    type: 'month',
+                    count: 3,
+                    text: '3m'
+                }, {
+                    type: 'month',
+                    count: 6,
+                    text: '6m'
+                }],
+                selected: 4,
+                inputEnabled: false
+            },
+
+            chart: {
+                spacingTop: 15,
+                spacingLeft: 15,
+                spacingRight: 15
+            },
+
+            series: [{
+                name: ticker,
+                type: 'area',
+                data: priceData,
+                tooltip: {
+                    valueDecimals: 2
+                },
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                yAxis: 0
+            }, {
+                name: `${ticker} Volume`,
+                type: 'column',
+                data: volumeData,
+                pointWidth: 2,
+                yAxis: 1
+            }]
+        });
     }
 
     function buildLatestNews(data) {
