@@ -54,6 +54,14 @@ def get_latest_news(stock_ticker_symbol):
         return Response.not_found('No news available')
 
 
+# TODO: Remove cors
+@app.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 if __name__ == '__main__':
     # TODO: Remove debug mode
     app.run(debug=True)
