@@ -98,15 +98,16 @@ const App = (function () {
     }
 
     function buildCharts(data) {
-        const priceData = [];
-        const volumeData = [];
+        const stockPrices = [];
+        const volumes = [];
         data.forEach(function ({ date, stockPrice, volume }) {
-            const epochDate = Date.parse(date.split("T")[0]);
-            priceData.push([epochDate, stockPrice]);
-            volumeData.push([epochDate, volume]);
+            const epochDate = Date.parse(date);
+            stockPrices.push([epochDate, stockPrice]);
+            volumes.push([epochDate, volume]);
         });
 
         const ticker = searchQuery.toUpperCase();
+
         Highcharts.stockChart(`result-${charts}`, {
             time: {
                 timezone: 'America/Los_Angeles'
@@ -132,15 +133,6 @@ const App = (function () {
                 },
                 opposite: true
             }],
-
-            xAxis: {
-                max: null,
-                min: null,
-                startOnTick: true,
-                endOnTick: true,
-                minPadding: 0,
-                maxPadding: 0
-            },
 
             rangeSelector: {
                 allButtonsEnabled: true,
@@ -178,7 +170,7 @@ const App = (function () {
             series: [{
                 name: ticker,
                 type: 'area',
-                data: priceData,
+                data: stockPrices,
                 tooltip: {
                     valueDecimals: 2
                 },
@@ -198,9 +190,10 @@ const App = (function () {
             }, {
                 name: `${ticker} Volume`,
                 type: 'column',
-                data: volumeData,
+                data: volumes,
                 pointWidth: 2,
-                yAxis: 1
+                yAxis: 1,
+                pointPlacement: 'on',
             }]
         });
     }
