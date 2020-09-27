@@ -111,7 +111,7 @@ const App = (() => {
             },
 
             title: {
-                text: `Stock Price ${searchQuery.toUpperCase()} ${(new Date()).toISOString().slice(0, 10)}`
+                text: `Stock Price ${searchQuery.toUpperCase()} ${(moment().tz('America/Los_Angeles')).toISOString().slice(0, 10)}`
             },
 
             subtitle: {

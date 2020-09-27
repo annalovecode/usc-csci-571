@@ -1,5 +1,5 @@
-from datetime import date
-
+from datetime import datetime, date
+import pytz
 from dateutil.relativedelta import relativedelta
 
 from modules.request import Request
@@ -28,8 +28,9 @@ class Tiingo:
     @classmethod
     def get_historical_intraday_prices(cls, ticker):
         url = Tiingo._build_url(f"iex/{ticker}/prices")
+        los_angeles_date = datetime.now(pytz.timezone('America/Los_Angeles')).date()
         return Tiingo.get(url, {
-            'startDate': (date.today() - relativedelta(months=6)).strftime("%Y-%m-%d"),
+            'startDate': (los_angeles_date - relativedelta(months=6)).strftime("%Y-%m-%d"),
             'resampleFreq': '12hour',
             'columns': ','.join(['open', 'high', 'low', 'close', 'volume'])
         })
