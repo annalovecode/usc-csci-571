@@ -6,7 +6,7 @@
 }
 
 body {
-    min-width: 1000px;
+    min-width: 1200px;
     background-color: #6060a9;
     display: flex;
     justify-content: center;
@@ -20,22 +20,24 @@ body {
 
 #content {
     margin-top: 50px;
-    width: 1000px;
+    width: 1200px;
     display: flex;
     flex-direction: column;
 }
 
 #search {
-    height: 300px;
+    height: 350px;
     background-color: #e8e8e8;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 5px;
 }
 
 #search-header {
-    font-size: 2.5em;
+    font-size: 3em;
+    font-weight: bold;
 }
 
 #search-form {
@@ -52,7 +54,7 @@ body {
 }
 
 #search-field-label {
-    font-size: 1.2em;
+    font-size: 1.5em;
 }
 
 #search-field-input {
@@ -60,25 +62,36 @@ body {
 }
 
 #search-field-input > input {
-    font-size: 1.2em;
+    font-size: 1.5em;
+    border-radius: 5px;
 }
 
 #search-buttons {
-    margin-top: 40px;
+    margin-top: 50px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-#search-button > input, #clear-button {
+#search-buttons input {
     margin-left: 25px;
     margin-right: 25px;
-    padding: 10px 25px;
-    font-size: 1em;
+    padding: 10px 40px;
+    font-size: 1.2em;
     background-color: #f8f8f8;
-    cursor: default
+    cursor: default;
+    border-radius: 5px;
 }
+
+#search-buttons input:hover {
+    background-color: #c0c0c0;
+}
+
+#search-field-input > input:focus, #search-buttons input:focus {
+    outline-color: black;
+}
+
 
 #ruler {
     margin-top: 20px;
@@ -88,7 +101,7 @@ body {
 }
 
 #result-tabs {
-    height: 50px;
+    height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -96,13 +109,14 @@ body {
 }
 
 #result-tabs > div {
-    height: 50px;
-    line-height: 50px;
+    height: 60px;
+    line-height: 60px;
     text-align: center;
     vertical-align: middle;
     padding-left: 15px;
     padding-right: 15px;
     cursor: default;
+    font-size: 1.5em;
 }
 
 .selected-tab {
@@ -122,24 +136,31 @@ body {
 .result-content.table > div {
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid #ddd9d9;
+    border-bottom: 2px solid #ddd9d9;
+}
+
+.result-content.table > div:last-child {
+    display: flex;
+    flex-direction: row;
+    border-bottom: none;
 }
 
 .result-content.table > div > div {
     padding-top: 5px;
     padding-bottom: 5px;
+    font-size: 1.2em;
 }
 
 .result-content.table > div > div:first-child {
-    width: 400px;
-    border-right: 1px solid #ddd9d9;
+    width: 450px;
+    border-right: 2px solid #ddd9d9;
     font-weight: bold;
     padding-left: 5px;
     background-color: #e8e6e6;
 }
 
 .result-content.table > div > div:last-child {
-    width: 600px;
+    width: 750px;
     text-align: center;
     padding-left: 10px;
     padding-right: 10px;
@@ -156,15 +177,15 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    max-height: 100px;
+    max-height: 110px;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
 }
 
 #result-stock-summary img {
-    margin-left: 5px;
-    width: 12px;
-    height: 12px;
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
 }
 
 #result-latest-news {
@@ -174,15 +195,16 @@ body {
 }
 
 #result-latest-news > div {
-    height: 100px;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    height: 125px;
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     background-color: #e8e8e8;
+    border-radius: 5px;
 }
 
 #result-latest-news > div:last-child {
@@ -190,19 +212,27 @@ body {
 }
 
 #result-latest-news > div > div:first-child {
-    width: 80px;
-    min-width: 80px;
+    width: 100px;
+    min-width: 100px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
 
 #result-latest-news > div > div:last-child {
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 #result-latest-news > div > div:last-child > div:first-child {
     font-weight: bold;
+}
+
+#result-latest-news > div > div:last-child > div {
+    font-size: 1.2em;
+}
+
+#result-latest-news > div > div:last-child > div:nth-child(2) {
+    white-space: pre;
 }
 
 #result-error {
