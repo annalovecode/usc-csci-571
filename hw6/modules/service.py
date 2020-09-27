@@ -48,10 +48,9 @@ class StockService:
                 'highPrice': parse_value(response['high']),
                 'lowPrice': parse_value(response['low']),
                 'lastPrice': parse_value(response['last']),
-                'change': round(parse_value(response['last']) - parse_value(response['prevClose']), 2),
-                'changePercent': round(
-                    ((parse_value(response['last']) - parse_value(response['prevClose'])) / parse_value(
-                        response['prevClose'])) * 100, 2),
+                'change': parse_value(response['last']) - parse_value(response['prevClose']),
+                'changePercent': ((parse_value(response['last']) - parse_value(response['prevClose'])) / parse_value(
+                    response['prevClose'])) * 100,
                 'numberOfSharesTraded': parse_value(response['volume']),
             }
         except StockService.ValueAbsentException:

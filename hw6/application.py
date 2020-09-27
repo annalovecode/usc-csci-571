@@ -54,7 +54,7 @@ def get_latest_news(stock_ticker_symbol):
 
 
 # # TODO: Remove cors
-# @app.after_request
+# @application.after_request
 # def after_request(response):
 #     header = response.headers
 #     header['Access-Control-Allow-Origin'] = '*'
