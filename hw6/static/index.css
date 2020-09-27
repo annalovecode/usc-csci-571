@@ -180,7 +180,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    max-height: 110px;
+    max-height: 118px;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
 }
