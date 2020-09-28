@@ -3,7 +3,7 @@
 * Install dependencies using `pip install`.
 * Run application using `FLASK_APP=application.py flask run` OR `python application.py`.
 
-### Production
+### Deployment
 #### AWS
 * ELB looks for `application.py` file with `application` Flask object. Could not find a way to override this.
 * Build zip using `zip eb-deploy application.py requirements.txt static/* modules/*.py`.
