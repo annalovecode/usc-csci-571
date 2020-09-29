@@ -1,7 +1,7 @@
 ### Development
 * Setup Python 3.7 using `conda` or `venv`.
 * Install dependencies using `pip install`.
-* Run application using `FLASK_APP=application.py flask run` OR `python application.py`.
+* Run application using `FLASK_APP=application.py flask run` or `python application.py`.
 
 ### Deployment
 #### AWS
