@@ -7,7 +7,7 @@
 #### AWS
 * ELB looks for `application.py` file with `application` Flask object. Could not find a way to override this.
 * Build zip using `zip eb-deploy application.py requirements.txt static/* modules/*.py`.
-* Verify zip using `zip -vl eb-deploy.zip`.
+* Verify zip using `unzip -vl eb-deploy.zip`.
 * Upload it via ELB console.
 
 #### Azure
