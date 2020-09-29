@@ -16,8 +16,8 @@
 * Override defaults using `az webapp config set --resource-group <resource_group_created> --name usc-csci-571-hw6-<unique> --startup-file "gunicorn --bind=0.0.0.0 --timeout 600 application:application"`.
 * Refresh deployment to use updated configuration using `az webapp up`.
 
-#### GC
-* By default, GC looks at `main.py` file with `app` Flask object.
+#### Google Cloud
+* By default, Google Cloud looks at `main.py` file with `app` Flask object.
 * `app.yaml` overrides these defaults using `gunicorn`. That is why `gunicorn` is installed as a dependency.
 * Create project using `gcloud projects create usc-csci-571-hw6-<unique> --set-as-default` in `us-west-2` region.
 * Create app in above project using `gcloud app create --project=usc-csci-571-hw6-<unique>`.
