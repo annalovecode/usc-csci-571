@@ -287,23 +287,27 @@ const App = (() => {
             }
         }
 
+        const fetchAndBuildSection = (ticker, section, builder) => {
+            Promise.allSettled([fetchSection(ticker, section)]).then(([response]) => {
+                buildSection(section, response, builder);
+            });
+        }
+
         Promise.allSettled([
             fetchSection(ticker, companyOutlook),
-            fetchSection(ticker, stockSummary),
-            fetchSection(ticker, charts),
-            fetchSection(ticker, latestNews)
-        ]).then(([companyOutlookResponse, stockSummaryResponse, chartsResponse, latestNewsResponse]) => {
+            fetchSection(ticker, stockSummary)
+        ]).then(([companyOutlookResponse, stockSummaryResponse]) => {
             if (!isResolved(companyOutlookResponse)) {
                 showResultError(companyOutlookResponse.reason);
             } else if (!isResolved(stockSummaryResponse)) {
                 showResultError(stockSummaryResponse.reason);
             } else {
-                buildSection(companyOutlook, companyOutlookResponse, buildCompanyOutlook);
-                buildSection(stockSummary, stockSummaryResponse, buildStockSummary);
-                buildSection(charts, chartsResponse, buildCharts);
-                buildSection(latestNews, latestNewsResponse, buildLatestNews);
+                buildCompanyOutlook(companyOutlookResponse.value);
+                buildStockSummary(stockSummaryResponse.value);
                 showSection(companyOutlook);
                 showResultSuccess();
+                fetchAndBuildSection(ticker, charts, buildCharts);
+                fetchAndBuildSection(ticker, latestNews, buildLatestNews);
             }
         })
     }
