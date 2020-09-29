@@ -12,9 +12,9 @@
 
 #### Azure
 * By default, Azure looks at `app.py` or `application.py` file with `app` Flask object.
-* Create application using `az webapp up --sku F1 --name usc-csci-571-hw6-<unique> --location westus`.
+* Create application using `az webapp up --sku F1 --name usc-csci-571-hw6-<unique> --location westus` which saves information in `.azure/config`.
 * Override defaults using `az webapp config set --resource-group <resource_group_created> --name usc-csci-571-hw6-<unique> --startup-file "gunicorn --bind=0.0.0.0 --timeout 600 application:application"`.
-* Refresh deployment to use updated configuration using `az webapp up --sku F1 --name usc-csci-571-<unique> --location westus`.
+* Refresh deployment to use updated configuration using `az webapp up`.
 
 #### GC
 * By default, GC looks at `main.py` file with `app` Flask object.
