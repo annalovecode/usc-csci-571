@@ -4,7 +4,7 @@ const App = (() => {
     let searchInput = null;
     let searchButton = null;
     let clearButton = null;
-    let searchQuery = null;
+    let previousTicker = null;
     let resultSuccess = null;
     let resultError = null;
     let selectedSection = null;
@@ -12,6 +12,7 @@ const App = (() => {
     let stockSummary = 'stock-summary';
     let charts = 'charts';
     let latestNews = 'latest-news';
+    const sections = [companyOutlook, stockSummary, charts, latestNews];
     const resultSuccessTab = {};
     const resultSuccessContent = {};
     const selectedTabClass = 'selected-tab';
@@ -25,19 +26,61 @@ const App = (() => {
         element.classList.remove(hideClass);
     }
 
-    const selectTab = (tabElement) => {
-        tabElement.classList.add(selectedTabClass);
+    const selectTab = (section) => {
+        resultSuccessTab[section].classList.add(selectedTabClass);
     }
 
-    const unselectTab = (tabElement) => {
-        tabElement.classList.remove(selectedTabClass);
+    const unselectTab = (section) => {
+        resultSuccessTab[section].classList.remove(selectedTabClass);
     }
 
     const showing = (element) => !(element.classList.contains(hideClass));
 
-    const floatFormatter = (value) => value.toFixed(2);
+    const hideSection = (section) => {
+        hide(resultSuccessContent[section]);
+    }
 
-    const buildCompanyOutlook = (data) => {
+    const showSection = (section) => {
+        show(resultSuccessContent[section]);
+    }
+
+    const unselectSection = () => {
+        if (selectedSection !== null) {
+            unselectTab(selectedSection);
+            hideSection(selectedSection);
+            selectedSection = null;
+        }
+    }
+
+    const selectSection = (section) => {
+        unselectSection();
+        selectedSection = section;
+        selectTab(section);
+        showSection(section);
+    }
+
+    const clear = (element) => {
+        element.innerHTML = "";
+    }
+
+    const clearSections = () => {
+        sections.forEach((section) => clear(resultSuccessContent[section]));
+    }
+
+    const clearSearchInput = () => {
+        searchInput.value = '';
+        previousTicker = null;
+    }
+
+    const hideAndClearResult = () => {
+        hide(resultSuccess);
+        hide(resultError);
+        unselectSection();
+        clearSections();
+        clear(resultError);
+    }
+
+    const setCompanyOutlook = (data) => {
         const buildRow = (key, value) =>
             `<div>
                 <div>${key}</div>
@@ -54,15 +97,8 @@ const App = (() => {
             buildRow('Description', data['description']);
     }
 
-    const buildStockSummary = (data) => {
-        const buildRow = (key, value) =>
-            `<div>
-                <div>${key}</div>
-                <div>
-                    <p>${value}</p>
-                </div>
-            </div>`;
-
+    const setStockSummary = (data) => {
+        const floatFormatter = (value) => value.toFixed(2);
 
         const buildNumberCellWithImage = (value, isPercentage = false) => {
             let cell = value.toString();
@@ -81,6 +117,14 @@ const App = (() => {
             return cell;
         }
 
+        const buildRow = (key, value) =>
+            `<div>
+                <div>${key}</div>
+                <div>
+                    <p>${value}</p>
+                </div>
+            </div>`;
+
         resultSuccessContent[stockSummary].innerHTML =
             buildRow('Stock Ticker Symbol', data['stockTickerSymbol']) +
             buildRow('Trading Day', data['tradingDay']) +
@@ -94,7 +138,7 @@ const App = (() => {
             buildRow('Number of Shares Traded', data['numberOfSharesTraded']);
     }
 
-    const buildCharts = (data) => {
+    const setCharts = (data) => {
         const stockPrices = [];
         const volumes = [];
         data.forEach(({ date, stockPrice, volume }) => {
@@ -103,7 +147,7 @@ const App = (() => {
             volumes.push([epochDate, volume]);
         });
 
-        const ticker = searchQuery.toUpperCase();
+        const ticker = previousTicker.toUpperCase();
 
         Highcharts.stockChart(`result-${charts}`, {
             time: {
@@ -111,7 +155,7 @@ const App = (() => {
             },
 
             title: {
-                text: `Stock Price ${searchQuery.toUpperCase()} ${(moment().tz('America/Los_Angeles')).toISOString().slice(0, 10)}`
+                text: `Stock Price ${previousTicker.toUpperCase()} ${(moment().tz('America/Los_Angeles')).toISOString().slice(0, 10)}`
             },
 
             subtitle: {
@@ -199,7 +243,7 @@ const App = (() => {
         });
     }
 
-    const buildLatestNews = (data) => {
+    const setLatestNews = (data) => {
         const buildNews = (news) =>
             `<div>
                 <div style="background-image: url(${news['image']});">
@@ -221,36 +265,15 @@ const App = (() => {
         resultSuccessContent[latestNews].innerHTML = innerHTML;
     }
 
-    const buildSectionError = (section, message) => {
+    const setSectionError = (section, message) => {
         resultSuccessContent[section].innerHTML =
             `<p>
                 ${message}
              </p>`
     }
 
-    const hideSection = (section) => {
-        unselectTab(resultSuccessTab[section]);
-        hide(resultSuccessContent[section]);
-    }
-
-    const showSection = (section) => {
-        if (selectedSection !== null) {
-            hideSection(selectedSection);
-        }
-        selectedSection = section;
-        selectTab(resultSuccessTab[section]);
-        show(resultSuccessContent[section]);
-    }
-
-    const showResultSuccess = () => {
-        show(resultSuccess);
-        hide(resultError);
-    }
-
-    const showResultError = (message) => {
-        hide(resultSuccess);
+    const setResultError = (message) => {
         resultError.innerHTML = message;
-        show(resultError);
     }
 
     const fetchSection = (ticker, section) => {
@@ -276,20 +299,16 @@ const App = (() => {
         })
     }
 
-    const search = (ticker) => {
+    const fetchAndSetResult = (ticker) => {
         const isResolved = (response) => response.status === 'fulfilled';
 
-        const buildSection = (section, response, builder) => {
-            if (isResolved(response)) {
-                builder(response.value);
-            } else {
-                buildSectionError(section, response.reason);
-            }
-        }
-
-        const fetchAndBuildSection = (ticker, section, builder) => {
+        const fetchAndSetSection = (ticker, section, setSection) => {
             Promise.allSettled([fetchSection(ticker, section)]).then(([response]) => {
-                buildSection(section, response, builder);
+                if (isResolved(response)) {
+                    setSection(response.value);
+                } else {
+                    setSectionError(section, response.reason);
+                }
             });
         }
 
@@ -297,58 +316,43 @@ const App = (() => {
             fetchSection(ticker, companyOutlook),
             fetchSection(ticker, stockSummary)
         ]).then(([companyOutlookResponse, stockSummaryResponse]) => {
-            if (!isResolved(companyOutlookResponse)) {
-                showResultError(companyOutlookResponse.reason);
-            } else if (!isResolved(stockSummaryResponse)) {
-                showResultError(stockSummaryResponse.reason);
+            if (!isResolved(companyOutlookResponse) || !isResolved(stockSummaryResponse)) {
+                setResultError(companyOutlookResponse.reason || stockSummaryResponse.reason);
+                show(resultError);
             } else {
-                buildCompanyOutlook(companyOutlookResponse.value);
-                buildStockSummary(stockSummaryResponse.value);
-                showSection(companyOutlook);
-                showResultSuccess();
-                fetchAndBuildSection(ticker, charts, buildCharts);
-                fetchAndBuildSection(ticker, latestNews, buildLatestNews);
+                setCompanyOutlook(companyOutlookResponse.value);
+                setStockSummary(stockSummaryResponse.value);
+                selectSection(companyOutlook);
+                show(resultSuccess);
+                fetchAndSetSection(ticker, charts, setCharts);
+                fetchAndSetSection(ticker, latestNews, setLatestNews);
             }
         })
     }
 
     const searchButtonClickHandler = (event) => {
-        const ticker = searchInput.value.toUpperCase();
+        const ticker = searchInput.value.trim().toUpperCase();
         if (ticker.length > 0) {
             event.preventDefault();
-            if (ticker !== searchQuery) {
-                searchQuery = ticker;
-                clearResult();
-                search(ticker);
+            if (ticker !== previousTicker) {
+                previousTicker = ticker;
+                hideAndClearResult();
+                fetchAndSetResult(ticker);
             } else if (showing(resultSuccess)) {
-                showSection(companyOutlook);
+                selectSection(companyOutlook);
             }
         }
     }
 
-    const clearInput = () => {
-        searchInput.value = '';
-        searchQuery = null;
-    }
-
-    const clearResult = () => {
-        if (selectedSection !== null) {
-            hideSection(selectedSection);
-            selectedSection = null;
-        }
-        hide(resultSuccess);
-        hide(resultError);
-    }
-
     const clearButtonClickHandler = (event) => {
         event.preventDefault();
-        clearInput();
-        clearResult();
+        clearSearchInput();
+        hideAndClearResult();
     }
 
     const tabClickHandler = (event) => {
         const section = (event.target.id).substring(11);
-        showSection(section);
+        selectSection(section);
     }
 
     const init = () => {
@@ -361,7 +365,7 @@ const App = (() => {
         clearButton.addEventListener("click", clearButtonClickHandler);
 
         resultSuccess = document.getElementById('result-success');
-        [companyOutlook, stockSummary, charts, latestNews].forEach((section) => {
+        sections.forEach((section) => {
             resultSuccessTab[section] = document.getElementById(`result-tab-${section}`);
             resultSuccessTab[section].addEventListener("click", tabClickHandler);
             resultSuccessContent[section] = document.getElementById(`result-${section}`);
@@ -372,6 +376,6 @@ const App = (() => {
 
 
     return {
-        init: init
+        init
     };
 })();
