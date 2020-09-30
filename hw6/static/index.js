@@ -141,8 +141,9 @@ const App = (() => {
     const setCharts = (data) => {
         const stockPrices = [];
         const volumes = [];
-        data.forEach(({ date, stockPrice, volume }) => {
-            const epochDate = Date.parse(date);
+        data.forEach(({ date: dateString, stockPrice, volume }) => {
+            const date = new Date(dateString);
+            const epochDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
             stockPrices.push([epochDate, stockPrice]);
             volumes.push([epochDate, volume]);
         });
@@ -150,10 +151,6 @@ const App = (() => {
         const ticker = previousTicker.toUpperCase();
 
         Highcharts.stockChart(`result-${charts}`, {
-            time: {
-                timezone: 'America/Los_Angeles'
-            },
-
             title: {
                 text: `Stock Price ${previousTicker.toUpperCase()} ${(moment().tz('America/Los_Angeles')).toISOString().slice(0, 10)}`
             },
@@ -161,6 +158,15 @@ const App = (() => {
             subtitle: {
                 text: '<div style="margin-top: 10px;"><a href="https://api.tiingo.com/" target="_blank">Source: Tiingo</a></div>',
                 useHTML: true
+            },
+
+            xAxis: {
+                type: 'datetime',
+                minRange: 24 * 60 * 60 * 1000,
+                minTickInterval: 24 * 60 * 60 * 1000,
+                tickPixelInterval: 125,
+                startOnTick: true,
+                endOnTick: true
             },
 
             yAxis: [{
@@ -208,10 +214,6 @@ const App = (() => {
                 spacingRight: 15
             },
 
-            tooltip: {
-                xDateFormat: '%A, %b %e, %Y'
-            },
-
             series: [{
                 name: ticker,
                 type: 'area',
@@ -231,14 +233,15 @@ const App = (() => {
                         [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
                     ]
                 },
-                yAxis: 0
+                yAxis: 0,
+                pointPlacement: 'on'
             }, {
                 name: `${ticker} Volume`,
                 type: 'column',
                 data: volumes,
                 pointWidth: 2,
                 yAxis: 1,
-                pointPlacement: 'on',
+                pointPlacement: 'on'
             }]
         });
     }
