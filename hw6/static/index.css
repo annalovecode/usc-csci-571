@@ -95,6 +95,16 @@ body {
     outline-color: black;
 }
 
+@supports (-moz-appearance:none) {
+    #search-field-input > input:focus {
+        outline: 2px solid black;
+        -moz-outline-radius: 5px;
+    }
+
+    #search-field-input > input:invalid {
+        box-shadow: none;
+    }
+}
 
 #ruler {
     margin-top: 20px;

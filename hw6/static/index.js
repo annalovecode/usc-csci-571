@@ -241,7 +241,8 @@ const App = (() => {
                 data: volumes,
                 pointWidth: 2,
                 yAxis: 1,
-                pointPlacement: 'on'
+                pointPlacement: 'on',
+                color: '#324854'
             }]
         });
     }
