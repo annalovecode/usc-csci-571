@@ -3,7 +3,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 import * as path from 'path';
 
-const app: express.Application = express();
+const app = express();
 const port = 3000;
 
 app.use(expressWinston.logger({
