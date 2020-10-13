@@ -3,3 +3,5 @@
 **/*.pyc
 **/*/__pycache__
 */.azure/
+**/*/node_modules
+**/*/dist

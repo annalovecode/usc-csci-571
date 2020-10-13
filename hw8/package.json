@@ -1,0 +1,26 @@
+{
+  "name": "usc-csci-571-hw8",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "watch": "concurrently --kill-others --names \"CLIENT,SERVER\" -c \"yellow.bold,blue.bold\" \"npm run watch:client\" \"npm run watch:server\"",
+    "watch:client": "cd client && npm run watch",
+    "watch:server": "cd server && npm run watch",
+    "start": "concurrently --kill-others --names \"CLIENT,SERVER\" -c \"yellow.bold,blue.bold\" \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "cd client && npm run start",
+    "start:server": "cd server && npm run start",
+    "clean": "rm -rf node_modules && npm run clean:client && npm run clean:server",
+    "clean:client": "cd client && rm -rf dist node_modules",
+    "clean:server": "cd server && rm -rf dist node_modules"
+  },
+  "author": "rochak84@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
