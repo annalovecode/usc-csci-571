@@ -2,6 +2,8 @@ import express from 'express';
 import expressWinston from 'express-winston';
 import winston from 'winston';
 import * as path from 'path';
+import * as bodyParser from 'body-parser';
+import api from './api';
 
 const app = express();
 const port = 3000;
@@ -11,22 +13,23 @@ app.use(expressWinston.logger({
     new winston.transports.Console()
   ],
   format: winston.format.combine(
-    winston.format.colorize(),
     winston.format.json(),
-    winston.format.prettyPrint()
+    winston.format.prettyPrint(),
   ),
-  meta: true,
-  msg: 'HTTP {{req.method}} {{req.url}}',
-  expressFormat: true,
-  colorize: true,
-  ignoreRoute: (req, res) => false
+  requestWhitelist: ['url', 'method', 'httpVersion', 'originalUrl', 'query'],
+  responseWhitelist: ['statusCode', 'body']
 }));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, '../../client/dist/client')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/client/index.html'));
+app.get('/', (_req, res) => {
+  res.redirect('/index.html');
 });
+
+app.use('/api', api);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
