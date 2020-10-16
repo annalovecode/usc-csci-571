@@ -115,9 +115,6 @@ export const getSummary = async (ticker: string): Promise<Summary> => {
     const currentTimestampMoment = moment().tz('America/Los_Angeles');
     const isMarketOpen = currentTimestampMoment.diff(lastTimestampMoment, 'seconds') < 60;
 
-    console.log(lastTimestampMoment.format('YYYY-MM-DD HH:mm:ss'));
-    console.log(currentTimestampMoment.format('YYYY-MM-DD HH:mm:ss'));
-
     if (isMarketOpen) {
         let midPrice: number | string;
         try {
