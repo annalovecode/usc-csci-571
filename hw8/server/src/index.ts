@@ -6,7 +6,7 @@ import * as bodyParser from 'body-parser';
 import api from './api';
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 app.use(expressWinston.logger({
   transports: [
@@ -31,6 +31,6 @@ app.get('/', (_req, res) => {
 
 app.use('/api', api);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
