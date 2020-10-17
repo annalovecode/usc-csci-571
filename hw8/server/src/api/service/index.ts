@@ -9,7 +9,6 @@ interface SearchResultItem {
 export const search = async (query: string): Promise<SearchResultItem[]> => {
     const items = await Tiingo.search(query);
     const searchResultItems: SearchResultItem[] = [];
-
     items.forEach(item => {
         try {
             searchResultItems.push({

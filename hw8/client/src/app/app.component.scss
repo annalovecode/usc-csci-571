@@ -1,0 +1,58 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#nav {
+  flex: 0 0 auto;
+}
+
+#content {
+  flex: 1 1 auto;
+}
+
+@include media-breakpoint-up(sm) {
+  $nav-height: 60px;
+
+  .nav-link {
+    margin-right: 10px;
+  }
+
+  #footer {
+    flex: 0 0 $nav-height;
+    min-height: $nav-height;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  $nav-height: 56px;
+
+  .nav-link {
+    padding-right: 10px;
+    width: 100%;
+  }
+
+  #footer {
+    flex: 0 0 $nav-height;
+    min-height: $nav-height;
+  }
+}
+
+#footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ddd;
+}
+
+.active-link {
+  border: 2px solid white;
+  border-radius: 15px;
+  color: white;
+}
