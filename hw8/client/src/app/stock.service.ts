@@ -23,13 +23,7 @@ export class StockService {
   search = (query: string): Observable<SearchResult[]> => {
     return this.get<SearchResult[]>('search', { query })
       .pipe(
-        map((response: { [key: string]: any }) => {
-          const data: SearchResult[] = response.data;
-          if (data.length === 0) {
-            this.log(`found no search results matching ${query}`);
-          }
-          return data;
-        }),
+        map((response: { [key: string]: any }) => response.data),
         catchError(this.handleError('search'))
       );
   }
