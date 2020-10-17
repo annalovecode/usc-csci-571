@@ -1,0 +1,81 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+#content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#header {
+  margin-top: 100px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+@include media-breakpoint-down(sm) {
+  #header {
+    flex-direction: column;
+  }
+
+  #header > div {
+    line-height: 80px;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  #header {
+    flex-direction: row;
+  }
+
+  #header > div:first-child {
+    margin-right: 20px;
+  }
+}
+
+#header > div {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 72px;
+  text-align: center;
+}
+
+#input {
+  border: 2px solid $purple;
+  border-radius: 25px;
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 15px;
+  padding-right: 25px;
+}
+
+input {
+  width: 180px;
+  border: none;
+  font-size: 16px;
+}
+
+input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+}
+
+mat-icon {
+  margin: 0;
+  padding: 0;
+  color: $purple;
+}

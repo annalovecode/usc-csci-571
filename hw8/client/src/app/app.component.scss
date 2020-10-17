@@ -10,6 +10,7 @@
 
 #nav {
   flex: 0 0 auto;
+  background-color: $purple;
 }
 
 #content {
@@ -20,7 +21,9 @@
   $nav-height: 60px;
 
   .nav-link {
-    margin-right: 10px;
+    margin-right: 5px;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
 
   #footer {

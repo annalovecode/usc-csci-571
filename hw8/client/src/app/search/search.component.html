@@ -1,1 +1,32 @@
-<p>search works!</p>
+<div id="content">
+    <div id="header">
+        <div>
+            Stock
+        </div>
+        <div>
+            Search
+        </div>
+    </div>
+    <div id="input">
+        <input #input type="text" class="form-control" placeholder="Enter stock name" matInput [matAutocomplete]="auto"
+            (input)="changeInput(input.value)">
+        <button mat-icon-button disableRipple>
+            <mat-icon>search</mat-icon>
+        </button>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)='selectOption($event.option.value)'>
+            <mat-option *ngIf="apiStatus.isLoading()" class="is-loading readonly">
+                <mat-spinner diameter="40"></mat-spinner>
+            </mat-option>
+            <mat-option *ngIf="apiStatus.isError()">
+                <mat-option class="readonly-block">
+                    {{ apiStatus.getError() }}
+                </mat-option>
+            </mat-option>
+            <ng-container *ngIf="apiStatus.isSuccess()">
+                <mat-option *ngFor="let option of options" [value]="option.ticker">
+                    {{ option. ticker }} | {{ option.name }}
+                </mat-option>
+            </ng-container>
+        </mat-autocomplete>
+    </div>
+</div>
