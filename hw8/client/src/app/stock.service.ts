@@ -11,6 +11,7 @@ export class StockService {
   constructor(private http: HttpClient) { }
 
   get = <T>(resource: string, params: { [key: string]: string } = {}): any => {
+    // TODO: Use relative paths
     const url = `http://localhost:3000/api/${resource}`;
     const options = {
       params,
