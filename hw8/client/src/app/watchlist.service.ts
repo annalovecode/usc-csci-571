@@ -35,12 +35,7 @@ export class WatchlistService {
   }
 
   private fetch(): string[] {
-    try {
-      const watchlist = JSON.parse(localStorage.getItem('watchlist'));
-      return watchlist || [];
-    } catch (error) {
-      return [];
-    }
+    return JSON.parse(localStorage.getItem('watchlist')) || [];
   }
 
   private store(watchlist: string[]): void {
