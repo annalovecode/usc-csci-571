@@ -6,9 +6,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbar-toggled" [ngbCollapse]="isNavbarCollapsed">
-        <ul ngbNav [(activeId)]="activeLink" class="navbar-nav ml-auto text-right">
+        <ul ngbNav [(activeId)]="activeLinkId" class="navbar-nav ml-auto text-right">
           <li class="nav-item" [ngbNavItem]="link.id" *ngFor="let link of links">
-            <a ngbNavLink class="nav-link" [class.active-link]="activeLink === link.id" routerLink="{{ link.path }}"
+            <a ngbNavLink class="nav-link" [class.active-link]="activeLinkId === link.id" routerLink="{{ link.path }}"
               (click)="closeNavbar(link.id)">{{ link.title }}</a>
           </li>
         </ul>

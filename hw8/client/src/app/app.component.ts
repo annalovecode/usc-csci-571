@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   isNavbarCollapsed = true;
 
-  activeLink: string = null;
+  activeLinkId: string = null;
 
   constructor(private router: Router) {
   }
@@ -26,8 +26,8 @@ export class AppComponent implements OnInit {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
-  closeNavbar(activeLink): void {
-    this.activeLink = activeLink;
+  closeNavbar(activeLinkId): void {
+    this.activeLinkId = activeLinkId;
     this.isNavbarCollapsed = true;
   }
 
@@ -37,9 +37,9 @@ export class AppComponent implements OnInit {
         const route = event.state.root.firstChild;
         const id = route.data.id;
         if (id === 'details') {
-          this.activeLink = null;
-        } else if (this.activeLink !== id) {
-          this.activeLink = id;
+          this.activeLinkId = null;
+        } else if (this.activeLinkId !== id) {
+          this.activeLinkId = id;
         }
       }
     });
