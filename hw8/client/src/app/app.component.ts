@@ -35,11 +35,11 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof RoutesRecognized) {
         const route = event.state.root.firstChild;
-        const name = route.data.name;
-        if (name === 'details') {
+        const id = route.data.id;
+        if (id === 'details') {
           this.activeLink = null;
-        } else if (this.activeLink !== name) {
-          this.activeLink = name;
+        } else if (this.activeLink !== id) {
+          this.activeLink = id;
         }
       }
     });
