@@ -1,0 +1,61 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+@include media-breakpoint-down(sm) {
+  #content {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+
+#loader {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#details {
+  padding-top: 25px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#details > div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#details > div:first-child {
+  font-size: 45px;
+  line-height: 45px;
+}
+
+#details > div:first-child > div:first-child i.fa-star {
+  color: #f3e30e;
+}
+
+#details > div:nth-child(2) {
+  margin-top: 10px;
+  font-size: 30px;
+  line-height: 30px;
+}
+
+#details > div:nth-child(2) > div:first-child {
+  color: #687380;
+}
+
+#details > div:nth-child(3) {
+  margin-top: 15px;
+  font-size: 15px;
+  line-height: 15px;
+}
+
+#details > div:last-child {
+  margin-top: 15px;
+}

@@ -15,7 +15,7 @@ export class SearchComponent implements OnInit {
   private inputs = new Subject<string>();
   apiStatus = new ApiStatus();
   options: SearchResult[] = [];
-  ticker: string = null;
+  private ticker: string = null;
 
   constructor(private stockService: StockService, private router: Router) {
   }

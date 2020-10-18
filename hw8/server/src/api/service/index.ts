@@ -51,8 +51,8 @@ export const getDetails = async (ticker: string): Promise<Details> => {
     const prevClose = Parser.parseNumber(currentTopOfBookAndLastPrice.prevClose);
     const timestamp = Parser.parseString(currentTopOfBookAndLastPrice.timestamp);
 
-    const change = lastPrice - prevClose;
-    const changePercent = (change * 100) / prevClose;
+    const change = Parser.parseNumber(lastPrice - prevClose);
+    const changePercent = Parser.parseNumber((change * 100) / prevClose);
 
     const lastTimestampMoment = moment(timestamp).tz('America/Los_Angeles');
     const currentTimestampMoment = moment().tz('America/Los_Angeles');

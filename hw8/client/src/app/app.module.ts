@@ -15,6 +15,8 @@ import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DetailsComponent } from './details/details.component';
 import { StockService } from './stock.service';
+import { WatchlistService } from './watchlist.service';
+import { PortfolioService } from './portfolio.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,7 @@ import { StockService } from './stock.service';
     MatIconModule,
     MatButtonModule
   ],
-  providers: [StockService],
+  providers: [StockService, WatchlistService, PortfolioService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
