@@ -17,8 +17,15 @@
   flex: 1 1 auto;
 }
 
+.nav-link {
+  font-size: 14px;
+  border: 2px solid $purple;
+  border-radius: 15px;
+  color: white;
+}
+
 @include media-breakpoint-up(sm) {
-  $nav-height: 60px;
+  $nav-height: 57px;
 
   .nav-link {
     margin-right: 5px;
@@ -40,6 +47,10 @@
     width: 100%;
   }
 
+  li:nth-of-type(1) {
+    margin-top: 5px;
+  }
+
   #footer {
     flex: 0 0 $nav-height;
     min-height: $nav-height;
@@ -55,7 +66,5 @@
 }
 
 .active-link {
-  border: 2px solid white;
-  border-radius: 15px;
-  color: white;
+  border-color: white;
 }

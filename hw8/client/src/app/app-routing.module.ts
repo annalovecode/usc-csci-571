@@ -6,10 +6,11 @@ import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 
 const routes: Routes = [
-  { path: '', component: SearchComponent },
-  { path: 'details/:ticker', component: DetailsComponent },
-  { path: 'watchlist', component: WatchlistComponent },
-  { path: 'portfolio', component: PortfolioComponent },
+  { path: '', component: SearchComponent, data: { name: 'search' } },
+  { path: 'details/:ticker', component: DetailsComponent, data: { name: 'details' } },
+  { path: 'watchlist', component: WatchlistComponent, data: { name: 'watchlist' } },
+  { path: 'portfolio', component: PortfolioComponent, data: { name: 'portfolio' } },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, Event, NavigationStart, NavigationEnd, NavigationError, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   searchLink = { id: 'search', title: 'Search', path: '' };
 
   links = [
@@ -16,7 +17,10 @@ export class AppComponent {
 
   isNavbarCollapsed = true;
 
-  activeLink = 'search';
+  activeLink: string = null;
+
+  constructor(private router: Router) {
+  }
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
@@ -25,5 +29,19 @@ export class AppComponent {
   closeNavbar(activeLink): void {
     this.activeLink = activeLink;
     this.isNavbarCollapsed = true;
+  }
+
+  ngOnInit(): void {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof RoutesRecognized) {
+        const route = event.state.root.firstChild;
+        const name = route.data.name;
+        if (name === 'details') {
+          this.activeLink = null;
+        } else if (this.activeLink !== name) {
+          this.activeLink = name;
+        }
+      }
+    });
   }
 }

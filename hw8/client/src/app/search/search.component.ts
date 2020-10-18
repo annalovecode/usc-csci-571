@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { switchMap, debounceTime, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
 import ApiStatus from '../api-status';
@@ -16,7 +17,7 @@ export class SearchComponent implements OnInit {
   options: SearchResult[] = [];
   ticker: string = null;
 
-  constructor(private stockService: StockService) {
+  constructor(private stockService: StockService, private router: Router) {
   }
 
   changeInput(input: string): void {
@@ -26,6 +27,12 @@ export class SearchComponent implements OnInit {
 
   selectOption(ticker: string): void {
     this.ticker = ticker || null;
+  }
+
+  navigateToDetails(): void {
+    if (this.ticker) {
+      this.router.navigate(['/details', this.ticker]);
+    }
   }
 
   ngOnInit(): void {

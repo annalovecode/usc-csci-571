@@ -10,7 +10,7 @@
     <div id="input">
         <input #input type="text" class="form-control" placeholder="Enter stock name" matInput [matAutocomplete]="auto"
             (input)="changeInput(input.value)">
-        <button mat-icon-button disableRipple>
+        <button mat-icon-button disableRipple (click)="navigateToDetails()">
             <mat-icon>search</mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)='selectOption($event.option.value)'>

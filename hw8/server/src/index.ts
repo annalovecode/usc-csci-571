@@ -29,11 +29,11 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../../client/dist/client')));
 
-app.get('/', (_req, res) => {
-  res.redirect('/index.html');
-});
-
 app.use('/api', api);
+
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/dist/client/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
