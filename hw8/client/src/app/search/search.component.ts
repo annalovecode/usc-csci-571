@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { switchMap, debounceTime, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
-import ApiStatus from '../api-status';
+import { ApiStatus } from '../api-status';
 import { StockService } from '../stock.service';
 import { SearchResult } from '../search-result';
 

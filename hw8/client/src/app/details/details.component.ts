@@ -4,7 +4,7 @@ import { Subscription, timer, of } from 'rxjs';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { StockService } from '../stock.service';
 import { WatchlistService } from '../watchlist.service';
-import ApiStatus from '../api-status';
+import { ApiStatus } from '../api-status';
 import { Alert } from '../alert';
 
 @Component({
@@ -22,7 +22,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private watchlistService: WatchlistService) { }
 
   getDetails(): void {
-    this.subscription = timer(0, 10000000).pipe(
+    this.subscription = timer(0, 15000).pipe(
       tap(() => this.apiStatus.loading()),
       switchMap(() => {
         return this.stockService.getDetails(this.ticker)

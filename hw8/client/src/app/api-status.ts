@@ -1,4 +1,4 @@
-export default class ApiStatus {
+export class ApiStatus {
     private states = {
         INITIAL: 'initial',
         LOADING: 'loading',
