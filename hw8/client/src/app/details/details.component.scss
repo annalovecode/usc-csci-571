@@ -3,9 +3,9 @@
 @import "~bootstrap/scss/mixins";
 
 @include media-breakpoint-down(sm) {
-  #content {
-    padding-left: 25px;
-    padding-right: 25px;
+  .container {
+    padding-left: 30px;
+    padding-right: 30px;
   }
 }
 
@@ -17,15 +17,22 @@
   align-items: center;
 }
 
+.container {
+  padding-top: 20px;
+}
+
+#alerts {
+  display: flex;
+  flex-direction: column;
+}
+
 #details {
-  padding-top: 25px;
-  width: 100%;
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
 }
 
 #details > div {
-  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

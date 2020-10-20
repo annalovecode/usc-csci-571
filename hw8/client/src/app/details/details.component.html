@@ -3,44 +3,43 @@
         <mat-spinner diameter="60"></mat-spinner>
     </div>
     <div class="container" *ngIf="apiStatus.isSuccess()">
-        <div class="row">
-            <div id="details">
-                <div>
-                    <div class="text-left">
-                        {{ details.ticker }}
-                        <i *ngIf="watchlistService.isWatchlisted(ticker)" class="fa fa-star"
-                            (click)="watchlistService.remove(ticker)"></i>
-                        <i *ngIf="!watchlistService.isWatchlisted(ticker)" class="fa fa-star-o"
-                            (click)="watchlistService.add(ticker)"></i>
-                    </div>
-                    <div class="text-right" [class.text-success]="details.change > 0"
-                        [class.text-danger]="details.change < 0">
-                        {{ details.lastPrice }}
-                    </div>
-                </div>
-                <div>
-                    <div class="text-left">
-                        {{ details.name }}
-                    </div>
-                    <div class="text-right" [class.text-success]="details.change > 0"
-                        [class.text-danger]="details.change < 0">
-                        <i *ngIf="details.change > 0" class="fa fa-caret-up"></i>
-                        <i *ngIf="details.change < 0" class="fa fa-caret-down"></i>
-                        {{ details.change }}
-                        ({{ details.changePercent}}%)
-                    </div>
-                </div>
-                <div>
-                    <div class="text-left">
-                        {{ details.exchangeCode }}
-                    </div>
-                    <div class="text-right">
-                        {{ details.lastTimestamp }}
-                    </div>
-                </div>
+        <div *ngIf="alerts.length > 0" id="alerts" class="row">
+            <app-alert *ngFor="let alert of alerts" [alert]="alert" (closed)="removeAlert($event)"></app-alert>
+        </div>
+        <div class="row" id="details">
+            <div>
                 <div class="text-left">
-                    <button type="button" class="btn btn-success btn-lg">Buy</button>
+                    {{ details.ticker }}
+                    <i *ngIf="isWatchlisted()" class="fa fa-star" (click)="removeFromWatchlist()"></i>
+                    <i *ngIf="!isWatchlisted()" class="fa fa-star-o" (click)="addToWatchlist(ticker)"></i>
                 </div>
+                <div class="text-right" [class.text-success]="details.change > 0"
+                    [class.text-danger]="details.change < 0">
+                    {{ details.lastPrice }}
+                </div>
+            </div>
+            <div>
+                <div class="text-left">
+                    {{ details.name }}
+                </div>
+                <div class="text-right" [class.text-success]="details.change > 0"
+                    [class.text-danger]="details.change < 0">
+                    <i *ngIf="details.change > 0" class="fa fa-caret-up"></i>
+                    <i *ngIf="details.change < 0" class="fa fa-caret-down"></i>
+                    {{ details.change }}
+                    ({{ details.changePercent}}%)
+                </div>
+            </div>
+            <div>
+                <div class="text-left">
+                    {{ details.exchangeCode }}
+                </div>
+                <div class="text-right">
+                    {{ details.lastTimestamp }}
+                </div>
+            </div>
+            <div class="text-left">
+                <button type="button" class="btn btn-success btn-lg">Buy</button>
             </div>
         </div>
     </div>

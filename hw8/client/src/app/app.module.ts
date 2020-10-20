@@ -17,6 +17,7 @@ import { DetailsComponent } from './details/details.component';
 import { StockService } from './stock.service';
 import { WatchlistService } from './watchlist.service';
 import { PortfolioService } from './portfolio.service';
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PortfolioService } from './portfolio.service';
     SearchComponent,
     WatchlistComponent,
     PortfolioComponent,
-    DetailsComponent
+    DetailsComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
