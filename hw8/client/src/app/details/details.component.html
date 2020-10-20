@@ -3,8 +3,9 @@
         <mat-spinner diameter="60"></mat-spinner>
     </div>
     <div class="container" *ngIf="apiStatus.isSuccess()">
-        <div *ngIf="alerts.length > 0" id="alerts" class="row">
-            <app-alert *ngFor="let alert of alerts" [alert]="alert" (closed)="removeAlert($event)"></app-alert>
+        <div *ngIf="alertManager.areAlertsAvailable()" id="alerts" class="row">
+            <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
+            </app-alert>
         </div>
         <div class="row" id="details">
             <div>
