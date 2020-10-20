@@ -22,15 +22,6 @@ export class AppComponent implements OnInit {
   constructor(private router: Router) {
   }
 
-  toggleNavbar(): void {
-    this.isNavbarCollapsed = !this.isNavbarCollapsed;
-  }
-
-  closeNavbar(activeLinkId): void {
-    this.activeLinkId = activeLinkId;
-    this.isNavbarCollapsed = true;
-  }
-
   ngOnInit(): void {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof RoutesRecognized) {
@@ -43,5 +34,14 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  toggleNavbar(): void {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
+  closeNavbar(activeLinkId): void {
+    this.activeLinkId = activeLinkId;
+    this.isNavbarCollapsed = true;
   }
 }

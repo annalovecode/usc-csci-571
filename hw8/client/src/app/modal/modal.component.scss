@@ -1,0 +1,14 @@
+.modal-footer {
+  justify-content: space-between;
+}
+
+input {
+  margin-left: 10px;
+  width: 200px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}

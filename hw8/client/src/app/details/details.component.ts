@@ -7,11 +7,13 @@ import { WatchlistService } from '../watchlist.service';
 import { ApiStatus } from '../api-status';
 import { AlertManager } from '../alert-manager';
 import { Alert } from '../alert';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
   private ticker: string = null;
@@ -20,7 +22,27 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
 
-  constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private watchlistService: WatchlistService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private stockService: StockService,
+    private watchlistService: WatchlistService,
+    public modal: NgbModal,
+    modalConfig: NgbModalConfig
+  ) {
+    modalConfig.keyboard = false;
+    modalConfig.beforeDismiss = () => false;
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe(paramMap => {
+      this.ticker = paramMap.get('ticker');
+      this.getDetails();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   getDetails(): void {
     this.subscription = timer(0, 15000).pipe(
@@ -56,18 +78,15 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.alertManager.addDangerAlert(`${this.ticker} removed from Watchlist.`);
   }
 
+  openModal(): void {
+    const modalRef = this.modal.open(ModalComponent);
+    modalRef.componentInstance.buttonText = 'Buy';
+    modalRef.componentInstance.ticker = this.details.ticker;
+    modalRef.componentInstance.currentPrice = this.details.lastPrice;
+    modalRef.result.then((quantity) => console.log(quantity));
+  }
+
   removeAlert(alert: Alert): void {
     this.alertManager.removeAlert(alert);
-  }
-
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(paramMap => {
-      this.ticker = paramMap.get('ticker');
-      this.getDetails();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

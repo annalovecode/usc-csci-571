@@ -12,6 +12,18 @@ export class AlertComponent implements OnInit, OnDestroy {
   @Output() closed = new EventEmitter();
   private timer = null;
 
+  ngOnInit(): void {
+    if (this.alert.dismissible) {
+      this.setTimer();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.alert.dismissible && this.timer) {
+      this.clearTimer();
+    }
+  }
+
   close(): void {
     this.isOpen = false;
     this.clearTimer();
@@ -37,17 +49,5 @@ export class AlertComponent implements OnInit, OnDestroy {
     classes.push(`alert-${this.alert.type}`);
     classes.push('text-center');
     return classes.join(' ');
-  }
-
-  ngOnInit(): void {
-    if (this.alert.dismissible) {
-      this.setTimer();
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.alert.dismissible && this.timer) {
-      this.clearTimer();
-    }
   }
 }

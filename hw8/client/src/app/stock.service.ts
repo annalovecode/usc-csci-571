@@ -12,7 +12,7 @@ export class StockService {
 
   get<T>(resource: string, params: { [key: string]: string } = {}): any {
     // TODO: Use relative paths
-    const url = `http://localhost:3000/api/${resource}`;
+    const url = `api/${resource}`;
     const options = {
       params,
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })

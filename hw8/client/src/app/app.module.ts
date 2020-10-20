@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,7 @@ import { StockService } from './stock.service';
 import { WatchlistService } from './watchlist.service';
 import { PortfolioService } from './portfolio.service';
 import { AlertComponent } from './alert/alert.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -26,12 +27,14 @@ import { AlertComponent } from './alert/alert.component';
     WatchlistComponent,
     PortfolioComponent,
     DetailsComponent,
-    AlertComponent
+    AlertComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     NgbModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

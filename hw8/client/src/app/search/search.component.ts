@@ -20,21 +20,6 @@ export class SearchComponent implements OnInit {
   constructor(private stockService: StockService, private router: Router) {
   }
 
-  changeInput(input: string): void {
-    this.inputs.next(input.trim());
-    this.ticker = null;
-  }
-
-  selectOption(ticker: string): void {
-    this.ticker = ticker || null;
-  }
-
-  navigateToDetails(): void {
-    if (this.ticker) {
-      this.router.navigate(['/details', this.ticker]);
-    }
-  }
-
   ngOnInit(): void {
     this.inputs.pipe(
       debounceTime(300),
@@ -63,5 +48,20 @@ export class SearchComponent implements OnInit {
         }
       }
     });
+  }
+
+  changeInput(input: string): void {
+    this.inputs.next(input.trim());
+    this.ticker = null;
+  }
+
+  selectOption(ticker: string): void {
+    this.ticker = ticker || null;
+  }
+
+  navigateToDetails(): void {
+    if (this.ticker) {
+      this.router.navigate(['/details', this.ticker]);
+    }
   }
 }

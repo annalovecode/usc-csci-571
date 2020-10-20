@@ -20,6 +20,15 @@ export class WatchlistComponent implements OnInit {
 
   constructor(private stockService: StockService, public watchlistService: WatchlistService, private router: Router) { }
 
+  ngOnInit(): void {
+    if (this.watchlistService.isWatchlistEmpty()) {
+      this.showEmptyWatchlistAlert();
+      this.apiStatus.success();
+    } else {
+      this.getWatchlistData();
+    }
+  }
+
   private getWatchlistData(): void {
     const watchlist = this.watchlistService.getWatchlist();
     forkJoin(watchlist.map(item =>
@@ -83,14 +92,5 @@ export class WatchlistComponent implements OnInit {
 
   showEmptyWatchlistAlert(): void {
     this.alertManager.addWarningAlert('Currently you don\'t have any stock in your watchlist.', false);
-  }
-
-  ngOnInit(): void {
-    if (this.watchlistService.isWatchlistEmpty()) {
-      this.showEmptyWatchlistAlert();
-      this.apiStatus.success();
-    } else {
-      this.getWatchlistData();
-    }
   }
 }

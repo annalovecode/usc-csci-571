@@ -13,7 +13,6 @@ export interface WatchlistItem {
   providedIn: 'root'
 })
 export class WatchlistService {
-
   constructor() {
     this.init();
   }
