@@ -147,6 +147,8 @@
       "element",
       "app",
       "kebab-case"
-    ]
+    ],
+    "no-unused-variable": true,
+    "no-unused-imports": true
   }
 }
