@@ -23,7 +23,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private watchlistService: WatchlistService) { }
 
   getDetails(): void {
-    this.subscription = timer(0, 1500000).pipe(
+    this.subscription = timer(0, 15000).pipe(
       tap(() => this.apiStatus.loading()),
       switchMap(() => {
         return this.stockService.getDetails(this.ticker)
