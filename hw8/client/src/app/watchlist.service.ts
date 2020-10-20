@@ -27,7 +27,7 @@ export class WatchlistService {
     return this.fetchWatchlist();
   }
 
-  add(ticker: string, name: string, price): void {
+  add(ticker: string, name: string, price: number): void {
     const watchlist = this.fetchWatchlist();
     watchlist.push({
       ticker, name, price

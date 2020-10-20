@@ -30,7 +30,7 @@ export class WatchlistComponent implements OnInit {
               this.apiStatus.loading();
             }
           }),
-          catchError(error => of(null))
+          catchError(_ => of(null))
         )
     )).subscribe(lastPrices => {
       const successWatchlist: WatchlistItem[] = [];
@@ -41,9 +41,7 @@ export class WatchlistComponent implements OnInit {
         if (lastPrice === null) {
           errorTickers.push(item.ticker);
         } else {
-          item.lastPrice = lastPrice;
-          item.change = +((item.price - lastPrice).toFixed(2));
-          item.changePercent = +(((item.price - lastPrice) / 100).toFixed(2));
+          this.enrichWatchlistItem(item, lastPrice);
           successWatchlist.push(item);
         }
       }
@@ -59,6 +57,12 @@ export class WatchlistComponent implements OnInit {
         this.apiStatus.success();
       }
     });
+  }
+
+  enrichWatchlistItem(item: WatchlistItem, lastPrice: number): void {
+    item.lastPrice = lastPrice;
+    item.change = +((item.price - lastPrice).toFixed(2));
+    item.changePercent = +(((item.price - lastPrice) / 100).toFixed(2));
   }
 
   removeFromWatchlist(ticker: string): void {
