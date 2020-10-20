@@ -32,7 +32,15 @@ export class StockService {
     return this.get<SearchResult[]>(`details/${ticker}`)
       .pipe(
         map((response: { [key: string]: any }) => response.data),
-        catchError(this.handleError('details'))
+        catchError(this.handleError('getDetails'))
+      );
+  }
+
+  getLastPrice(ticker: string): Observable<number> {
+    return this.get<number>(`last-price/${ticker}`)
+      .pipe(
+        map((response: { [key: string]: any }) => response.data),
+        catchError(this.handleError('getLastPrice'))
       );
   }
 

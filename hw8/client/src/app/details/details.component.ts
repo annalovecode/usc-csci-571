@@ -5,8 +5,8 @@ import { switchMap, tap, catchError } from 'rxjs/operators';
 import { StockService } from '../stock.service';
 import { WatchlistService } from '../watchlist.service';
 import { ApiStatus } from '../api-status';
-import { Alert } from '../alert';
 import { AlertManager } from '../alert-manager';
+import { Alert } from '../alert';
 
 @Component({
   selector: 'app-details',
@@ -47,13 +47,17 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   addToWatchlist(): void {
-    this.watchlistService.add(this.ticker);
+    this.watchlistService.add(this.ticker, this.details.name, this.details.lastPrice);
     this.alertManager.addSuccessAlert(`${this.ticker} added to Watchlist.`);
   }
 
   removeFromWatchlist(): void {
     this.watchlistService.remove(this.ticker);
     this.alertManager.addDangerAlert(`${this.ticker} removed from Watchlist.`);
+  }
+
+  removeAlert(alert: Alert): void {
+    this.alertManager.removeAlert(alert);
   }
 
   ngOnInit(): void {

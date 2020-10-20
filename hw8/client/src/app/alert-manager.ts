@@ -11,17 +11,21 @@ export class AlertManager {
         return this.alerts.length > 0;
     }
 
-    addSuccessAlert(message: string): void {
-        this.addAlert('success', message);
+    addSuccessAlert(message: string, dismissible = true): void {
+        this.addAlert('success', message, dismissible);
     }
 
-    addDangerAlert(message: string): void {
-        this.addAlert('danger', message);
+    addWarningAlert(message: string, dismissible = true): void {
+        this.addAlert('warning', message, dismissible);
     }
 
-    private addAlert(type: string, message: string): void {
+    addDangerAlert(message: string, dismissible = true): void {
+        this.addAlert('danger', message, dismissible);
+    }
+
+    private addAlert(type: string, message: string, dismissible: boolean): void {
         this.alerts.unshift({
-            type, message
+            type, message, dismissible
         });
     }
 

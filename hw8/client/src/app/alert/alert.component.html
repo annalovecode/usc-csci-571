@@ -1,6 +1,6 @@
-<div *ngIf="isOpen" [ngClass]="'alert alert-dismissible alert-' + alert.type + ' text-center'" role="alert">
+<div *ngIf="isOpen" [ngClass]="getClass()" role="alert">
     {{ alert.message }}
-    <button type="button" class="close" data-dismiss="alert" (click)="close()">
+    <button type="button" class="close" data-dismiss="alert" (click)="close()" *ngIf="alert.dismissible">
         <span>&times;</span>
     </button>
 </div>

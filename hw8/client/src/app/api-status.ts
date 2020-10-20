@@ -10,6 +10,10 @@ export class ApiStatus {
 
     errorMessage: string = null;
 
+    isInitial(): boolean {
+        return this.state === this.states.INITIAL;
+    }
+
     isLoading(): boolean {
         return this.state === this.states.LOADING;
     }
@@ -20,6 +24,10 @@ export class ApiStatus {
 
     isError(): boolean {
         return this.state === this.states.ERROR;
+    }
+
+    isCompleted(): boolean {
+        return this.state === this.states.SUCCESS || this.state === this.states.ERROR;
     }
 
     reset(): void {

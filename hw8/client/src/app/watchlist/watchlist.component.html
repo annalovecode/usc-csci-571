@@ -1,1 +1,43 @@
-<p>watchlist works!</p>
+<div id="content">
+    <div id="loader" *ngIf="apiStatus.isLoading()">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    <div class="container" *ngIf="apiStatus.isCompleted()">
+        <div class="row" id="header">
+            My Watchlist
+        </div>
+        <div *ngIf="alertManager.areAlertsAvailable()" id="alerts" class="row">
+            <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
+            </app-alert>
+        </div>
+        <div class="row card" *ngFor="let item of successWatchlist" (click)="navigateToDetails(item.ticker)">
+            <div class="close-button">
+                <button type="button" class="close" (click)="removeFromWatchlist(item.ticker)">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="card-title">
+                    <div>
+                        {{ item.ticker }}
+                    </div>
+                    <div class="text-right" [class.text-success]="item.change > 0"
+                        [class.text-danger]="item.change < 0">
+                        {{ item.lastPrice }}
+                    </div>
+                </div>
+                <div class="card-subtitle">
+                    <div>
+                        {{ item.name }}
+                    </div>
+                    <div class="text-right" [class.text-success]="item.change > 0"
+                        [class.text-danger]="item.change < 0">
+                        <i *ngIf="item.change > 0" class="fa fa-caret-up"></i>
+                        <i *ngIf="item.change < 0" class="fa fa-caret-down"></i> {{ item.change }}
+                        ({{ item.changePercent }}%)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
