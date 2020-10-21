@@ -1,1 +1,82 @@
-<p>portfolio works!</p>
+<div id="content">
+    <div id="loader" *ngIf="apiStatus.isLoading()">
+        <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    <div class="container" *ngIf="apiStatus.isCompleted()">
+        <div class="row" id="header">
+            My Portfolio
+        </div>
+        <div *ngIf="alertManager.areAlertsAvailable()" id="alerts" class="row">
+            <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
+            </app-alert>
+        </div>
+        <div class="row card" *ngFor="let item of successPortfolio">
+            <div class="card-header" (click)="navigateToDetails(item.ticker)">
+                <div>{{ item.ticker }}</div>
+                <div>{{ item.name }}</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm">
+                        <div>
+                            Quantity:
+                        </div>
+                        <div>
+                            {{ item.quantity }}
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div>
+                            Change:
+                        </div>
+                        <div [class.text-success]="item.change > 0" [class.text-danger]="item.change < 0">
+                            <i *ngIf="item.change > 0" class="fa fa-caret-up"></i>
+                            <i *ngIf="item.change < 0" class="fa fa-caret-down"></i>
+                            {{ item.getChange(lastPrices[item.ticker]) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <div>
+                            Avg. Cost / Share:
+                        </div>
+                        <div>
+                            {{ item.price }}
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div>
+                            Current Price:
+                        </div>
+                        <div [class.text-success]="item.change > 0" [class.text-danger]="item.change < 0">
+                            {{ lastPrices[item.ticker] }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <div>
+                            Total Cost:
+                        </div>
+                        <div>
+                            {{ item.getTotalCost() }}
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div>
+                            Market Value:
+                        </div>
+                        <div [class.text-success]="item.change > 0" [class.text-danger]="item.change < 0">
+                            {{ item.getMarketValue(lastPrices[item.ticker]) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary btn-lg" (click)="openBuyModal(item)">Buy</button>
+                <button type="button" class="btn btn-danger btn-lg" (click)="openSellModal(item)">Sell</button>
+            </div>
+        </div>
+    </div>
+</div>

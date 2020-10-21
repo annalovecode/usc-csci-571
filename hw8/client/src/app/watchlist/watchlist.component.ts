@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { WatchlistItem, WatchlistService } from '../watchlist.service';
+import { WatchlistService } from '../watchlist.service';
+import { WatchlistItem } from '../watchlist-item';
 import { StockService } from '../stock.service';
 import { ApiStatus } from '../api-status';
 import { AlertManager } from '../alert-manager';
@@ -15,6 +16,7 @@ import { Alert } from '../alert';
 })
 export class WatchlistComponent implements OnInit {
   successWatchlist: WatchlistItem[] = [];
+  lastPrices = {};
   alertManager: AlertManager = new AlertManager();
   apiStatus = new ApiStatus();
 
@@ -46,11 +48,12 @@ export class WatchlistComponent implements OnInit {
       const errorTickers: string[] = [];
       for (let i = 0; i < watchlist.length; i++) {
         const item = watchlist[i];
+        const ticker = item.ticker;
         const lastPrice = lastPrices[i];
         if (lastPrice === null) {
-          errorTickers.push(item.ticker);
+          errorTickers.push(ticker);
         } else {
-          this.enrichWatchlistItem(item, lastPrice);
+          this.lastPrices[ticker] = lastPrice;
           successWatchlist.push(item);
         }
       }
@@ -68,15 +71,9 @@ export class WatchlistComponent implements OnInit {
     });
   }
 
-  enrichWatchlistItem(item: WatchlistItem, lastPrice: number): void {
-    item.lastPrice = lastPrice;
-    item.change = +((item.price - lastPrice).toFixed(2));
-    item.changePercent = +(((item.price - lastPrice) / 100).toFixed(2));
-  }
-
   removeFromWatchlist(ticker: string): void {
-    this.successWatchlist = this.successWatchlist.filter(item => item.ticker !== ticker);
     this.watchlistService.remove(ticker);
+    this.successWatchlist = this.watchlistService.getFilteredWatchlist(this.successWatchlist.map(item => item.ticker));
     if (this.watchlistService.isWatchlistEmpty()) {
       this.showEmptyWatchlistAlert();
     }

@@ -1,0 +1,104 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+@include media-breakpoint-down(sm) {
+  .container {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+#loader {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  padding-top: 40px;
+}
+
+#header {
+  font-size: 45px;
+  line-height: 45px;
+  padding-bottom: 40px;
+}
+
+#alerts {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card-title,
+.card-subtitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 35px;
+  line-height: 35px;
+  margin-bottom: 30px;
+}
+
+.card-subtitle {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.card-header > div:first-child {
+  font-size: 35px;
+}
+
+.card-header > div:nth-child(2) {
+  margin-left: 10px;
+  font-size: 25px;
+  color: #687380;
+}
+
+.card-header:hover {
+  cursor: pointer;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.col-sm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-body {
+  font-size: 20px;
+}
+
+@include media-breakpoint-up(sm) {
+  .card-body {
+    margin-bottom: -10px;
+    padding-bottom: 0px;
+  }
+}
+
+.card-footer > button:last-child {
+  margin-left: 15px;
+}

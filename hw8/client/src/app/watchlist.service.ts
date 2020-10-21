@@ -1,13 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export interface WatchlistItem {
-  ticker: string;
-  name: string;
-  price: number;
-  lastPrice?: number;
-  change?: number;
-  changePercent?: number;
-}
+import { WatchlistItem } from './watchlist-item';
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +18,21 @@ export class WatchlistService {
     return this.fetchWatchlist();
   }
 
+  getFilteredWatchlist(tickers: string[]): WatchlistItem[] {
+    const watchlist = this.fetchWatchlist();
+    return watchlist.filter(item => tickers.includes(item.ticker));
+  }
+
   add(ticker: string, name: string, price: number): void {
     const watchlist = this.fetchWatchlist();
-    watchlist.push({
-      ticker, name, price
-    });
+    watchlist.push(WatchlistItem.of(ticker, name, price));
     this.storeWatchlist(watchlist);
   }
 
   remove(ticker: string): void {
-    const watchlist = this.fetchWatchlist();
-    this.storeWatchlist(watchlist.filter(item => item.ticker !== ticker));
+    let watchlist = this.fetchWatchlist();
+    watchlist = watchlist.filter(item => item.ticker !== ticker);
+    this.storeWatchlist(watchlist);
   }
 
   isWatchlisted(ticker: string): boolean {
@@ -49,7 +45,7 @@ export class WatchlistService {
   }
 
   private fetchWatchlist(): WatchlistItem[] {
-    return JSON.parse(localStorage.getItem('watchlist')) || [];
+    return (JSON.parse(localStorage.getItem('watchlist')) || []).map(item => WatchlistItem.clone(item));
   }
 
   private storeWatchlist(watchlist: WatchlistItem[]): void {

@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer, of } from 'rxjs';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { StockService } from '../stock.service';
 import { WatchlistService } from '../watchlist.service';
+import { PortfolioService } from '../portfolio.service';
 import { ApiStatus } from '../api-status';
+import { Details } from '../details';
 import { AlertManager } from '../alert-manager';
 import { Alert } from '../alert';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
@@ -18,7 +20,7 @@ import { ModalComponent } from '../modal/modal.component';
 export class DetailsComponent implements OnInit, OnDestroy {
   private ticker: string = null;
   apiStatus = new ApiStatus();
-  private details = null;
+  details: Details = null;
   private subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
 
@@ -26,6 +28,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private stockService: StockService,
     private watchlistService: WatchlistService,
+    private portfolioService: PortfolioService,
     public modal: NgbModal,
     modalConfig: NgbModalConfig
   ) {
@@ -81,9 +84,18 @@ export class DetailsComponent implements OnInit, OnDestroy {
   openModal(): void {
     const modalRef = this.modal.open(ModalComponent);
     modalRef.componentInstance.buttonText = 'Buy';
-    modalRef.componentInstance.ticker = this.details.ticker;
+    modalRef.componentInstance.ticker = this.ticker;
     modalRef.componentInstance.currentPrice = this.details.lastPrice;
-    modalRef.result.then((quantity) => console.log(quantity));
+    modalRef.result.then((quantity) => {
+      if (quantity) {
+        this.buy(quantity);
+      }
+    });
+  }
+
+  buy(quantity: number): void {
+    this.portfolioService.buy(this.ticker, this.details.name, quantity, this.details.lastPrice);
+    this.alertManager.addSuccessAlert(`${this.ticker} bought successfully!`);
   }
 
   removeAlert(alert: Alert): void {
