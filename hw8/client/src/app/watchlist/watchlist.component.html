@@ -21,7 +21,8 @@
                     <div>
                         {{ item.ticker }}
                     </div>
-                    <div [class.text-success]="item.change > 0" [class.text-danger]="item.change < 0">
+                    <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                        [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
                         {{ lastPrices[item.ticker] }}
                     </div>
                 </div>
@@ -29,9 +30,10 @@
                     <div>
                         {{ item.name }}
                     </div>
-                    <div [class.text-success]="item.change > 0" [class.text-danger]="item.change < 0">
-                        <i *ngIf="item.change > 0" class="fa fa-caret-up"></i>
-                        <i *ngIf="item.change < 0" class="fa fa-caret-down"></i>
+                    <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                        [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                        <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
+                        <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
                         {{ item.getChange(lastPrices[item.ticker]) }}
                         ({{ item.getChangePercent(lastPrices[item.ticker]) }}%)
                     </div>
