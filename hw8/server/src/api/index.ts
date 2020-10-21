@@ -24,16 +24,6 @@ api.get('/details/:ticker', async (req: Request, res) => {
     }
 });
 
-api.get('/summary/:ticker', async (req: Request, res) => {
-    try {
-        const ticker = Parser.parseParameter(req.params.ticker);
-        const data = await Service.getSummary(ticker);
-        return Response.sendOk(res, data);
-    } catch (error) {
-        return Response.sendError(res, error);
-    }
-});
-
 api.get('/news/:ticker', async (req: Request, res) => {
     try {
         const ticker = Parser.parseParameter(req.params.ticker);

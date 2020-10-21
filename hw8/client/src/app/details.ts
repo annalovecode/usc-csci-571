@@ -8,4 +8,16 @@ export interface Details {
     currentTimestamp: string;
     isMarketOpen: boolean;
     lastTimestamp: string;
+    startDate: string;
+    description: string;
+    highPrice: number;
+    lowPrice: number;
+    openPrice: number;
+    prevClose: number;
+    volume: number;
+    midPrice?: number | string;
+    askPrice?: number;
+    askSize?: number;
+    bidPrice?: number;
+    bidSize?: number;
 }

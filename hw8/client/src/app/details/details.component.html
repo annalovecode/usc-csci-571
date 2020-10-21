@@ -2,12 +2,12 @@
     <div id="loader" *ngIf="apiStatus.isLoading()">
         <mat-spinner diameter="60"></mat-spinner>
     </div>
-    <div class="container" *ngIf="apiStatus.isSuccess()">
+    <div class="container" *ngIf="apiStatus.isCompleted()">
         <div *ngIf="alertManager.areAlertsAvailable()" id="alerts" class="row">
             <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
             </app-alert>
         </div>
-        <div class="row" id="details">
+        <div class="row" id="details" *ngIf="apiStatus.isSuccess()">
             <div>
                 <div class="text-left">
                     {{ details.ticker }}
@@ -36,7 +36,7 @@
                     {{ details.exchangeCode }}
                 </div>
                 <div class="text-right">
-                    {{ details.lastTimestamp }}
+                    {{ details.currentTimestamp }}
                 </div>
             </div>
             <div class="text-left">

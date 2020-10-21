@@ -22,6 +22,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   apiStatus = new ApiStatus();
   details: Details = null;
   private subscription: Subscription = null;
+  private refetching = false;
   alertManager: AlertManager = new AlertManager();
 
   constructor(
@@ -54,15 +55,28 @@ export class DetailsComponent implements OnInit, OnDestroy {
         return this.stockService.getDetails(this.ticker)
           .pipe(
             catchError(error => {
-              this.apiStatus.error(error);
+              if (!this.refetching) {
+                this.apiStatus.error(error);
+              }
               return of(null);
             })
           );
       })
     ).subscribe(data => {
-      if (data !== null) {
-        this.details = data;
-        this.apiStatus.success();
+      if (!this.refetching) {
+        if (data === null) {
+          this.alertManager.addDangerAlert(`Error occurred while fetching data.`, false);
+        } else {
+          this.details = data;
+          this.apiStatus.success();
+        }
+        this.refetching = true;
+      } else {
+        if (data === null) {
+          this.alertManager.addDangerAlert(`Error occurred while refetching data.`);
+        } else {
+          this.details = data;
+        }
       }
     });
   }
