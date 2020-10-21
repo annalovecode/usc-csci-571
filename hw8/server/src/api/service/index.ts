@@ -21,7 +21,6 @@ export const search = async (query: string): Promise<SearchResultItem[]> => {
     });
     return Parser.parseArray(searchResultItems);
 };
-
 interface Details {
     readonly ticker: string;
     readonly name: string;
@@ -32,30 +31,10 @@ interface Details {
     readonly currentTimestamp: string;
     readonly isMarketOpen: boolean;
     readonly lastTimestamp: string;
-    readonly startDate: string;
-    readonly description: string;
-    readonly highPrice: number;
-    readonly lowPrice: number;
-    readonly openPrice: number;
-    readonly prevClose: number;
-    readonly volume: number;
-    readonly midPrice?: number | string;
-    readonly askPrice?: number;
-    readonly askSize?: number;
-    readonly bidPrice?: number;
-    readonly bidSize?: number;
 }
 
-export const getDetails = async (ticker: string): Promise<Details> => {
-    const [
-        metadata,
-        currentTopOfBookAndLastPrice
-    ] = await Promise.all([
-        Tiingo.getMetadata(ticker),
-        Tiingo.getCurrentTopOfBookAndLastPrice(ticker)
-    ]);
-
-    ticker = Parser.parseString(metadata.ticker);
+const extractDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
+    const ticker = Parser.parseString(metadata.ticker);
     const name = Parser.parseString(metadata.name);
     const exchangeCode = Parser.parseString(metadata.exchangeCode);
 
@@ -73,15 +52,7 @@ export const getDetails = async (ticker: string): Promise<Details> => {
     const lastTimestamp = lastTimestampMoment.format('YYYY-MM-DD HH:mm:ss');
     const currentTimestamp = currentTimestampMoment.format('YYYY-MM-DD HH:mm:ss');
 
-    const startDate = Parser.parseString(metadata.startDate);
-    const description = Parser.parseString(metadata.description);
-
-    const highPrice = Parser.parseNumber(currentTopOfBookAndLastPrice.high);
-    const lowPrice = Parser.parseNumber(currentTopOfBookAndLastPrice.low);
-    const openPrice = Parser.parseNumber(currentTopOfBookAndLastPrice.open);
-    const volume = Parser.parseNumber(currentTopOfBookAndLastPrice.volume);
-
-    let details: Details = {
+    return {
         ticker,
         name,
         exchangeCode,
@@ -90,15 +61,25 @@ export const getDetails = async (ticker: string): Promise<Details> => {
         changePercent,
         currentTimestamp,
         isMarketOpen,
-        lastTimestamp,
-        startDate,
-        description,
-        highPrice,
-        lowPrice,
-        openPrice,
-        prevClose,
-        volume
+        lastTimestamp
     };
+};
+
+const extractSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summary => {
+    let summary: Summary = {
+        startDate: Parser.parseString(metadata.startDate),
+        description: Parser.parseString(metadata.description),
+        highPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.high),
+        lowPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.low),
+        openPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.open),
+        prevClose: Parser.parseNumber(currentTopOfBookAndLastPrice.prevClose),
+        volume: Parser.parseNumber(currentTopOfBookAndLastPrice.volume)
+    };
+
+    const timestamp = Parser.parseString(currentTopOfBookAndLastPrice.timestamp);
+    const lastTimestampMoment = moment(timestamp).tz('America/Los_Angeles');
+    const currentTimestampMoment = moment().tz('America/Los_Angeles');
+    const isMarketOpen = currentTimestampMoment.diff(lastTimestampMoment, 'seconds') < 60;
 
     if (isMarketOpen) {
         let midPrice: number | string;
@@ -107,8 +88,8 @@ export const getDetails = async (ticker: string): Promise<Details> => {
         } catch (error) {
             midPrice = "-";
         }
-        details = {
-            ...details,
+        summary = {
+            ...summary,
             midPrice,
             askPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.askPrice),
             askSize: Parser.parseNumber(currentTopOfBookAndLastPrice.askSize),
@@ -117,8 +98,41 @@ export const getDetails = async (ticker: string): Promise<Details> => {
         };
     }
 
-    return details;
+    return summary;
 };
+
+export const getDetails = async (ticker: string): Promise<Details | Summary> => {
+    const [
+        metadata,
+        currentTopOfBookAndLastPrice
+    ] = await Promise.all([
+        Tiingo.getMetadata(ticker),
+        Tiingo.getCurrentTopOfBookAndLastPrice(ticker)
+    ]);
+
+    const details = extractDetails(metadata, currentTopOfBookAndLastPrice);
+    const summary = extractSummary(metadata, currentTopOfBookAndLastPrice);
+
+    return {
+        ...details,
+        ...summary
+    };
+};
+
+interface Summary {
+    readonly startDate: string;
+    readonly description: string;
+    readonly highPrice: number;
+    readonly lowPrice: number;
+    readonly openPrice: number;
+    readonly prevClose: number;
+    readonly volume: number;
+    readonly midPrice?: number | string;
+    readonly askPrice?: number;
+    readonly askSize?: number;
+    readonly bidPrice?: number;
+    readonly bidSize?: number;
+}
 
 interface NewsItem {
     readonly publisher: string;
