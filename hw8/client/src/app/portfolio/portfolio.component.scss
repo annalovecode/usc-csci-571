@@ -22,8 +22,8 @@
 }
 
 #header {
-  font-size: 45px;
-  line-height: 45px;
+  font-size: 40px;
+  line-height: 40px;
   padding-bottom: 40px;
 }
 
@@ -45,8 +45,8 @@
 }
 
 .card-title {
-  font-size: 35px;
-  line-height: 35px;
+  font-size: 30px;
+  line-height: 30px;
   margin-bottom: 30px;
 }
 
@@ -63,12 +63,12 @@
 }
 
 .card-header > div:first-child {
-  font-size: 35px;
+  font-size: 30px;
 }
 
 .card-header > div:nth-child(2) {
   margin-left: 10px;
-  font-size: 25px;
+  font-size: 20px;
   color: #687380;
 }
 
@@ -94,8 +94,17 @@
 
 @include media-breakpoint-up(sm) {
   .card-body {
-    margin-bottom: -10px;
+    padding-top: 10px;
     padding-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: -15px;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .card-body {
+    padding: 5px 10px;
   }
 }
 
