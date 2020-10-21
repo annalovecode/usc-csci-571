@@ -25,8 +25,23 @@ export class WatchlistService {
 
   add(ticker: string, name: string, price: number): void {
     const watchlist = this.fetchWatchlist();
-    watchlist.push(WatchlistItem.of(ticker, name, price));
+    this.addToWatchlist(watchlist, WatchlistItem.of(ticker, name, price));
     this.storeWatchlist(watchlist);
+  }
+
+  private addToWatchlist(watchlist: WatchlistItem[], item: WatchlistItem): void {
+    watchlist.push(item);
+    watchlist.sort((item1, item2) => {
+      const ticker1 = item1.ticker;
+      const ticker2 = item2.ticker;
+      if (ticker1 < ticker2) {
+        return -1;
+      }
+      if (ticker1 > ticker2) {
+        return 1;
+      }
+      return 0;
+    });
   }
 
   remove(ticker: string): void {

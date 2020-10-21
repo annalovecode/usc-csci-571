@@ -29,9 +29,24 @@ export class PortfolioService {
     if (existingItem) {
       existingItem.buy(quantity, price);
     } else {
-      portfolio.push(PortfolioItem.of(ticker, name, quantity, price));
+      this.addToPortfolio(portfolio, PortfolioItem.of(ticker, name, quantity, price));
     }
     this.storePortfolio(portfolio);
+  }
+
+  private addToPortfolio(portfolio: PortfolioItem[], item: PortfolioItem): void {
+    portfolio.push(item);
+    portfolio.sort((item1, item2) => {
+      const ticker1 = item1.ticker;
+      const ticker2 = item2.ticker;
+      if (ticker1 < ticker2) {
+        return -1;
+      }
+      if (ticker1 > ticker2) {
+        return 1;
+      }
+      return 0;
+    });
   }
 
   sell(ticker: string, quantity: number): void {
