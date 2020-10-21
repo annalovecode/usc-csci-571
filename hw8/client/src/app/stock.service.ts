@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SearchResult } from './search-result';
+import { Details } from './details';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,6 @@ export class StockService {
   constructor(private http: HttpClient) { }
 
   get<T>(resource: string, params: { [key: string]: string } = {}): any {
-    // TODO: Use relative paths
     const url = `api/${resource}`;
     const options = {
       params,
@@ -28,7 +28,7 @@ export class StockService {
       );
   }
 
-  getDetails(ticker: string): Observable<SearchResult[]> {
+  getDetails(ticker: string): Observable<Details> {
     return this.get<SearchResult[]>(`details/${ticker}`)
       .pipe(
         map((response: { [key: string]: any }) => response.data),
@@ -44,12 +44,6 @@ export class StockService {
       );
   }
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
   private handleError(operation = 'operation'): (error: HttpErrorResponse) => Observable<never> {
     return (error: HttpErrorResponse) => {
       console.log(error);

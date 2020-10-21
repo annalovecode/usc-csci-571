@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { forkJoin, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { WatchlistService } from '../watchlist.service';
 import { WatchlistItem } from '../watchlist-item';
 import { StockService } from '../stock.service';
@@ -14,11 +14,12 @@ import { Alert } from '../alert';
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss']
 })
-export class WatchlistComponent implements OnInit {
+export class WatchlistComponent implements OnInit, OnDestroy {
   successWatchlist: WatchlistItem[] = [];
   lastPrices = {};
   alertManager: AlertManager = new AlertManager();
   apiStatus = new ApiStatus();
+  subscription: Subscription = null;
 
   constructor(private stockService: StockService, public watchlistService: WatchlistService, private router: Router) { }
 
@@ -31,19 +32,20 @@ export class WatchlistComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   private getWatchlistData(): void {
     const watchlist = this.watchlistService.getWatchlist();
-    forkJoin(watchlist.map(item =>
-      this.stockService.getLastPrice(item.ticker)
-        .pipe(
-          tap(() => {
-            if (this.apiStatus.isInitial()) {
-              this.apiStatus.loading();
-            }
-          }),
-          catchError(_ => of(null))
-        )
-    )).subscribe(lastPrices => {
+    this.apiStatus.loading();
+    this.subscription = forkJoin(
+      watchlist.map(item =>
+        this.stockService.getLastPrice(item.ticker).pipe(catchError(_ => of(null)))
+      )
+    ).subscribe(lastPrices => {
       const successWatchlist: WatchlistItem[] = [];
       const errorTickers: string[] = [];
       for (let i = 0; i < watchlist.length; i++) {

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { forkJoin, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { PortfolioService } from '../portfolio.service';
 import { PortfolioItem } from '../portfolio-item';
 import { StockService } from '../stock.service';
@@ -15,11 +15,12 @@ import { ModalComponent } from '../modal/modal.component';
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.scss']
 })
-export class PortfolioComponent implements OnInit {
+export class PortfolioComponent implements OnInit, OnDestroy {
   successPortfolio: PortfolioItem[] = [];
   lastPrices = {};
   alertManager: AlertManager = new AlertManager();
   apiStatus = new ApiStatus();
+  subscription: Subscription = null;
 
   constructor(
     private stockService: StockService,
@@ -41,19 +42,20 @@ export class PortfolioComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   private getPortfolioData(): void {
     const portfolio = this.portfolioService.getPortfolio();
-    forkJoin(portfolio.map(item =>
-      this.stockService.getLastPrice(item.ticker)
-        .pipe(
-          tap(() => {
-            if (this.apiStatus.isInitial()) {
-              this.apiStatus.loading();
-            }
-          }),
-          catchError(_ => of(null))
-        )
-    )).subscribe(lastPrices => {
+    this.apiStatus.loading();
+    this.subscription = forkJoin(
+      portfolio.map(item =>
+        this.stockService.getLastPrice(item.ticker).pipe(catchError(_ => of(null)))
+      )
+    ).subscribe(lastPrices => {
       const successPortfolio: PortfolioItem[] = [];
       const errorTickers: string[] = [];
       for (let i = 0; i < portfolio.length; i++) {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer, of } from 'rxjs';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { StockService } from '../stock.service';
 import { WatchlistService } from '../watchlist.service';
 import { PortfolioService } from '../portfolio.service';
@@ -48,8 +48,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   getDetails(): void {
+    this.apiStatus.loading();
     this.subscription = timer(0, 15000).pipe(
-      tap(() => this.apiStatus.loading()),
       switchMap(() => {
         return this.stockService.getDetails(this.ticker)
           .pipe(
