@@ -1,0 +1,72 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+#content {
+  padding-top: 30px 15px;
+}
+
+#loader {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#alerts {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-items {
+  height: 100%;
+}
+
+.news-items .container {
+  height: 100%;
+}
+
+.news-items > div {
+  margin-bottom: 20px;
+}
+
+.card {
+  height: 100%;
+  background-color: #f9f9f9;
+}
+
+.news-item {
+  height: 100%;
+}
+
+.news-item > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.news-item > div:first-child > div {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  min-height: 100px;
+  max-height: 125px;
+}
+
+@include media-breakpoint-down(sm) {
+  .news-item > div:last-child {
+    margin-top: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .news-item > div:first-child > div {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 5px;
+    height: 200px;
+    max-height: 200px;
+  }
+}

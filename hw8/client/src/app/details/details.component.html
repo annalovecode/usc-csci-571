@@ -2,7 +2,7 @@
     <div id="loader" *ngIf="apiStatus.isLoading()">
         <mat-spinner diameter="60"></mat-spinner>
     </div>
-    <div class="container" *ngIf="apiStatus.isCompleted()">
+    <div class="container" *ngIf="apiStatus.isCompleted()" id="main-container">
         <div *ngIf="alertManager.areAlertsAvailable()" id="alerts" class="row">
             <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
             </app-alert>
@@ -41,6 +41,114 @@
             </div>
             <div class="text-left">
                 <button type="button" class="btn btn-success btn-lg" (click)="openModal()">Buy</button>
+            </div>
+            <div *ngIf="details.isMarketOpen">
+                <span id="market-open">Market is Open</span>
+            </div>
+            <div *ngIf="!details.isMarketOpen">
+                <span id="market-closed">Market Closed on {{ details.lastTimestamp}}</span>
+            </div>
+            <div>
+                <mat-tab-group mat-stretch-tabs mat-align-tabs="center">
+                    <mat-tab label="Summary">
+                        <div class="container" id="summary">
+                            <div class="row">
+                                <div class="col-md" id="summary-details">
+                                    <div class="row" id="summary-prices">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        High Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Low Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Open Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Prev. Close:
+                                                    </div>
+                                                    <div class="row">
+                                                        Volume:
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        {{ details.highPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.lowPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.openPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.prevClose }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.volume }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row" *ngIf="!details.isMarketOpen">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        Mid Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Ask Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Ask Size:
+                                                    </div>
+                                                    <div class="row">
+                                                        Bid Price:
+                                                    </div>
+                                                    <div class="row">
+                                                        Bid Size:
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        {{ details.midPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.askPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.askSize }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.bidPrice }}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{ details.bidSize }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="summary-description">
+                                        <div class="col">
+                                            <div class="row">Company's Description</div>
+                                            <div class="row">Start Date: {{ details.startDate }}</div>
+                                            <div class="row">{{ details.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md" id="summary-chart">Chart</div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Top News">
+                        <app-news [ticker]="ticker"></app-news>
+                    </mat-tab>
+                    <mat-tab label="Charts"></mat-tab>
+                </mat-tab-group>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@
     <div id="loader" *ngIf="apiStatus.isLoading()">
         <mat-spinner diameter="60"></mat-spinner>
     </div>
-    <div class="container" *ngIf="apiStatus.isCompleted()">
+    <div class="container" *ngIf="apiStatus.isCompleted()" id="main-container">
         <div class="row" id="header">
             My Portfolio
         </div>

@@ -8,6 +8,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
@@ -19,6 +20,8 @@ import { WatchlistService } from './watchlist.service';
 import { PortfolioService } from './portfolio.service';
 import { AlertComponent } from './alert/alert.component';
 import { ModalComponent } from './modal/modal.component';
+import { NewsComponent } from './news/news.component';
+import { GroupPipe } from './group.pipe';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,9 @@ import { ModalComponent } from './modal/modal.component';
     PortfolioComponent,
     DetailsComponent,
     AlertComponent,
-    ModalComponent
+    ModalComponent,
+    NewsComponent,
+    GroupPipe
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,8 @@ import { ModalComponent } from './modal/modal.component';
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTabsModule
   ],
   providers: [StockService, WatchlistService, PortfolioService],
   bootstrap: [AppComponent]

@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SearchResult } from './search-result';
 import { Details } from './details';
+import { NewsItem } from './news-item';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,14 @@ export class StockService {
       .pipe(
         map((response: { [key: string]: any }) => response.data),
         catchError(this.handleError('getLastPrice'))
+      );
+  }
+
+  getNews(ticker: string): Observable<NewsItem[]> {
+    return this.get<NewsItem[]>(`news/${ticker}`)
+      .pipe(
+        map((response: { [key: string]: any }) => response.data),
+        catchError(this.handleError('getNews'))
       );
   }
 

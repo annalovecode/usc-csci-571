@@ -1,14 +1,3 @@
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-
-@include media-breakpoint-down(sm) {
-  .container {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-}
-
 #loader {
   margin-top: 50px;
   width: 100%;

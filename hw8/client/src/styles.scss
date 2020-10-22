@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
 html,
 body {
   height: 100%;
@@ -7,3 +11,10 @@ body {
 }
 
 $purple: #673ab7;
+
+@include media-breakpoint-down(sm) {
+  #main-container {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
