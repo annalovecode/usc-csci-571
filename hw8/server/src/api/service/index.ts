@@ -21,6 +21,7 @@ export const search = async (query: string): Promise<SearchResultItem[]> => {
     });
     return Parser.parseArray(searchResultItems);
 };
+
 interface Details {
     readonly ticker: string;
     readonly name: string;
@@ -64,6 +65,21 @@ const extractDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Detai
         lastTimestamp
     };
 };
+
+interface Summary {
+    readonly startDate: string;
+    readonly description: string;
+    readonly highPrice: number;
+    readonly lowPrice: number;
+    readonly openPrice: number;
+    readonly prevClose: number;
+    readonly volume: number;
+    readonly midPrice?: number | string;
+    readonly askPrice?: number;
+    readonly askSize?: number;
+    readonly bidPrice?: number;
+    readonly bidSize?: number;
+}
 
 const extractSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summary => {
     let summary: Summary = {
@@ -118,21 +134,6 @@ export const getDetails = async (ticker: string): Promise<Details | Summary> => 
         ...summary
     };
 };
-
-interface Summary {
-    readonly startDate: string;
-    readonly description: string;
-    readonly highPrice: number;
-    readonly lowPrice: number;
-    readonly openPrice: number;
-    readonly prevClose: number;
-    readonly volume: number;
-    readonly midPrice?: number | string;
-    readonly askPrice?: number;
-    readonly askSize?: number;
-    readonly bidPrice?: number;
-    readonly bidSize?: number;
-}
 
 interface NewsItem {
     readonly publisher: string;
