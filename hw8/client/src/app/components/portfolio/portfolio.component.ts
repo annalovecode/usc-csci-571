@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PortfolioService } from '../portfolio.service';
-import { PortfolioItem } from '../portfolio-item';
-import { StockService } from '../stock.service';
-import { ApiStatus } from '../api-status';
-import { AlertManager } from '../alert-manager';
+import { PortfolioService } from '../../services/portfolio/portfolio.service';
+import { PortfolioItem } from '../../models/portfolio-item';
+import { StockService } from '../../services/stock/stock.service';
+import { ApiStatus } from '../../models/api-status';
+import { AlertManager } from '../../models/alert-manager';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({

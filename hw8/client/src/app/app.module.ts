@@ -10,18 +10,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { SearchComponent } from './search/search.component';
-import { WatchlistComponent } from './watchlist/watchlist.component';
-import { PortfolioComponent } from './portfolio/portfolio.component';
-import { DetailsComponent } from './details/details.component';
-import { StockService } from './stock.service';
-import { WatchlistService } from './watchlist.service';
-import { PortfolioService } from './portfolio.service';
-import { AlertComponent } from './alert/alert.component';
-import { ModalComponent } from './modal/modal.component';
-import { NewsComponent } from './news/news.component';
-import { GroupPipe } from './group.pipe';
+import { AppComponent } from './components/app/app.component';
+import { SearchComponent } from './components/search/search.component';
+import { WatchlistComponent } from './components/watchlist/watchlist.component';
+import { PortfolioComponent } from './components/portfolio/portfolio.component';
+import { DetailsComponent } from './components/details/details.component';
+import { StockService } from './services/stock/stock.service';
+import { WatchlistService } from './services/watchlist/watchlist.service';
+import { PortfolioService } from './services/portfolio/portfolio.service';
+import { AlertComponent } from './components/alert/alert.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { NewsComponent } from './components/news/news.component';
+import { GroupPipe } from './pipes/group/group.pipe';
 
 @NgModule({
   declarations: [

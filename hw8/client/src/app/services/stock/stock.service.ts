@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { SearchResult } from './search-result';
-import { Details } from './details';
-import { NewsItem } from './news-item';
+import { SearchResult } from '../../models/search-result';
+import { Details } from '../../models/details';
+import { NewsItem } from '../../models/news-item';
 
 @Injectable({
   providedIn: 'root'

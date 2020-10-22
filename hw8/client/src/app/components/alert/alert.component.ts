@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Alert } from '../alert';
+import { Alert } from '../../models/alert';
 
 @Component({
   selector: 'app-alert',

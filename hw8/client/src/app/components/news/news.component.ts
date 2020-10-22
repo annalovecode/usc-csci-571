@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AlertManager } from '../alert-manager';
-import { ApiStatus } from '../api-status';
-import { NewsItem } from '../news-item';
-import { StockService } from '../stock.service';
+import { AlertManager } from '../../models/alert-manager';
+import { ApiStatus } from '../../models/api-status';
+import { NewsItem } from '../../models/news-item';
+import { StockService } from '../../services/stock/stock.service';
 
 @Component({
   selector: 'app-news',

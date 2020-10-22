@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WatchlistItem } from './watchlist-item';
+import { WatchlistItem } from '../../models/watchlist-item';
 
 @Injectable({
   providedIn: 'root'

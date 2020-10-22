@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { switchMap, debounceTime, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
-import { ApiStatus } from '../api-status';
-import { StockService } from '../stock.service';
-import { SearchResult } from '../search-result';
+import { ApiStatus } from '../../models/api-status';
+import { StockService } from '../../services/stock/stock.service';
+import { SearchResult } from '../../models/search-result';
 
 @Component({
   selector: 'app-search',

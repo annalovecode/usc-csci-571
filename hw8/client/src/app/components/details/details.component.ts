@@ -3,14 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
-import { StockService } from '../stock.service';
-import { WatchlistService } from '../watchlist.service';
-import { PortfolioService } from '../portfolio.service';
-import { ApiStatus } from '../api-status';
-import { Details } from '../details';
-import { AlertManager } from '../alert-manager';
-import { Alert } from '../alert';
-import { ModalComponent } from '../modal/modal.component';
+import { StockService } from '../../services/stock/stock.service';
+import { WatchlistService } from '../../services/watchlist/watchlist.service';
+import { PortfolioService } from '../../services/portfolio/portfolio.service';
+import { ApiStatus } from '../../models/api-status';
+import { Details } from '../../models/details';
+import { AlertManager } from '../../models/alert-manager';
+import { Alert } from '../../models/alert';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-details',

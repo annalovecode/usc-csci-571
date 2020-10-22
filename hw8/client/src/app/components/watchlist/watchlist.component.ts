@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { WatchlistService } from '../watchlist.service';
-import { WatchlistItem } from '../watchlist-item';
-import { StockService } from '../stock.service';
-import { ApiStatus } from '../api-status';
-import { AlertManager } from '../alert-manager';
-import { Alert } from '../alert';
+import { WatchlistService } from '../../services/watchlist/watchlist.service';
+import { WatchlistItem } from '../../models/watchlist-item';
+import { StockService } from '../../services/stock/stock.service';
+import { ApiStatus } from '../../models/api-status';
+import { AlertManager } from '../../models/alert-manager';
+import { Alert } from '../../models/alert';
 
 @Component({
   selector: 'app-watchlist',
