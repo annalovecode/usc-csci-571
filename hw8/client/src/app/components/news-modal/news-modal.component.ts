@@ -8,7 +8,7 @@ import { NewsItem } from 'src/app/models/news-item';
   styleUrls: ['./news-modal.component.scss']
 })
 export class NewsModalComponent implements OnInit {
-  @Input() newsItem: NewsItem;
+  @Input() item: NewsItem;
 
   constructor(public activeModal: NgbActiveModal) { }
 
@@ -24,10 +24,10 @@ export class NewsModalComponent implements OnInit {
   }
 
   getTwitterUrl(): string {
-    return `https://twitter.com/intent/tweet?text=${this.encode(this.newsItem.title)}&url=${this.encode(this.newsItem.url)}`;
+    return `https://twitter.com/intent/tweet?text=${this.encode(this.item.title)}&url=${this.encode(this.item.url)}`;
   }
 
   getFacebookUrl(): string {
-    return `https://www.facebook.com/sharer/sharer.php?u=${this.encode(this.newsItem.url)}&src=sdkpreparse`;
+    return `https://www.facebook.com/sharer/sharer.php?u=${this.encode(this.item.url)}&src=sdkpreparse`;
   }
 }

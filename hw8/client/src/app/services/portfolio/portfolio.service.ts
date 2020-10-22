@@ -18,11 +18,6 @@ export class PortfolioService {
     return this.fetchPortfolio();
   }
 
-  getFilteredPortfolio(tickers: string[]): PortfolioItem[] {
-    const portfolio = this.fetchPortfolio();
-    return portfolio.filter(item => tickers.includes(item.ticker));
-  }
-
   buy(ticker: string, name: string, quantity: number, price: number): void {
     const portfolio = this.fetchPortfolio();
     const existingItem = portfolio.find(item => item.ticker === ticker);

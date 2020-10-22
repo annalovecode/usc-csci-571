@@ -38,17 +38,15 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       this.showEmptyPortfolioAlert();
       this.apiStatus.success();
     } else {
-      this.getPortfolioData();
+      this.fetchLastPricesAndBuildPortfolio();
     }
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
-  private getPortfolioData(): void {
+  private fetchLastPricesAndBuildPortfolio(refetching = false): void {
     const portfolio = this.portfolioService.getPortfolio();
     this.apiStatus.loading();
     this.subscription = forkJoin(
@@ -71,7 +69,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       }
       let message = null;
       if (errorTickers.length > 0) {
-        message = `Error occurred while fetching last prices of stock(s): ${errorTickers.join(', ')}.`;
+        message = `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stock(s): ${errorTickers.join(', ')}.`;
         this.alertManager.addDangerAlert(message, false);
       }
       if (successPortfolio.length === 0) {
@@ -105,7 +103,8 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   buy(item: PortfolioItem, quantity: number): void {
     this.portfolioService.buy(item.ticker, item.name, quantity, this.lastPrices[item.ticker]);
-    this.successPortfolio = this.portfolioService.getFilteredPortfolio(this.getSuccessTickers());
+    this.successPortfolio = [];
+    this.fetchLastPricesAndBuildPortfolio(true);
   }
 
   openSellModal(item: PortfolioItem): void {
@@ -123,13 +122,11 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   sell(item: PortfolioItem, quantity: number): void {
     this.portfolioService.sell(item.ticker, quantity);
-    this.successPortfolio = this.portfolioService.getFilteredPortfolio(this.getSuccessTickers());
+    this.successPortfolio = [];
     if (this.portfolioService.isPortfolioEmpty()) {
       this.showEmptyPortfolioAlert();
+    } else {
+      this.fetchLastPricesAndBuildPortfolio(true);
     }
-  }
-
-  getSuccessTickers(): string[] {
-    return this.successPortfolio.map(item => item.ticker);
   }
 }

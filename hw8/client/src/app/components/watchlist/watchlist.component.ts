@@ -28,17 +28,15 @@ export class WatchlistComponent implements OnInit, OnDestroy {
       this.showEmptyWatchlistAlert();
       this.apiStatus.success();
     } else {
-      this.getWatchlistData();
+      this.fetchLastPricesAndBuildWatchlist();
     }
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
-  private getWatchlistData(): void {
+  private fetchLastPricesAndBuildWatchlist(): void {
     const watchlist = this.watchlistService.getWatchlist();
     this.apiStatus.loading();
     this.subscription = forkJoin(

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { switchMap, debounceTime, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
 import { ApiStatus } from '../../models/api-status';
 import { StockService } from '../../services/stock/stock.service';
@@ -11,17 +11,18 @@ import { SearchResult } from '../../models/search-result';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   private inputs = new Subject<string>();
   apiStatus = new ApiStatus();
   options: SearchResult[] = [];
   private ticker: string = null;
+  private subscription: Subscription = null;
 
   constructor(private stockService: StockService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.inputs.pipe(
+    this.subscription = this.inputs.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       tap(() => this.apiStatus.loading()),
@@ -48,6 +49,10 @@ export class SearchComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   changeInput(input: string): void {

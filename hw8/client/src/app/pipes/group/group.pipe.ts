@@ -12,5 +12,4 @@ export class GroupPipe implements PipeTransform {
     }
     return groups;
   }
-
 }

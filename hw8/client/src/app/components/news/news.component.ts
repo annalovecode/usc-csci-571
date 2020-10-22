@@ -15,7 +15,7 @@ import { StockService } from '../../services/stock/stock.service';
 })
 export class NewsComponent implements OnInit, OnDestroy {
   @Input() ticker: string = null;
-  newsItems: NewsItem[] = [];
+  items: NewsItem[] = [];
   apiStatus = new ApiStatus();
   subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
@@ -26,16 +26,14 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNews();
+    this.fetchNews();
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
-  getNews(): void {
+  fetchNews(): void {
     this.apiStatus.loading();
     this.subscription = this.stockService.getNews(this.ticker).pipe(
       catchError(error => {
@@ -45,14 +43,14 @@ export class NewsComponent implements OnInit, OnDestroy {
       })
     ).subscribe(data => {
       if (data !== null) {
-        this.newsItems = data;
+        this.items = data;
         this.apiStatus.success();
       }
     });
   }
 
-  openModal(newsItem: NewsItem): void {
+  openModal(item: NewsItem): void {
     const modalRef = this.modal.open(NewsModalComponent);
-    modalRef.componentInstance.newsItem = newsItem;
+    modalRef.componentInstance.item = item;
   }
 }
