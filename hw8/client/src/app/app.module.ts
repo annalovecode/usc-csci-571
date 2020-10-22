@@ -22,6 +22,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { NewsComponent } from './components/news/news.component';
 import { GroupPipe } from './pipes/group/group.pipe';
+import { NewsModalComponent } from './components/news-modal/news-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { GroupPipe } from './pipes/group/group.pipe';
     AlertComponent,
     ModalComponent,
     NewsComponent,
-    GroupPipe
+    GroupPipe,
+    NewsModalComponent
   ],
   imports: [
     BrowserModule,

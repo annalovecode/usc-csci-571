@@ -1,0 +1,32 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title">
+            <div>{{ newsItem.publisher }}</div>
+            <div>{{ newsItem.publishedDate }}</div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" (click)="close()">
+            <span>&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div>{{ newsItem.title }}</div>
+        <div [innerHTML]="newsItem.description"></div>
+        <div>For more details click <a [href]="newsItem.url" target="_blank">here</a></div>
+        <div class="card">
+            <div class="card-body">
+                <div>Share</div>
+                <div>
+                    <div>
+                        <a class="twitter-share-button" [href]="getTwitterUrl()" data-size="large">
+                            <i class="fa fa-twitter"></i></a>
+                    </div>
+                    <div class="fb-share-button" [attr.data-href]="newsItem.url" data-layout="button" data-size="large">
+                        <a target="_blank" [href]="getFacebookUrl()" class="fb-xfbml-parse-ignore">
+                            <i class="fa fa-facebook-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

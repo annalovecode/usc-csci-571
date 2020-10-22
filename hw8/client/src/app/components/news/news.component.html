@@ -10,7 +10,7 @@
         <div class="row" id="news" *ngIf="apiStatus.isSuccess()">
             <div class="row news-items" *ngFor="let pair of newsItems | group: 2">
                 <div class="col-lg-6" *ngFor="let newsItem of pair">
-                    <div class="card">
+                    <div class="card" (click)="openModal(newsItem)">
                         <div class="card-body">
                             <div class="container">
                                 <div class="row news-item">

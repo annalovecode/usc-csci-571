@@ -1,0 +1,57 @@
+.modal-title > div:first-child {
+  font-size: 35px;
+  line-height: 40px;
+}
+
+.modal-title > div:last-child {
+  color: #687380;
+  font-weight: bold;
+}
+
+.modal-body > div:first-child {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-body > div:nth-child(2) {
+  font-size: 16px;
+}
+
+.modal-body > div:nth-child(3) {
+  color: #687380;
+  font-size: 16px;
+}
+
+.card {
+  margin-top: 40px;
+}
+
+.card-body > div:last-child {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.card-body > div:last-child > div {
+  padding: 0px;
+  margin: 0px;
+}
+
+.card-body > div:last-child > div:last-child {
+  margin-left: 5px;
+}
+
+.fa-twitter {
+  color: #4792f9;
+}
+
+.fa-facebook-square {
+  margin-left: 10px;
+  color: #3810f3;
+}
+
+.fa-twitter,
+.fa-facebook-square {
+  font-size: 40px;
+}

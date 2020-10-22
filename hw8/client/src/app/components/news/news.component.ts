@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { NewsModalComponent } from '../news-modal/news-modal.component';
 import { AlertManager } from '../../models/alert-manager';
 import { ApiStatus } from '../../models/api-status';
 import { NewsItem } from '../../models/news-item';
@@ -18,7 +20,20 @@ export class NewsComponent implements OnInit, OnDestroy {
   subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
 
-  constructor(private stockService: StockService) { }
+  constructor(private stockService: StockService, public modal: NgbModal, modalConfig: NgbModalConfig) {
+    modalConfig.keyboard = false;
+    modalConfig.beforeDismiss = () => false;
+  }
+
+  ngOnInit(): void {
+    this.getNews();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   getNews(): void {
     this.apiStatus.loading();
@@ -36,13 +51,8 @@ export class NewsComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    this.getNews();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  openModal(newsItem: NewsItem): void {
+    const modalRef = this.modal.open(NewsModalComponent);
+    modalRef.componentInstance.newsItem = newsItem;
   }
 }
