@@ -1,10 +1,11 @@
 
-export enum ApiErrorType {
+enum ApiErrorType {
     CLIENT_OR_NETWORK,
     BACKEND
 }
 
-export enum ApiErrorStatusCode {
+enum ApiErrorStatusCode {
+    BAD_REQUEST = 400,
     NOT_FOUND = 404,
     INTERNAL_SERVER_ERROR = 500,
     SERVICE_UNAVAILABLE = 504
@@ -31,23 +32,35 @@ export class ApiError extends Error {
         return statusCode in ApiErrorStatusCode;
     }
 
+    private isType(type: ApiErrorType): boolean {
+        return this.type === type;
+    }
+
     isClientOrNetwork(): boolean {
-        return this.type === ApiErrorType.CLIENT_OR_NETWORK;
+        return this.isType(ApiErrorType.CLIENT_OR_NETWORK);
     }
 
     isBackend(): boolean {
-        return this.type === ApiErrorType.BACKEND;
+        return this.isType(ApiErrorType.BACKEND);
+    }
+
+    private isBackendStatusCode(statusCode: number): boolean {
+        return this.isBackend() && this.statusCode === statusCode;
+    }
+
+    isBadRequest(): boolean {
+        return this.isBackendStatusCode(ApiErrorStatusCode.BAD_REQUEST);
     }
 
     isNotFound(): boolean {
-        return this.isBackend() && this.statusCode === ApiErrorStatusCode.NOT_FOUND;
+        return this.isBackendStatusCode(ApiErrorStatusCode.NOT_FOUND);
     }
 
     isInternalServerError(): boolean {
-        return this.isBackend() && this.statusCode === ApiErrorStatusCode.INTERNAL_SERVER_ERROR;
+        return this.isBackendStatusCode(ApiErrorStatusCode.INTERNAL_SERVER_ERROR);
     }
 
     isServiceUnavailable(): boolean {
-        return this.isBackend() && this.statusCode === ApiErrorStatusCode.SERVICE_UNAVAILABLE;
+        return this.isBackendStatusCode(ApiErrorStatusCode.SERVICE_UNAVAILABLE);
     }
 }

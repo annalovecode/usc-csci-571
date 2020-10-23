@@ -1,52 +1,56 @@
-export class ApiStatus {
-    private states = {
-        INITIAL: 'initial',
-        LOADING: 'loading',
-        SUCCESS: 'success',
-        ERROR: 'error'
-    };
+enum ApiStatusState {
+    INITIAL,
+    LOADING,
+    SUCCESS,
+    ERROR
+}
 
-    private state = this.states.INITIAL;
+export class ApiStatus {
+    private state = ApiStatusState.INITIAL;
 
     errorMessage: string = null;
 
+    private isState(state: ApiStatusState): boolean {
+        return this.state === state;
+    }
+
     isInitial(): boolean {
-        return this.state === this.states.INITIAL;
+        return this.isState(ApiStatusState.INITIAL);
     }
 
     isLoading(): boolean {
-        return this.state === this.states.LOADING;
+        return this.isState(ApiStatusState.LOADING);
     }
 
     isSuccess(): boolean {
-        return this.state === this.states.SUCCESS;
+        return this.isState(ApiStatusState.SUCCESS);
     }
 
     isError(): boolean {
-        return this.state === this.states.ERROR;
+        return this.isState(ApiStatusState.ERROR);
     }
 
     isCompleted(): boolean {
-        return this.state === this.states.SUCCESS || this.state === this.states.ERROR;
+        return this.isError() || this.isSuccess();
     }
 
     reset(): void {
-        this.state = this.states.INITIAL;
+        this.state = ApiStatusState.INITIAL;
         this.errorMessage = null;
     }
 
     loading(): void {
-        this.state = this.states.LOADING;
+        this.state = ApiStatusState.LOADING;
         this.errorMessage = null;
     }
 
     success(): void {
-        this.state = this.states.SUCCESS;
+        this.state = ApiStatusState.SUCCESS;
         this.errorMessage = null;
     }
 
     error(errorMessage): void {
-        this.state = this.states.ERROR;
+        this.state = ApiStatusState.ERROR;
         this.errorMessage = errorMessage;
     }
 

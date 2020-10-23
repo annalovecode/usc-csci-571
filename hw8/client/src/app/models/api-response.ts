@@ -24,11 +24,15 @@ export class ApiResponse<T> {
         return response;
     }
 
+    private isType(type: ApiResponseType): boolean {
+        return this.type === type;
+    }
+
     isSuccess(): boolean {
-        return this.type === ApiResponseType.SUCCESS;
+        return this.isType(ApiResponseType.SUCCESS);
     }
 
     isFailure(): boolean {
-        return this.type === ApiResponseType.FAILURE;
+        return this.isType(ApiResponseType.FAILURE);
     }
 }
