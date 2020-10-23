@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Subscription } from 'rxjs';
 import { PortfolioService } from '../../services/portfolio/portfolio.service';
 import { PortfolioItem } from '../../models/portfolio-item';
@@ -26,11 +26,8 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     public portfolioService: PortfolioService,
     private router: Router,
-    public modal: NgbModal,
-    modalConfig: NgbModalConfig
+    public modal: NgbModal
   ) {
-    modalConfig.keyboard = false;
-    modalConfig.beforeDismiss = () => false;
   }
 
   ngOnInit(): void {
@@ -103,7 +100,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       if (quantity) {
         this.buy(item, quantity);
       }
-    });
+    }).catch(_ => { });
   }
 
   buy(item: PortfolioItem, quantity: number): void {
@@ -121,7 +118,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       if (quantity) {
         this.sell(item, quantity);
       }
-    });
+    }).catch(_ => { });
   }
 
   sell(item: PortfolioItem, quantity: number): void {

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { NewsModalComponent } from '../news-modal/news-modal.component';
 import { AlertManager } from '../../models/alert-manager';
@@ -20,9 +20,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
 
-  constructor(private stockService: StockService, public modal: NgbModal, modalConfig: NgbModalConfig) {
-    modalConfig.keyboard = false;
-    modalConfig.beforeDismiss = () => false;
+  constructor(private stockService: StockService, public modal: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -60,5 +58,6 @@ export class NewsComponent implements OnInit, OnDestroy {
   openModal(item: NewsItem): void {
     const modalRef = this.modal.open(NewsModalComponent);
     modalRef.componentInstance.item = item;
+    modalRef.result.then(_ => { }).catch(_ => { });
   }
 }

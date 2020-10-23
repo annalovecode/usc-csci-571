@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { StockService } from '../../services/stock/stock.service';
@@ -32,11 +32,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     private watchlistService: WatchlistService,
     private portfolioService: PortfolioService,
-    public modal: NgbModal,
-    modalConfig: NgbModalConfig
+    public modal: NgbModal
   ) {
-    modalConfig.keyboard = false;
-    modalConfig.beforeDismiss = () => false;
   }
 
   ngOnInit(): void {
@@ -114,7 +111,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       if (quantity) {
         this.buy(quantity);
       }
-    });
+    }).catch(_ => { });
   }
 
   buy(quantity: number): void {
