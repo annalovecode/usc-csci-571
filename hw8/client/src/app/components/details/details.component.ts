@@ -54,7 +54,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   fetchDetails(): void {
     this.apiStatus.loading();
-    this.subscription = timer(0, 15000).pipe(switchMap(() => this.stockService.getDetails(this.ticker)))
+    this.subscription = timer(0, 1005000).pipe(switchMap(() => this.stockService.getDetails(this.ticker)))
       .subscribe((response: ApiResponse<Details>) => {
         if (response.isFailure()) {
           const error = response.error;

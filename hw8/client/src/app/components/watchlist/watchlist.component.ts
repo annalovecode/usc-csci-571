@@ -24,12 +24,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   constructor(private stockService: StockService, public watchlistService: WatchlistService, private router: Router) { }
 
   ngOnInit(): void {
-    if (this.watchlistService.isWatchlistEmpty()) {
-      this.showEmptyWatchlistAlert();
-      this.apiStatus.success();
-    } else {
-      this.fetchLastPricesAndBuildWatchlist();
-    }
+    this.fetchLastPricesAndBuildWatchlist();
   }
 
   ngOnDestroy(): void {
@@ -39,6 +34,11 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   }
 
   private fetchLastPricesAndBuildWatchlist(): void {
+    if (this.watchlistService.isWatchlistEmpty()) {
+      this.showEmptyWatchlistAlert();
+      this.apiStatus.success();
+      return;
+    }
     this.apiStatus.loading();
     const watchlist = this.watchlistService.getWatchlist();
     this.subscription = forkJoin(watchlist.map(item => this.stockService.getLastPrice(item.ticker)))

@@ -34,12 +34,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.portfolioService.isPortfolioEmpty()) {
-      this.showEmptyPortfolioAlert();
-      this.apiStatus.success();
-    } else {
-      this.fetchLastPricesAndBuildPortfolio();
-    }
+    this.fetchLastPricesAndBuildPortfolio();
   }
 
   ngOnDestroy(): void {
@@ -50,7 +45,14 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   private fetchLastPricesAndBuildPortfolio(refetching = false): void {
     if (refetching) {
+      this.successPortfolio = [];
+      this.lastPrices = {};
       this.alertManager.clear();
+    }
+    if (this.portfolioService.isPortfolioEmpty()) {
+      this.showEmptyPortfolioAlert();
+      this.apiStatus.success();
+      return;
     }
     this.apiStatus.loading();
     const portfolio = this.portfolioService.getPortfolio();
@@ -106,7 +108,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   buy(item: PortfolioItem, quantity: number): void {
     this.portfolioService.buy(item.ticker, item.name, quantity, this.lastPrices[item.ticker]);
-    this.successPortfolio = [];
     this.fetchLastPricesAndBuildPortfolio(true);
   }
 
@@ -125,11 +126,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   sell(item: PortfolioItem, quantity: number): void {
     this.portfolioService.sell(item.ticker, quantity);
-    this.successPortfolio = [];
-    if (this.portfolioService.isPortfolioEmpty()) {
-      this.showEmptyPortfolioAlert();
-    } else {
-      this.fetchLastPricesAndBuildPortfolio(true);
-    }
+    this.fetchLastPricesAndBuildPortfolio(true);
   }
 }
