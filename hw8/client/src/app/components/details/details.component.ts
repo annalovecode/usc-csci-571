@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, timer, of } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { StockService } from '../../services/stock/stock.service';
 import { WatchlistService } from '../../services/watchlist/watchlist.service';
 import { PortfolioService } from '../../services/portfolio/portfolio.service';
@@ -11,6 +11,7 @@ import { Details } from '../../models/details';
 import { AlertManager } from '../../models/alert-manager';
 import { Alert } from '../../models/alert';
 import { ModalComponent } from '../../components/modal/modal.component';
+import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
   selector: 'app-details',
@@ -27,6 +28,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private stockService: StockService,
     private watchlistService: WatchlistService,
     private portfolioService: PortfolioService,
@@ -45,40 +47,48 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   fetchDetails(): void {
     this.apiStatus.loading();
-    this.subscription = timer(0, 15000).pipe(
-      switchMap(() => {
-        return this.stockService.getDetails(this.ticker)
-          .pipe(
-            catchError(error => {
-              if (!this.refetching) {
-                this.apiStatus.error(error);
-              }
-              return of(null);
-            })
-          );
-      })
-    ).subscribe(data => {
-      if (!this.refetching) {
-        if (data === null) {
-          this.alertManager.addDangerAlert(`Error occurred while fetching data.`, false);
+    this.subscription = timer(0, 15000).pipe(switchMap(() => this.stockService.getDetails(this.ticker)))
+      .subscribe((response: ApiResponse<Details>) => {
+        if (response.isFailure()) {
+          const error = response.error;
+          if (error.isClientOrNetwork()) {
+            this.alertManager.addDangerAlert(
+              `Network error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              this.refetching
+            );
+          } else if (error.isNotFound()) {
+            this.router.navigate(['/']);
+          } else if (error.isServiceUnavailable()) {
+            this.alertManager.addDangerAlert(
+              `Tiingo API error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              this.refetching
+            );
+          } else {
+            this.alertManager.addDangerAlert(
+              `Unknown server error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              this.refetching
+            );
+          }
+          if (!this.refetching) {
+            this.apiStatus.error(response.error.message);
+          }
         } else {
-          this.details = data;
-          this.apiStatus.success();
+          this.details = response.data;
+          if (!this.refetching) {
+            this.apiStatus.success();
+          }
         }
-        this.refetching = true;
-      } else {
-        if (data === null) {
-          this.alertManager.addDangerAlert(`Error occurred while refetching data.`);
-        } else {
-          this.details = data;
+        if (!this.refetching) {
+          this.refetching = true;
         }
-      }
-    });
+      });
   }
 
   isWatchlisted(): boolean {

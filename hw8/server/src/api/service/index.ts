@@ -187,7 +187,7 @@ export const getChartData = async (ticker: string, summary = false): Promise<Cha
     } else {
         items = await Tiingo.getLastTwoYearPrices(ticker);
     }
-    return items.map((item: any) => ({
+    const parsedItems = items.map((item: any) => ({
         date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
         open: Parser.parseNumber(item.open),
         high: Parser.parseNumber(item.high),
@@ -195,6 +195,7 @@ export const getChartData = async (ticker: string, summary = false): Promise<Cha
         close: Parser.parseNumber(item.close),
         volume: Parser.parseNumber(item.volume)
     }));
+    return Parser.parseArray(parsedItems);
 };
 
 export const getLastPrice = async (ticker: string): Promise<number> => {

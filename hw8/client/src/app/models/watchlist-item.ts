@@ -3,7 +3,7 @@ export class WatchlistItem {
     name: string;
     price: number;
 
-    static of(ticker: string, name: string, price: number): WatchlistItem {
+    static with(ticker: string, name: string, price: number): WatchlistItem {
         const item = new WatchlistItem();
         item.ticker = ticker;
         item.name = name;
@@ -11,13 +11,13 @@ export class WatchlistItem {
         return item;
     }
 
-    static clone(item: WatchlistItem): WatchlistItem {
+    static from(item: WatchlistItem): WatchlistItem {
         const clone = new WatchlistItem();
         Object.assign(clone, item);
         return clone;
     }
 
-    round(value: number): number {
+    private round(value: number): number {
         return +(value.toFixed(2));
     }
 

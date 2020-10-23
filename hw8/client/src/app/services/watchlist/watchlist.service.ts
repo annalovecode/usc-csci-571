@@ -25,7 +25,7 @@ export class WatchlistService {
 
   add(ticker: string, name: string, price: number): void {
     const watchlist = this.fetchWatchlist();
-    this.addToWatchlist(watchlist, WatchlistItem.of(ticker, name, price));
+    this.addToWatchlist(watchlist, WatchlistItem.with(ticker, name, price));
     this.storeWatchlist(watchlist);
   }
 
@@ -60,7 +60,7 @@ export class WatchlistService {
   }
 
   private fetchWatchlist(): WatchlistItem[] {
-    return (JSON.parse(localStorage.getItem('watchlist')) || []).map(item => WatchlistItem.clone(item));
+    return (JSON.parse(localStorage.getItem('watchlist')) || []).map(item => WatchlistItem.from(item));
   }
 
   private storeWatchlist(watchlist: WatchlistItem[]): void {

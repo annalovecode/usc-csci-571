@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SearchResult } from '../../models/search-result';
 import { Details } from '../../models/details';
 import { NewsItem } from '../../models/news-item';
+import { ApiError } from 'src/app/models/api-error';
+import { ApiResponse } from 'src/app/models/api-response';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ import { NewsItem } from '../../models/news-item';
 export class StockService {
   constructor(private http: HttpClient) { }
 
-  get<T>(resource: string, params: { [key: string]: string } = {}): any {
+  get<T>(resource: string, params: { [key: string]: any } = {}): any {
     const url = `api/${resource}`;
     const options = {
       params,
@@ -21,59 +23,53 @@ export class StockService {
     return this.http.get<T>(url, options);
   }
 
-  search(query: string): Observable<SearchResult[]> {
+  search(query: string): Observable<ApiResponse<SearchResult[]>> {
     return this.get<SearchResult[]>('search', { query })
       .pipe(
-        map((response: { [key: string]: any }) => response.data),
-        catchError(this.handleError('search'))
+        map((response: { [key: string]: any }) => ApiResponse.success<SearchResult[]>(response.data)),
+        catchError(this.handleError<SearchResult[]>('search'))
       );
   }
 
-  getDetails(ticker: string): Observable<Details> {
+  getDetails(ticker: string): Observable<ApiResponse<Details>> {
     return this.get<SearchResult[]>(`details/${ticker}`)
       .pipe(
-        map((response: { [key: string]: any }) => response.data),
-        catchError(this.handleError('getDetails'))
+        map((response: { [key: string]: any }) => ApiResponse.success<Details>(response.data)),
+        catchError(this.handleError<Details>('getDetails'))
       );
   }
 
-  getLastPrice(ticker: string): Observable<number> {
+  getLastPrice(ticker: string): Observable<ApiResponse<number>> {
     return this.get<number>(`last-price/${ticker}`)
       .pipe(
-        map((response: { [key: string]: any }) => response.data),
-        catchError(this.handleError('getLastPrice'))
+        map((response: { [key: string]: any }) => ApiResponse.success<number>(response.data)),
+        catchError(this.handleError<number>('getLastPrice'))
       );
   }
 
-  getNews(ticker: string): Observable<NewsItem[]> {
+  getNews(ticker: string): Observable<ApiResponse<NewsItem[]>> {
     return this.get<NewsItem[]>(`news/${ticker}`)
       .pipe(
-        map((response: { [key: string]: any }) => response.data),
-        catchError(this.handleError('getNews'))
+        map((response: { [key: string]: any }) => ApiResponse.success<NewsItem[]>(response.data)),
+        catchError(this.handleError<NewsItem[]>('getNews'))
       );
   }
 
-  private handleError(operation = 'operation'): (error: HttpErrorResponse) => Observable<never> {
+  private handleError<T>(operation = 'operation'): (error: HttpErrorResponse) => Observable<ApiResponse<T>> {
     return (error: HttpErrorResponse) => {
       console.log(error);
-      let errorMessage: string;
-      if (error.error instanceof ErrorEvent) {
+      let apiError: ApiError;
+      if (error.error instanceof ErrorEvent || !(error.error.message)) {
         // A client-side or network error occurred. Handle it accordingly.
-        errorMessage = 'Unknown error';
-        console.log('Client or network error:', error.error.message);
+        apiError = ApiError.clientOrNetwork('Network error');
       } else {
         // The backend returned an unsuccessful response code.
         // The response body may contain clues as to what went wrong.
-        if (error.error.message) {
-          errorMessage = error.error.message;
-          console.log(`Backend error: ${errorMessage}`);
-        } else {
-          errorMessage = 'Unknown error';
-        }
+        apiError = ApiError.backend(error.status, error.error.message);
       }
-      this.log(`${operation} failed: ${errorMessage}`);
+      this.log(`${operation} failed: ${apiError.message}`);
       // Return an observable with a user-facing error message.
-      return throwError(errorMessage);
+      return of(ApiResponse.failure<T>(apiError));
     };
   }
 

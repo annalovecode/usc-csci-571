@@ -24,7 +24,7 @@ export class PortfolioService {
     if (existingItem) {
       existingItem.buy(quantity, price);
     } else {
-      this.addToPortfolio(portfolio, PortfolioItem.of(ticker, name, quantity, price));
+      this.addToPortfolio(portfolio, PortfolioItem.with(ticker, name, quantity, price));
     }
     this.storePortfolio(portfolio);
   }
@@ -58,7 +58,7 @@ export class PortfolioService {
   }
 
   private fetchPortfolio(): PortfolioItem[] {
-    return (JSON.parse(localStorage.getItem('portfolio')) || []).map(item => PortfolioItem.clone(item));
+    return (JSON.parse(localStorage.getItem('portfolio')) || []).map(item => PortfolioItem.from(item));
   }
 
   private storePortfolio(portfolio: PortfolioItem[]): void {

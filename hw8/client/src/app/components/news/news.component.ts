@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { NewsModalComponent } from '../news-modal/news-modal.component';
 import { AlertManager } from '../../models/alert-manager';
 import { ApiStatus } from '../../models/api-status';
 import { NewsItem } from '../../models/news-item';
 import { StockService } from '../../services/stock/stock.service';
+import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
   selector: 'app-news',
@@ -30,20 +30,28 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   fetchNews(): void {
     this.apiStatus.loading();
-    this.subscription = this.stockService.getNews(this.ticker).pipe(
-      catchError(error => {
+    this.subscription = this.stockService.getNews(this.ticker).subscribe((response: ApiResponse<NewsItem[]>) => {
+      if (response.isFailure()) {
+        const error = response.error;
+        if (error.isClientOrNetwork()) {
+          this.alertManager.addDangerAlert('Network error occurred while fetching news.', false);
+        } else if (error.isNotFound()) {
+          this.alertManager.addWarningAlert('No news available.', false);
+        } else if (error.isServiceUnavailable()) {
+          this.alertManager.addDangerAlert('News API error occurred while fetching news.', false);
+        } else {
+          this.alertManager.addDangerAlert('Unknown server error occurred while fetching news.', false);
+        }
         this.apiStatus.error(error);
-        this.alertManager.addDangerAlert('Error occurred while fetching news.', false);
-        return of(null);
-      })
-    ).subscribe(data => {
-      if (data !== null) {
-        this.items = data;
+      } else {
+        this.items = response.data;
         this.apiStatus.success();
       }
     });

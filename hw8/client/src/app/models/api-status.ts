@@ -6,7 +6,7 @@ export class ApiStatus {
         ERROR: 'error'
     };
 
-    state = this.states.INITIAL;
+    private state = this.states.INITIAL;
 
     errorMessage: string = null;
 

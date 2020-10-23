@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of, Subject, Subscription } from 'rxjs';
-import { switchMap, debounceTime, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { switchMap, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ApiStatus } from '../../models/api-status';
 import { StockService } from '../../services/stock/stock.service';
 import { SearchResult } from '../../models/search-result';
+import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
   selector: 'app-search',
@@ -26,37 +27,39 @@ export class SearchComponent implements OnInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged(),
       tap(() => this.apiStatus.loading()),
-      switchMap(input => {
-        if (input) {
-          return this.stockService.search(input as string)
-            .pipe(
-              catchError(error => {
-                this.apiStatus.error(error);
-                return of(null);
-              })
-            );
+      switchMap(input => this.stockService.search(input as string))
+    ).subscribe((response: ApiResponse<SearchResult[]>) => {
+      if (response.isFailure()) {
+        const error = response.error;
+        let errorMessage: string = null;
+        if (error.isClientOrNetwork()) {
+          errorMessage = 'Network error';
+        } else if (error.isNotFound()) {
+          errorMessage = 'No results';
+        } else if (error.isServiceUnavailable()) {
+          errorMessage = 'Tiingo API error';
         } else {
-          return of([]);
+          errorMessage = 'Unknown server error';
         }
-      })
-    ).subscribe(data => {
-      if (data !== null) {
-        this.options = data;
-        if (data.length === 0) {
-          this.apiStatus.error('No results');
-        } else {
-          this.apiStatus.success();
-        }
+        this.apiStatus.error(errorMessage);
+      } else {
+        this.options = response.data;
+        this.apiStatus.success();
       }
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   changeInput(input: string): void {
-    this.inputs.next(input.trim());
+    input = input.trim();
+    if (input) {
+      this.inputs.next(input);
+    }
     this.ticker = null;
   }
 

@@ -31,11 +31,12 @@ export const getLastDayPrices = async (ticker: string): Promise<any[]> => {
 
 export const getLastTwoYearPrices = async (ticker: string): Promise<any[]> => {
     const url = buildURL(`iex/${ticker}/prices`);
-    return await get(url, {
+    const data = await get(url, {
         'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
         'resampleFreq': '12hour',
         'columns': 'open,high,low,close,volume'
     });
+    return Parser.parseArray(data);
 };
 
 export const getCurrentTopOfBookAndLastPrice = async (ticker: string) => {

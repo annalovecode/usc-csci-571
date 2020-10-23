@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, of, Subscription } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin, Subscription } from 'rxjs';
 import { PortfolioService } from '../../services/portfolio/portfolio.service';
 import { PortfolioItem } from '../../models/portfolio-item';
 import { StockService } from '../../services/stock/stock.service';
 import { ApiStatus } from '../../models/api-status';
 import { AlertManager } from '../../models/alert-manager';
 import { ModalComponent } from '../modal/modal.component';
+import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
   selector: 'app-portfolio',
@@ -43,42 +43,45 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private fetchLastPricesAndBuildPortfolio(refetching = false): void {
-    const portfolio = this.portfolioService.getPortfolio();
+    if (refetching) {
+      this.alertManager.clear();
+    }
     this.apiStatus.loading();
-    this.subscription = forkJoin(
-      portfolio.map(item =>
-        this.stockService.getLastPrice(item.ticker).pipe(catchError(_ => of(null)))
-      )
-    ).subscribe(lastPrices => {
-      const successPortfolio: PortfolioItem[] = [];
-      const errorTickers: string[] = [];
-      for (let i = 0; i < portfolio.length; i++) {
-        const item = portfolio[i];
-        const ticker = item.ticker;
-        const lastPrice = lastPrices[i];
-        if (lastPrice === null) {
-          errorTickers.push(ticker);
-        } else {
-          this.lastPrices[ticker] = lastPrice;
-          successPortfolio.push(item);
+    const portfolio = this.portfolioService.getPortfolio();
+    this.subscription = forkJoin(portfolio.map(item => this.stockService.getLastPrice(item.ticker)))
+      .subscribe((responses: ApiResponse<number>[]) => {
+        const successPortfolio: PortfolioItem[] = [];
+        const errorTickers: string[] = [];
+        for (let i = 0; i < portfolio.length; i++) {
+          const item = portfolio[i];
+          const ticker = item.ticker;
+          const response = responses[i];
+          if (response.isFailure()) {
+            errorTickers.push(ticker);
+          } else {
+            this.lastPrices[ticker] = response.data;
+            successPortfolio.push(item);
+          }
         }
-      }
-      let message = null;
-      if (errorTickers.length > 0) {
-        message = `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stock(s): ${errorTickers.join(', ')}.`;
-        this.alertManager.addDangerAlert(message, false);
-      }
-      if (successPortfolio.length === 0) {
-        this.apiStatus.error(message);
-      } else {
-        this.successPortfolio = successPortfolio;
-        this.apiStatus.success();
-      }
-    });
+        let errorMessage: string = null;
+        if (errorTickers.length > 0) {
+          errorMessage =
+            `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stock(s): ${errorTickers.join(', ')}.`;
+          this.alertManager.addDangerAlert(errorMessage, false);
+        }
+        if (successPortfolio.length === 0) {
+          this.apiStatus.error(errorMessage);
+        } else {
+          this.successPortfolio = successPortfolio;
+          this.apiStatus.success();
+        }
+      });
   }
 
   navigateToDetails(ticker): void {

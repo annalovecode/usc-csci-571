@@ -4,7 +4,7 @@ export class PortfolioItem {
     quantity: number;
     price: number;
 
-    static of(ticker: string, name: string, quantity: number, price: number): PortfolioItem {
+    static with(ticker: string, name: string, quantity: number, price: number): PortfolioItem {
         const item = new PortfolioItem();
         item.ticker = ticker;
         item.name = name;
@@ -13,7 +13,7 @@ export class PortfolioItem {
         return item;
     }
 
-    static clone(item: PortfolioItem): PortfolioItem {
+    static from(item: PortfolioItem): PortfolioItem {
         const clone = new PortfolioItem();
         Object.assign(clone, item);
         return clone;
@@ -43,7 +43,7 @@ export class PortfolioItem {
         return this.quantity === 0;
     }
 
-    round(value: number): number {
+    private round(value: number): number {
         return +(value.toFixed(2));
     }
 }

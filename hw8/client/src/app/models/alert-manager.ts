@@ -32,4 +32,8 @@ export class AlertManager {
     removeAlert(alertToRemove: Alert): void {
         this.alerts = this.alerts.filter(alert => alert !== alertToRemove);
     }
+
+    clear(): void {
+        this.alerts = [];
+    }
 }
