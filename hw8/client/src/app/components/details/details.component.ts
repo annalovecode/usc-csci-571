@@ -60,19 +60,19 @@ export class DetailsComponent implements OnInit, OnDestroy {
           const error = response.error;
           if (error.isClientOrNetwork()) {
             this.alertManager.addDangerAlert(
-              `Network error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              `Network error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
               this.refetching
             );
           } else if (error.isNotFound()) {
             this.router.navigate(['/']);
           } else if (error.isServiceUnavailable()) {
             this.alertManager.addDangerAlert(
-              `Tiingo API error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              `Tiingo API error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
               this.refetching
             );
           } else {
             this.alertManager.addDangerAlert(
-              `Unknown server error occurred while ${this.refetching ? 'refetching' : 'fetching'} data.`,
+              `Unknown server error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
               this.refetching
             );
           }
