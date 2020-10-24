@@ -2,11 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss']
+  selector: 'app-buy-sell-modal',
+  templateUrl: './buy-sell-modal.component.html',
+  styleUrls: ['./buy-sell-modal.component.scss']
 })
-export class ModalComponent implements OnInit {
+export class BuySellModalComponent implements OnInit {
   @Input() buttonText: string;
   @Input() maxQuantity = Infinity;
   @Input() ticker: string;

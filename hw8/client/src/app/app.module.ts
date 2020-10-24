@@ -20,7 +20,7 @@ import { StockService } from './services/stock/stock.service';
 import { WatchlistService } from 'src/app/services/watchlist/watchlist.service';
 import { PortfolioService } from 'src/app/services/portfolio/portfolio.service';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
-import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { BuySellModalComponent } from 'src/app/components/buy-sell-modal/buy-sell-modal.component';
 import { NewsComponent } from 'src/app/components/news/news.component';
 import { GroupPipe } from 'src/app/pipes/group/group.pipe';
 import { NewsModalComponent } from 'src/app/components/news-modal/news-modal.component';
@@ -34,7 +34,7 @@ import { SummaryChartComponent } from 'src/app/components/summary-chart/summary-
     PortfolioComponent,
     DetailsComponent,
     AlertComponent,
-    ModalComponent,
+    BuySellModalComponent,
     NewsComponent,
     GroupPipe,
     NewsModalComponent,

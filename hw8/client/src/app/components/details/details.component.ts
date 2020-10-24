@@ -10,7 +10,7 @@ import { ApiStatus } from 'src/app/models/api-status';
 import { Details } from 'src/app/models/details';
 import { AlertManager } from 'src/app/models/alert-manager';
 import { Alert } from 'src/app/models/alert';
-import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { BuySellModalComponent } from 'src/app/components/buy-sell-modal/buy-sell-modal.component';
 import { ApiResponse } from 'src/app/models/api-response';
 import { ChartItem } from 'src/app/models/chart-item';
 
@@ -115,7 +115,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   openModal(): void {
-    const modalRef = this.modal.open(ModalComponent);
+    const modalRef = this.modal.open(BuySellModalComponent);
     modalRef.componentInstance.buttonText = 'Buy';
     modalRef.componentInstance.ticker = this.ticker;
     modalRef.componentInstance.currentPrice = this.details.lastPrice;

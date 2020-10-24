@@ -7,7 +7,7 @@ import { PortfolioItem } from 'src/app/models/portfolio-item';
 import { StockService } from 'src/app/services/stock/stock.service';
 import { ApiStatus } from 'src/app/models/api-status';
 import { AlertManager } from 'src/app/models/alert-manager';
-import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { BuySellModalComponent } from 'src/app/components/buy-sell-modal/buy-sell-modal.component';
 import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
@@ -92,7 +92,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   openBuyModal(item: PortfolioItem): void {
-    const modalRef = this.modal.open(ModalComponent);
+    const modalRef = this.modal.open(BuySellModalComponent);
     modalRef.componentInstance.buttonText = 'Buy';
     modalRef.componentInstance.ticker = item.ticker;
     modalRef.componentInstance.currentPrice = this.lastPrices[item.ticker];
@@ -109,7 +109,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   openSellModal(item: PortfolioItem): void {
-    const modalRef = this.modal.open(ModalComponent);
+    const modalRef = this.modal.open(BuySellModalComponent);
     modalRef.componentInstance.buttonText = 'Sell';
     modalRef.componentInstance.ticker = item.ticker;
     modalRef.componentInstance.currentPrice = this.lastPrices[item.ticker];
