@@ -24,7 +24,7 @@ export const getLastDayPrices = async (ticker: string): Promise<any[]> => {
     const data = await get(url, {
         'startDate': startDate.format('YYYY-MM-DD'),
         'resampleFreq': '4min',
-        'columns': 'open,high,low,close,volume'
+        'columns': 'close'
     });
     return Parser.parseArray(data);
 };
