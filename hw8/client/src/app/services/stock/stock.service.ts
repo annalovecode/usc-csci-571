@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { SearchResult } from '../../models/search-result';
-import { Details } from '../../models/details';
-import { NewsItem } from '../../models/news-item';
+import { SearchResult } from 'src/app/models/search-result';
+import { Details } from 'src/app/models/details';
+import { NewsItem } from 'src/app/models/news-item';
+import { ChartItem } from 'src/app/models/chart-item';
 import { ApiError } from 'src/app/models/api-error';
 import { ApiResponse } from 'src/app/models/api-response';
 
@@ -52,6 +53,14 @@ export class StockService {
       .pipe(
         map((response: { [key: string]: any }) => ApiResponse.success<NewsItem[]>(response.data)),
         catchError(this.handleError<NewsItem[]>('getNews'))
+      );
+  }
+
+  getSummaryChartData(ticker: string): Observable<ApiResponse<ChartItem[]>> {
+    return this.get<ChartItem[]>(`summary-chart/${ticker}`)
+      .pipe(
+        map((response: { [key: string]: any }) => ApiResponse.success<ChartItem[]>(response.data)),
+        catchError(this.handleError<ChartItem[]>('getSummaryChartData'))
       );
   }
 

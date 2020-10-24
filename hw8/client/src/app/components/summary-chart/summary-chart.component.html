@@ -1,0 +1,9 @@
+<div *ngIf="apiStatus.isError()" id="alerts" class="row">
+    <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
+    </app-alert>
+</div>
+<div class="row" id="summary-chart" *ngIf="apiStatus.isSuccess()">
+    <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor" [options]="chartOptions"
+        [(update)]="updateFlag">
+    </highcharts-chart>
+</div>

@@ -53,7 +53,7 @@
                     <mat-tab label="Summary">
                         <div class="container" id="summary">
                             <div class="row">
-                                <div class="col-md" id="summary-details">
+                                <div class="col-lg" id="summary-details">
                                     <div class="row" id="summary-prices">
                                         <div class="col">
                                             <div class="row">
@@ -140,14 +140,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md" id="summary-chart">Chart</div>
+                                <div class="col-lg" id="summary-chart">
+                                    <app-summary-chart [items]="summaryChartItems" [ticker]="ticker"
+                                        [change]="details.change">
+                                    </app-summary-chart>
+                                </div>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab label="Top News">
                         <app-news [ticker]="ticker"></app-news>
                     </mat-tab>
-                    <mat-tab label="Charts"></mat-tab>
+                    <mat-tab label="Charts">
+                        Charts
+                    </mat-tab>
                 </mat-tab-group>
             </div>
         </div>

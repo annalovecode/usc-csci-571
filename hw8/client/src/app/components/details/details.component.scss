@@ -90,11 +90,14 @@
 }
 
 #summary {
-  padding: 30px 45px;
+  padding-left: 45px;
+  padding-right: 45px;
+  padding-bottom: 30px;
 }
 
 #summary-details {
   font-size: 15px;
+  padding-top: 30px;
 }
 
 #summary-description {
@@ -115,4 +118,9 @@
 
 #summary-description > div > div:nth-child(3) {
   margin-top: 15px;
+}
+
+#summary-chart {
+  padding-top: 30px;
+  height: 100%;
 }

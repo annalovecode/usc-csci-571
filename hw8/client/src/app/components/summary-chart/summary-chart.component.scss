@@ -1,0 +1,29 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+#alerts {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+#summary-chart {
+  position: relative;
+}
+
+highcharts-chart {
+  display: block;
+  width: 100% !important;
+}
+
+@include media-breakpoint-up(lg) {
+  #alerts {
+    margin-left: 10px;
+  }
+
+  highcharts-chart {
+    padding-left: 25px;
+    position: absolute;
+  }
+}

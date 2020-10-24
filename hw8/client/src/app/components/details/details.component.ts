@@ -1,17 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { StockService } from '../../services/stock/stock.service';
-import { WatchlistService } from '../../services/watchlist/watchlist.service';
-import { PortfolioService } from '../../services/portfolio/portfolio.service';
-import { ApiStatus } from '../../models/api-status';
-import { Details } from '../../models/details';
-import { AlertManager } from '../../models/alert-manager';
-import { Alert } from '../../models/alert';
-import { ModalComponent } from '../../components/modal/modal.component';
+import { StockService } from 'src/app/services/stock/stock.service';
+import { WatchlistService } from 'src/app/services/watchlist/watchlist.service';
+import { PortfolioService } from 'src/app/services/portfolio/portfolio.service';
+import { ApiStatus } from 'src/app/models/api-status';
+import { Details } from 'src/app/models/details';
+import { AlertManager } from 'src/app/models/alert-manager';
+import { Alert } from 'src/app/models/alert';
+import { ModalComponent } from 'src/app/components/modal/modal.component';
 import { ApiResponse } from 'src/app/models/api-response';
+import { ChartItem } from 'src/app/models/chart-item';
 
 @Component({
   selector: 'app-details',
@@ -19,16 +20,15 @@ import { ApiResponse } from 'src/app/models/api-response';
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  private ticker: string = null;
+  ticker: string = null;
   apiStatus = new ApiStatus();
   details: Details = null;
+  summaryChartItems: ChartItem[] = [];
   private subscription: Subscription = null;
-  private refetching = false;
   alertManager: AlertManager = new AlertManager();
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private stockService: StockService,
     private watchlistService: WatchlistService,
     private portfolioService: PortfolioService,
@@ -44,46 +44,58 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cancelSubscription();
+  }
+
+  cancelSubscription(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
+      this.subscription = null;
+    }
+  }
+
+  handleFetch(detailsResponse: ApiResponse<Details>, summaryChartResponse: ApiResponse<ChartItem[]>): void {
+    if (detailsResponse.isSuccess() && summaryChartResponse.isSuccess()) {
+      this.details = detailsResponse.data;
+      this.summaryChartItems = summaryChartResponse.data;
+      this.apiStatus.success();
+    } else if (detailsResponse.isFailure() && detailsResponse.error.isNotFound()) {
+      const errorMessage = `No results found. Please enter a valid Ticker`;
+      this.alertManager.addDangerAlert(errorMessage, false);
+      this.apiStatus.error(errorMessage);
+      this.cancelSubscription();
+    } else {
+      const errorMessage = `Error occurred while fetching details and summary.`;
+      this.alertManager.addDangerAlert(errorMessage, false);
+      this.apiStatus.error(errorMessage);
+    }
+  }
+
+  handleRefetch(detailsResponse: ApiResponse<Details>, summaryChartResponse: ApiResponse<ChartItem[]>): void {
+    this.alertManager.removeFixedAlerts();
+    if (detailsResponse.isSuccess() && summaryChartResponse.isSuccess()) {
+      this.details = detailsResponse.data;
+      this.summaryChartItems = summaryChartResponse.data;
+      this.apiStatus.success();
+    } else {
+      this.alertManager.addDangerAlert(`Error occurred while refetching details and summary.`, false);
     }
   }
 
   fetchDetails(): void {
     this.apiStatus.loading();
-    this.subscription = timer(0, 1005000).pipe(switchMap(() => this.stockService.getDetails(this.ticker)))
-      .subscribe((response: ApiResponse<Details>) => {
-        if (response.isFailure()) {
-          const error = response.error;
-          if (error.isClientOrNetwork()) {
-            this.alertManager.addDangerAlert(
-              `Network error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
-              this.refetching
-            );
-          } else if (error.isNotFound()) {
-            this.router.navigate(['/']);
-          } else if (error.isServiceUnavailable()) {
-            this.alertManager.addDangerAlert(
-              `Tiingo API error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
-              this.refetching
-            );
-          } else {
-            this.alertManager.addDangerAlert(
-              `Unknown server error occurred while ${this.refetching ? 'refetching' : 'fetching'} details.`,
-              this.refetching
-            );
-          }
-          if (!this.refetching) {
-            this.apiStatus.error(response.error.message);
-          }
-        } else {
-          this.details = response.data;
-          if (!this.refetching) {
-            this.apiStatus.success();
-          }
+    this.subscription = timer(0, 15000).pipe(
+      switchMap(() => forkJoin([
+        this.stockService.getDetails(this.ticker),
+        this.stockService.getSummaryChartData(this.ticker)
+      ]))).subscribe(([detailsResponse, summaryChartResponse]: [ApiResponse<Details>, ApiResponse<ChartItem[]>]) => {
+        if (summaryChartResponse.isFailure() && summaryChartResponse.error.isNotFound()) {
+          summaryChartResponse = ApiResponse.success<ChartItem[]>([]);
         }
-        if (!this.refetching) {
-          this.refetching = true;
+        if (this.apiStatus.isLoading()) {
+          this.handleFetch(detailsResponse, summaryChartResponse);
+        } else {
+          this.handleRefetch(detailsResponse, summaryChartResponse);
         }
       });
   }

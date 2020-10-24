@@ -173,20 +173,25 @@ export const getNews = async (ticker: string): Promise<NewsItem[]> => {
 
 interface ChartItem {
     readonly date: number;
-    readonly open: number;
-    readonly high: number;
-    readonly low: number;
+    readonly open?: number;
+    readonly high?: number;
+    readonly low?: number;
     readonly close: number;
-    readonly volume: number;
+    readonly volume?: number;
 }
 
-export const getChartData = async (ticker: string, summary = false): Promise<ChartItem[]> => {
-    let items;
-    if (summary) {
-        items = await Tiingo.getLastDayPrices(ticker);
-    } else {
-        items = await Tiingo.getLastTwoYearPrices(ticker);
-    }
+export const getSummaryChartData = async (ticker: string): Promise<ChartItem[]> => {
+    const items = await Tiingo.getLastDayPrices(ticker);
+    const parsedItems = items.map((item: any) => ({
+        date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
+        close: Parser.parseNumber(item.close)
+    }));
+    return Parser.parseArray(parsedItems);
+};
+
+
+export const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
+    const items = await Tiingo.getLastTwoYearPrices(ticker);
     const parsedItems = items.map((item: any) => ({
         date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
         open: Parser.parseNumber(item.open),

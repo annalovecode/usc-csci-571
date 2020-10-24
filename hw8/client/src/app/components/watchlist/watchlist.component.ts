@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
-import { WatchlistService } from '../../services/watchlist/watchlist.service';
-import { WatchlistItem } from '../../models/watchlist-item';
-import { StockService } from '../../services/stock/stock.service';
-import { ApiStatus } from '../../models/api-status';
-import { AlertManager } from '../../models/alert-manager';
-import { Alert } from '../../models/alert';
+import { WatchlistService } from 'src/app/services/watchlist/watchlist.service';
+import { WatchlistItem } from 'src/app/models/watchlist-item';
+import { StockService } from 'src/app/services/stock/stock.service';
+import { ApiStatus } from 'src/app/models/api-status';
+import { AlertManager } from 'src/app/models/alert-manager';
+import { Alert } from 'src/app/models/alert';
 import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({

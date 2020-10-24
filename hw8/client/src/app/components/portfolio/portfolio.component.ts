@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Subscription } from 'rxjs';
-import { PortfolioService } from '../../services/portfolio/portfolio.service';
-import { PortfolioItem } from '../../models/portfolio-item';
-import { StockService } from '../../services/stock/stock.service';
-import { ApiStatus } from '../../models/api-status';
-import { AlertManager } from '../../models/alert-manager';
-import { ModalComponent } from '../modal/modal.component';
+import { PortfolioService } from 'src/app/services/portfolio/portfolio.service';
+import { PortfolioItem } from 'src/app/models/portfolio-item';
+import { StockService } from 'src/app/services/stock/stock.service';
+import { ApiStatus } from 'src/app/models/api-status';
+import { AlertManager } from 'src/app/models/alert-manager';
+import { ModalComponent } from 'src/app/components/modal/modal.component';
 import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
@@ -44,7 +44,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     if (refetching) {
       this.successPortfolio = [];
       this.lastPrices = {};
-      this.alertManager.clear();
+      this.alertManager.removeAllAlerts();
     }
     if (this.portfolioService.isPortfolioEmpty()) {
       this.showEmptyPortfolioAlert();
@@ -88,7 +88,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   showEmptyPortfolioAlert(): void {
-    this.alertManager.addWarningAlert('Currently you don\'t have any stock in your portfolio.', false);
+    this.alertManager.addWarningAlert('Currently you don\'t have any stock.', false);
   }
 
   openBuyModal(item: PortfolioItem): void {

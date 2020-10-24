@@ -33,7 +33,11 @@ export class AlertManager {
         this.alerts = this.alerts.filter(alert => alert !== alertToRemove);
     }
 
-    clear(): void {
+    removeAllAlerts(): void {
         this.alerts = [];
+    }
+
+    removeFixedAlerts(): void {
+        this.alerts = this.alerts.filter(alert => alert.dismissible);
     }
 }

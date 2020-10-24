@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PortfolioItem } from '../../models/portfolio-item';
+import { PortfolioItem } from 'src/app/models/portfolio-item';
 
 @Injectable({
   providedIn: 'root'

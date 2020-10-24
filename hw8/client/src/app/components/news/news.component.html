@@ -7,7 +7,7 @@
             <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
             </app-alert>
         </div>
-        <div class="row" id="news" *ngIf="apiStatus.isSuccess()">
+        <ng-container *ngIf="apiStatus.isSuccess()">
             <div class="row news-items" *ngFor="let pair of items | group: 2">
                 <div class="col-lg-6" *ngFor="let item of pair">
                     <div class="card" (click)="openModal(item)">
@@ -25,6 +25,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </div>

@@ -9,20 +9,22 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { HighchartsChartModule } from 'highcharts-angular';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './components/app/app.component';
-import { SearchComponent } from './components/search/search.component';
-import { WatchlistComponent } from './components/watchlist/watchlist.component';
-import { PortfolioComponent } from './components/portfolio/portfolio.component';
-import { DetailsComponent } from './components/details/details.component';
+import { AppComponent } from 'src/app/components/app/app.component';
+import { SearchComponent } from 'src/app/components/search/search.component';
+import { WatchlistComponent } from 'src/app/components/watchlist/watchlist.component';
+import { PortfolioComponent } from 'src/app/components/portfolio/portfolio.component';
+import { DetailsComponent } from 'src/app/components/details/details.component';
 import { StockService } from './services/stock/stock.service';
-import { WatchlistService } from './services/watchlist/watchlist.service';
-import { PortfolioService } from './services/portfolio/portfolio.service';
-import { AlertComponent } from './components/alert/alert.component';
-import { ModalComponent } from './components/modal/modal.component';
-import { NewsComponent } from './components/news/news.component';
-import { GroupPipe } from './pipes/group/group.pipe';
-import { NewsModalComponent } from './components/news-modal/news-modal.component';
+import { WatchlistService } from 'src/app/services/watchlist/watchlist.service';
+import { PortfolioService } from 'src/app/services/portfolio/portfolio.service';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { NewsComponent } from 'src/app/components/news/news.component';
+import { GroupPipe } from 'src/app/pipes/group/group.pipe';
+import { NewsModalComponent } from 'src/app/components/news-modal/news-modal.component';
+import { SummaryChartComponent } from 'src/app/components/summary-chart/summary-chart.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { NewsModalComponent } from './components/news-modal/news-modal.component
     ModalComponent,
     NewsComponent,
     GroupPipe,
-    NewsModalComponent
+    NewsModalComponent,
+    SummaryChartComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { NewsModalComponent } from './components/news-modal/news-modal.component
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule,
-    MatTabsModule
+    MatTabsModule,
+    HighchartsChartModule
   ],
   providers: [StockService, WatchlistService, PortfolioService],
   bootstrap: [AppComponent]

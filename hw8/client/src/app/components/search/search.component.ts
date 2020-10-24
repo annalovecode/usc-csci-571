@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { switchMap, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { ApiStatus } from '../../models/api-status';
-import { StockService } from '../../services/stock/stock.service';
-import { SearchResult } from '../../models/search-result';
+import { ApiStatus } from 'src/app/models/api-status';
+import { StockService } from 'src/app/services/stock/stock.service';
+import { SearchResult } from 'src/app/models/search-result';
 import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
@@ -32,14 +32,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (response.isFailure()) {
         const error = response.error;
         let errorMessage: string = null;
-        if (error.isClientOrNetwork()) {
-          errorMessage = 'Network error';
-        } else if (error.isNotFound()) {
+        if (error.isNotFound()) {
           errorMessage = 'No results';
-        } else if (error.isServiceUnavailable()) {
-          errorMessage = 'Tiingo API error';
         } else {
-          errorMessage = 'Unknown server error';
+          errorMessage = 'Error occurred';
         }
         this.apiStatus.error(errorMessage);
       } else {

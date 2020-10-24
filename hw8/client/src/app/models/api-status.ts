@@ -49,7 +49,7 @@ export class ApiStatus {
         this.errorMessage = null;
     }
 
-    error(errorMessage): void {
+    error(errorMessage: string): void {
         this.state = ApiStatusState.ERROR;
         this.errorMessage = errorMessage;
     }

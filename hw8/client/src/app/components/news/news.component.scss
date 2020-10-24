@@ -3,7 +3,7 @@
 @import "~bootstrap/scss/mixins";
 
 #content {
-  padding: 30px 20px;
+  padding: 30px 10px;
 }
 
 #loader {
@@ -19,11 +19,6 @@
 }
 
 .news-items {
-  height: 100%;
-  width: 100%;
-}
-
-.news-items .container {
   height: 100%;
 }
 
@@ -72,7 +67,11 @@
     background-position: center;
     background-size: cover;
     border-radius: 5px;
-    height: 200px;
-    max-height: 200px;
+    height: 175px;
+    max-height: 175px;
   }
+}
+
+.card-body .container {
+  height: 100%;
 }

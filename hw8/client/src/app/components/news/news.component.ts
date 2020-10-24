@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { NewsModalComponent } from '../news-modal/news-modal.component';
-import { AlertManager } from '../../models/alert-manager';
-import { ApiStatus } from '../../models/api-status';
-import { NewsItem } from '../../models/news-item';
-import { StockService } from '../../services/stock/stock.service';
+import { NewsModalComponent } from 'src/app/components/news-modal/news-modal.component';
+import { AlertManager } from 'src/app/models/alert-manager';
+import { ApiStatus } from 'src/app/models/api-status';
+import { NewsItem } from 'src/app/models/news-item';
+import { StockService } from 'src/app/services/stock/stock.service';
 import { ApiResponse } from 'src/app/models/api-response';
 
 @Component({
@@ -38,16 +38,12 @@ export class NewsComponent implements OnInit, OnDestroy {
     this.subscription = this.stockService.getNews(this.ticker).subscribe((response: ApiResponse<NewsItem[]>) => {
       if (response.isFailure()) {
         const error = response.error;
-        if (error.isClientOrNetwork()) {
-          this.alertManager.addDangerAlert('Network error occurred while fetching news.', false);
-        } else if (error.isNotFound()) {
+        if (error.isNotFound()) {
           this.alertManager.addWarningAlert('No news available.', false);
-        } else if (error.isServiceUnavailable()) {
-          this.alertManager.addDangerAlert('News API error occurred while fetching news.', false);
         } else {
-          this.alertManager.addDangerAlert('Unknown server error occurred while fetching news.', false);
+          this.alertManager.addDangerAlert('Error occurred while fetching news.', false);
         }
-        this.apiStatus.error(error);
+        this.apiStatus.error(error.message);
       } else {
         this.items = response.data;
         this.apiStatus.success();

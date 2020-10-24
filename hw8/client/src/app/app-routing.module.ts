@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SearchComponent } from './components/search/search.component';
-import { DetailsComponent } from './components/details/details.component';
-import { WatchlistComponent } from './components/watchlist/watchlist.component';
-import { PortfolioComponent } from './components/portfolio/portfolio.component';
+import { SearchComponent } from 'src/app/components/search/search.component';
+import { DetailsComponent } from 'src/app/components/details/details.component';
+import { WatchlistComponent } from 'src/app/components/watchlist/watchlist.component';
+import { PortfolioComponent } from 'src/app/components/portfolio/portfolio.component';
 
 const routes: Routes = [
   { path: '', component: SearchComponent, data: { id: 'search' } },
