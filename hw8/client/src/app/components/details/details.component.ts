@@ -60,7 +60,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       this.summaryChartItems = summaryChartResponse.data;
       this.apiStatus.success();
     } else if (detailsResponse.isFailure() && detailsResponse.error.isNotFound()) {
-      const errorMessage = `No results found. Please enter a valid Ticker`;
+      const errorMessage = `No results found. Please enter valid Ticker`;
       this.alertManager.addDangerAlert(errorMessage, false);
       this.apiStatus.error(errorMessage);
       this.cancelSubscription();
