@@ -2,6 +2,10 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+.container {
+  padding: 30px;
+}
+
 #loader {
   height: 100%;
   display: flex;
