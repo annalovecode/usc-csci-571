@@ -9,7 +9,8 @@
         <p>Current Price: {{ currentPrice }}</p>
         <div class="form-group">
             <label for="quantity">Quantity:</label> <input type="number" class="form-control" id="quantity" min="1"
-                max="{{ maxQuantity }}" [(ngModel)]="quantity">
+                max="{{ maxQuantity }}" [(ngModel)]="quantity"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
         </div>
     </div>
     <div class="modal-footer">

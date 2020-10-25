@@ -25,6 +25,7 @@ import { NewsComponent } from 'src/app/components/news/news.component';
 import { GroupPipe } from 'src/app/pipes/group/group.pipe';
 import { NewsModalComponent } from 'src/app/components/news-modal/news-modal.component';
 import { SummaryChartComponent } from 'src/app/components/summary-chart/summary-chart.component';
+import { HistoricalChartComponent } from 'src/app/components/historical-chart/historical-chart.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SummaryChartComponent } from 'src/app/components/summary-chart/summary-
     NewsComponent,
     GroupPipe,
     NewsModalComponent,
-    SummaryChartComponent
+    SummaryChartComponent,
+    HistoricalChartComponent
   ],
   imports: [
     BrowserModule,

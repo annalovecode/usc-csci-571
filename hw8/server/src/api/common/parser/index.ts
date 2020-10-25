@@ -14,7 +14,7 @@ export const parseNumber = (value: any): number => {
     }
     value = value as number;
     if (!Number.isInteger(value)) {
-        value = +(value.toFixed(2));
+        value = +(value.toFixed(3));
     }
     return value;
 };

@@ -18,7 +18,7 @@ export class WatchlistItem {
     }
 
     private round(value: number): number {
-        return +(value.toFixed(2));
+        return +(value.toFixed(3));
     }
 
     getChange(newPrice: number): number {
