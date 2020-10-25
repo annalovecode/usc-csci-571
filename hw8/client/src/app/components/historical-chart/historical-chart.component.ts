@@ -41,7 +41,7 @@ export class HistoricalChartComponent implements OnInit, OnDestroy {
 
   fetchData(): void {
     this.apiStatus.loading();
-    this.subscription = this.stockService.getHistoryChartData(this.ticker).subscribe((response: ApiResponse<ChartItem[]>) => {
+    this.subscription = this.stockService.getHistoricalChartData(this.ticker).subscribe((response: ApiResponse<ChartItem[]>) => {
       if (response.isFailure()) {
         const error = response.error;
         if (error.isNotFound()) {

@@ -64,11 +64,11 @@ export class StockService {
       );
   }
 
-  getHistoryChartData(ticker: string): Observable<ApiResponse<ChartItem[]>> {
+  getHistoricalChartData(ticker: string): Observable<ApiResponse<ChartItem[]>> {
     return this.get<ChartItem[]>(`historical-chart/${ticker}`)
       .pipe(
         map((response: { [key: string]: any }) => ApiResponse.success<ChartItem[]>(response.data)),
-        catchError(this.handleError<ChartItem[]>('getHistoryChartData'))
+        catchError(this.handleError<ChartItem[]>('getHistoricalChartData'))
       );
   }
 
