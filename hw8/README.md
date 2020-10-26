@@ -14,8 +14,8 @@
 
 ### Azure
 
-- Deploying is not supported due to unknown issues.
+- Not supported due to unknown issues.
 
 ### Google Cloud
 
-- Deploying is not supported because Google Cloud does not allow writing on file system.
+- Not supported because Google Cloud does not allow writing on file system.
