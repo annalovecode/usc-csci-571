@@ -10,12 +10,11 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es5",
+    "target": "es2015",
     "module": "es2020",
     "lib": [
       "es2018",
       "dom"
     ]
-  },
-  "enableIvy": false
+  }
 }
