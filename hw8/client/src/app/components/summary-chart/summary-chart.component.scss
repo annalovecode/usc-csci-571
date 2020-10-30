@@ -8,12 +8,9 @@
   margin-bottom: 20px;
 }
 
-#summary-chart {
-  position: relative;
-}
-
 highcharts-chart {
   display: block;
+  height: 400px;
   width: 100% !important;
 }
 
@@ -24,6 +21,5 @@ highcharts-chart {
 
   highcharts-chart {
     padding-left: 25px;
-    position: absolute;
   }
 }

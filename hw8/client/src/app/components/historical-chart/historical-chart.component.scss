@@ -2,8 +2,8 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
-.container {
-  padding: 30px;
+#content {
+  padding: 30px 10px;
 }
 
 #loader {
@@ -16,10 +16,6 @@
 #alerts {
   display: flex;
   flex-direction: column;
-}
-
-#historical-chart {
-  height: 100%;
 }
 
 highcharts-chart {

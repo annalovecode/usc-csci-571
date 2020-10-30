@@ -80,28 +80,13 @@ export class SummaryChartComponent implements OnInit, OnChanges {
       xAxis: {
         type: 'datetime',
         minRange: 4 * 60 * 1000,
-        minTickInterval: 4 * 60 * 1000,
-        startOnTick: true,
-        endOnTick: true
+        minTickInterval: 4 * 60 * 1000
       },
 
       chart: {
         spacingTop: 0,
         spacingLeft: 0,
         spacingRight: 0
-      },
-
-      responsive: {
-        rules: [{
-          condition: {
-            maxWidth: 1400
-          },
-          chartOptions: {
-            legend: {
-              enabled: false
-            }
-          }
-        }]
       },
 
       rangeSelector: {

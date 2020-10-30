@@ -152,7 +152,11 @@
                         <app-news [ticker]="ticker"></app-news>
                     </mat-tab>
                     <mat-tab label="Charts">
-                        <app-historical-chart [ticker]="ticker"></app-historical-chart>
+                        <ng-template matTabContent>
+                            <app-historical-chart [apiStatus]="historicalChartApiStatus"
+                                [alertManager]="historicalChartAlertManager" [chartOptions]="historicalChartOptions">
+                            </app-historical-chart>
+                        </ng-template>
                     </mat-tab>
                 </mat-tab-group>
             </div>
