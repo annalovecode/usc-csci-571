@@ -7,17 +7,17 @@ export const Axios = axios.create({
 });
 
 Axios.interceptors.request.use((config) => {
-    console.log(`External API Request: ${axios.getUri(config)}`);
+    console.info(`API Request: ${axios.getUri(config)}`);
     return config;
 }, (error: AxiosError) => {
-    console.log(`External API Request: ${error}`);
+    console.info(`API Request: ${error}`);
     return Promise.reject(error);
 });
 
-Axios.interceptors.response.use((response: AxiosResponse) => {
-    console.log(`External API Response: ${JSON.stringify(response.data, undefined, 2)}`);
-    return response;
-}, (error: AxiosError) => {
-    console.log(`External API Response: ${error}`);
-    return Promise.reject(error);
-});
+// Axios.interceptors.response.use((response: AxiosResponse) => {
+//     console.info(`API Response: ${JSON.stringify(response.data, undefined, 2)}`);
+//     return response;
+// }, (error: AxiosError) => {
+//     console.info(`API Response: ${error}`);
+//     return Promise.reject(error);
+// });

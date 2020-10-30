@@ -25,7 +25,7 @@ app.use(expressWinston.logger({
     winston.format.prettyPrint(),
   ),
   requestWhitelist: ['url', 'method', 'httpVersion', 'originalUrl', 'query'],
-  responseWhitelist: ['statusCode', 'body']
+  responseWhitelist: ['statusCode']
 }));
 
 app.use(bodyParser.urlencoded({ extended: true }));

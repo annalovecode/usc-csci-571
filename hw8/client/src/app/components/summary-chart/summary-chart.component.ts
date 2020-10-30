@@ -19,17 +19,9 @@ export class SummaryChartComponent implements OnInit, OnChanges {
   Highcharts = Highcharts;
   chartConstructor = 'stockChart';
   chartOptions: Highcharts.Options = {};
-  // windowResizeEventListener: () => void = null;
-  // chartCallback: Highcharts.ChartCallbackFunction = this.addWindowResizeEventListener.bind(this);
   updateFlag = false;
 
   constructor() { }
-
-  // addWindowResizeEventListener(chart): void {
-  //   this.windowResizeEventListener = () => chart.reflow();
-  //   window.addEventListener('resize', this.windowResizeEventListener);
-  //   chart.reflow();
-  // }
 
   ngOnInit(): void {
   }
@@ -47,12 +39,6 @@ export class SummaryChartComponent implements OnInit, OnChanges {
       this.updateFlag = true;
     }
   }
-
-  // ngOnDestroy(): void {
-  //   if (this.windowResizeEventListener) {
-  //     window.removeEventListener('resize', this.windowResizeEventListener);
-  //   }
-  // }
 
   getColor(): string {
     let color = 'black';
