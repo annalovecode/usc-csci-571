@@ -93,7 +93,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   fetchDetails(): void {
     this.apiStatus.loading();
-    this.subscription = timer(0, 15000000).pipe(
+    this.subscription = timer(0, 15000).pipe(
       switchMap(() => forkJoin([
         this.stockService.getDetails(this.ticker),
         this.stockService.getSummaryChartData(this.ticker)
