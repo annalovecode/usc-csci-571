@@ -14,11 +14,10 @@
                         <div class="card-body">
                             <div class="container">
                                 <div class="row news-item">
-                                    <div class="col-md-4">
-                                        <div class="row"
-                                            [ngStyle]="{'background-image': 'url(' + item.urlToImage + ')'}"></div>
+                                    <div class="col-sm-auto col-xs-12">
+                                        <img [src]="item.urlToImage" alt="News Image">
                                     </div>
-                                    <div class="col-md-8">{{ item.title }}</div>
+                                    <div class="col col-xs-12">{{ item.title }}</div>
                                 </div>
                             </div>
                         </div>
