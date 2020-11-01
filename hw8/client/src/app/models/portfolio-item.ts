@@ -44,6 +44,6 @@ export class PortfolioItem {
     }
 
     private round(value: number): number {
-        return +(value.toFixed(3));
+        return +(value.toFixed(2));
     }
 }

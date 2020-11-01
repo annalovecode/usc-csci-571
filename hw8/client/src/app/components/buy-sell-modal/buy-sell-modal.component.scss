@@ -12,3 +12,7 @@ input {
   flex-direction: row;
   align-items: baseline;
 }
+
+.modal-body > * {
+  margin-bottom: 5px;
+}

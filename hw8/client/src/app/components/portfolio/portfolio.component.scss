@@ -10,7 +10,7 @@
   align-items: center;
 }
 
-.container {
+#main-container {
   padding-top: 40px;
 }
 
@@ -75,30 +75,17 @@
   justify-content: flex-end;
 }
 
-.col-sm {
+.col-md {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.card-body {
+.card .container {
   font-size: 20px;
-}
-
-@include media-breakpoint-up(sm) {
-  .card-body {
-    padding-top: 10px;
-    padding-bottom: 0px;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: -15px;
-  }
-}
-
-@include media-breakpoint-down(sm) {
-  .card-body {
-    padding: 5px 10px;
-  }
+  font-weight: 375;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .card-footer > button:last-child {

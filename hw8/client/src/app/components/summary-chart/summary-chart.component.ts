@@ -63,6 +63,10 @@ export class SummaryChartComponent implements OnInit, OnChanges {
         }
       },
 
+      time: {
+        useUTC: false
+      },
+
       xAxis: {
         type: 'datetime',
         minRange: 4 * 60 * 1000,

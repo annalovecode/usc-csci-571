@@ -15,17 +15,17 @@
                 <div>{{ item.ticker }}</div>
                 <div>{{ item.name }}</div>
             </div>
-            <div class="card-body">
+            <div class="container">
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Quantity:
                         </div>
                         <div>
-                            {{ item.quantity }}
+                            {{ item.quantity | number }}
                         </div>
                     </div>
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Change:
                         </div>
@@ -33,45 +33,45 @@
                             [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
                             <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
                             <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
-                            {{ item.getChange(lastPrices[item.ticker]) }}
+                            {{ item.getChange(lastPrices[item.ticker]) | number:'.2-2' }}
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Avg. Cost / Share:
                         </div>
                         <div>
-                            {{ item.price }}
+                            {{ item.price | number:'.2-2' }}
                         </div>
                     </div>
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Current Price:
                         </div>
                         <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
                             [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                            {{ lastPrices[item.ticker] }}
+                            {{ lastPrices[item.ticker] | number:'.2-2' }}
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Total Cost:
                         </div>
                         <div>
-                            {{ item.getTotalCost() }}
+                            {{ item.getTotalCost() | number:'.2-2' }}
                         </div>
                     </div>
-                    <div class="col-sm">
+                    <div class="col-md">
                         <div>
                             Market Value:
                         </div>
                         <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
                             [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                            {{ item.getMarketValue(lastPrices[item.ticker]) }}
+                            {{ item.getMarketValue(lastPrices[item.ticker]) | number:'.2-2' }}
                         </div>
                     </div>
                 </div>

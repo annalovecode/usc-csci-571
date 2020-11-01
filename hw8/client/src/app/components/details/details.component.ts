@@ -181,9 +181,14 @@ export class DetailsComponent implements OnInit, OnDestroy {
         useHTML: true
       },
 
+      time: {
+        useUTC: false
+      },
+
       rangeSelector: {
         selected: 2
       },
+
       yAxis: [{
         startOnTick: false,
         endOnTick: false,
@@ -236,7 +241,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
         name: this.ticker,
         id: this.ticker.toLowerCase(),
         zIndex: 2,
-        data: ohlc
+        data: ohlc,
+        tooltip: {
+          valueDecimals: 2
+        }
       }, {
         type: 'column',
         name: 'Volume',
@@ -254,6 +262,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
         },
         zoneLines: {
           enabled: false
+        },
+        tooltip: {
+          valueDecimals: 2
         }
       }, {
         type: 'sma',
@@ -261,6 +272,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
         zIndex: 1,
         marker: {
           enabled: false
+        },
+        tooltip: {
+          valueDecimals: 2
         }
       }]
     };

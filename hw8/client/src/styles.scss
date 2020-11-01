@@ -12,6 +12,10 @@ body {
 
 $purple: #673ab7;
 
+* {
+  font-family: "Roboto", sans-serif;
+}
+
 @include media-breakpoint-down(sm) {
   #main-container {
     padding-left: 35px;

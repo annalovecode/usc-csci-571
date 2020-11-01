@@ -31,6 +31,6 @@ export class BuySellModalComponent implements OnInit {
   }
 
   getTotal(): number {
-    return +((this.quantity * this.currentPrice).toFixed(3));
+    return +((this.quantity * this.currentPrice).toFixed(2));
   }
 }
