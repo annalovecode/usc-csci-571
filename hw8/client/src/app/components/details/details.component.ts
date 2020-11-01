@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { StockService } from 'src/app/services/stock/stock.service';
@@ -26,6 +26,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   summaryChartItems: ChartItem[] = [];
   private subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
+  modalRef: NgbModalRef = null;
 
   historicalChartApiStatus = new ApiStatus();
   historicalChartAlertManager = new AlertManager();
@@ -84,6 +85,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.alertManager.removeFixedAlerts();
     if (detailsResponse.isSuccess() && summaryChartResponse.isSuccess()) {
       this.details = detailsResponse.data;
+      if (this.modalRef) {
+        this.modalRef.componentInstance.currentPrice = this.details.lastPrice;
+      }
       this.summaryChartItems = summaryChartResponse.data;
       this.apiStatus.success();
     } else {
@@ -124,15 +128,18 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   openModal(): void {
-    const modalRef = this.modal.open(BuySellModalComponent);
-    modalRef.componentInstance.buttonText = 'Buy';
-    modalRef.componentInstance.ticker = this.ticker;
-    modalRef.componentInstance.currentPrice = this.details.lastPrice;
-    modalRef.result.then((quantity) => {
+    this.modalRef = this.modal.open(BuySellModalComponent);
+    this.modalRef.componentInstance.buttonText = 'Buy';
+    this.modalRef.componentInstance.ticker = this.ticker;
+    this.modalRef.componentInstance.currentPrice = this.details.lastPrice;
+    this.modalRef.result.then((quantity) => {
       if (quantity) {
         this.buy(quantity);
       }
-    }).catch(_ => { });
+      this.modalRef = null;
+    }).catch(_ => {
+      this.modalRef = null;
+    });
   }
 
   buy(quantity: number): void {
