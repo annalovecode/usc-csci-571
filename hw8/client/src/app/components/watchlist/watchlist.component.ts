@@ -33,7 +33,12 @@ export class WatchlistComponent implements OnInit, OnDestroy {
     }
   }
 
-  private fetchLastPricesAndBuildWatchlist(): void {
+  private fetchLastPricesAndBuildWatchlist(refetching = false): void {
+    if (refetching) {
+      this.successWatchlist = [];
+      this.lastPrices = {};
+      this.alertManager.removeAllAlerts();
+    }
     if (this.watchlistService.isWatchlistEmpty()) {
       this.showEmptyWatchlistAlert();
       this.apiStatus.success();
@@ -58,7 +63,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
         }
         let errorMessage: string = null;
         if (errorTickers.length > 0) {
-          errorMessage = `Error occurred while fetching last prices of stock(s): ${errorTickers.join(', ')}.`;
+          errorMessage = `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stock(s): ${errorTickers.join(', ')}.`;
           this.alertManager.addDangerAlert(errorMessage, false);
         }
         if (successWatchlist.length === 0) {
@@ -72,10 +77,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
 
   removeFromWatchlist(ticker: string): void {
     this.watchlistService.remove(ticker);
-    this.successWatchlist = this.watchlistService.getFilteredWatchlist(this.successWatchlist.map(item => item.ticker));
-    if (this.watchlistService.isWatchlistEmpty()) {
-      this.showEmptyWatchlistAlert();
-    }
+    this.fetchLastPricesAndBuildWatchlist(true);
   }
 
   navigateToDetails(ticker): void {

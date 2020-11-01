@@ -18,11 +18,6 @@ export class WatchlistService {
     return this.fetchWatchlist();
   }
 
-  getFilteredWatchlist(tickers: string[]): WatchlistItem[] {
-    const watchlist = this.fetchWatchlist();
-    return watchlist.filter(item => tickers.includes(item.ticker));
-  }
-
   add(ticker: string, name: string, price: number): void {
     const watchlist = this.fetchWatchlist();
     this.addToWatchlist(watchlist, WatchlistItem.with(ticker, name, price));
