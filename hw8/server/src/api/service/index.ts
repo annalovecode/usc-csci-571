@@ -2,8 +2,8 @@ import moment from 'moment-timezone';
 import { Parser, Tiingo, NewsAPI } from '../common';
 
 interface SearchResultItem {
-    readonly ticker: string;
-    readonly name: string;
+    ticker: string;
+    name: string;
 }
 
 export const search = async (query: string): Promise<SearchResultItem[]> => {
@@ -23,15 +23,15 @@ export const search = async (query: string): Promise<SearchResultItem[]> => {
 };
 
 interface Details {
-    readonly ticker: string;
-    readonly name: string;
-    readonly exchangeCode: string;
-    readonly lastPrice: number;
-    readonly change: number;
-    readonly changePercent: number;
-    readonly currentTimestamp: string;
-    readonly isMarketOpen: boolean;
-    readonly lastTimestamp: string;
+    ticker: string;
+    name: string;
+    exchangeCode: string;
+    lastPrice: number;
+    change: number;
+    changePercent: number;
+    currentTimestamp: string;
+    isMarketOpen: boolean;
+    lastTimestamp: string;
 }
 
 const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
@@ -67,28 +67,28 @@ const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details
 };
 
 interface Summary {
-    readonly startDate: string;
-    readonly description: string;
-    readonly highPrice: number;
-    readonly lowPrice: number;
-    readonly openPrice: number;
-    readonly prevClose: number;
-    readonly volume: number;
-    readonly midPrice?: number | string;
-    readonly askPrice?: number;
-    readonly askSize?: number;
-    readonly bidPrice?: number;
-    readonly bidSize?: number;
-    readonly chartData: ChartItem[];
+    startDate: string;
+    description: string;
+    highPrice: number;
+    lowPrice: number;
+    openPrice: number;
+    prevClose: number;
+    volume: number;
+    midPrice?: number | string;
+    askPrice?: number;
+    askSize?: number;
+    bidPrice?: number;
+    bidSize?: number;
+    chartData: ChartItem[];
 }
 
 interface ChartItem {
-    readonly date: number;
-    readonly open?: number;
-    readonly high?: number;
-    readonly low?: number;
-    readonly close: number;
-    readonly volume?: number;
+    date: number;
+    open?: number;
+    high?: number;
+    low?: number;
+    close: number;
+    volume?: number;
 }
 
 const getSummaryChartData = async (ticker: string, startDate: string): Promise<ChartItem[]> => {
@@ -140,8 +140,8 @@ const buildSummary = async (metadata: any, currentTopOfBookAndLastPrice: any): P
 };
 
 interface DetailsAndSummary {
-    readonly details: Details;
-    readonly summary: Summary;
+    details: Details;
+    summary: Summary;
 }
 
 export const getDetailsAndSummary = async (ticker: string): Promise<DetailsAndSummary> => {
@@ -163,12 +163,12 @@ export const getDetailsAndSummary = async (ticker: string): Promise<DetailsAndSu
 };
 
 interface NewsItem {
-    readonly publisher: string;
-    readonly publishedDate: string;
-    readonly title: string;
-    readonly description: string;
-    readonly url: string;
-    readonly urlToImage: string;
+    publisher: string;
+    publishedDate: string;
+    title: string;
+    description: string;
+    url: string;
+    urlToImage: string;
 }
 
 export const getNews = async (ticker: string): Promise<NewsItem[]> => {
