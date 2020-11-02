@@ -22,7 +22,7 @@
 - Install dependencies using `npm install`.
 - Set `start` npm script to `npm run start:az`.
 - Build assets using `npm run build:az`.
-- Run `rm -rf node_modules`.
+- Delete `node_modules` using `npx rimraf node_modules` because the next command uploads the entire project directory.
 - Create and deploy application using `az webapp up --sku F1 --name usc-csci-571-hw8-<unique> --location westus`. It saves information in `.azure/config`.
 - Clean generated files using `npm run clean:az`.
 
