@@ -5,7 +5,7 @@
   "scripts": {
     "start:client": "cd client && ng serve",
     "watch:client": "cd client && ng serve",
-    "build:client": "cd client && ng build",
+    "build:client": "cd client && ng build --prod=true",
     "test:client": "cd client && ng test",
     "lint:client": "cd client && ng lint",
     "e2e:client": "cd client && ng e2e",
@@ -21,9 +21,9 @@
     "build:aws": "(npm run build:client); (npm run copy:client); (zip -r eb-deploy server package.json package-lock.json)",
     "start:aws": "npm run start:server",
     "clean:aws": "(npm run clean:app); (rm -rf eb-deploy.zip)",
-    "build:gcloud": "npm run build:app",
-    "start:gcloud": "cd server && node dist/index.js",
-    "clean:gcloud": "npm run clean:app",
+    "build:gc": "npm run build:app",
+    "start:gc": "cd server && node dist/index.js",
+    "clean:gc": "npm run clean:app",
     "start": "npm run start:aws"
   },
   "author": "rochak84@gmail.com",

@@ -24,9 +24,9 @@
 #### Google Cloud
 
 - Install dependencies using `npm install`.
-- Set `start` npm script to `npm run start:gcloud`.
-- Build assets using `npm run build:gcloud`.
+- Set `start` npm script to `npm run start:gc`.
+- Build assets using `npm run build:gc`.
 - Create project using `gcloud projects create usc-csci-571-hw8-<unique> --set-as-default` in `us-west-2` region.
 - Create app in above project using `gcloud app create --project=usc-csci-571-hw8-<unique>`.
 - Deploy app using `gcloud app deploy`.
-- Clean generated files using `npm run clean:gcloud`.
+- Clean generated files using `npm run clean:gc`.
