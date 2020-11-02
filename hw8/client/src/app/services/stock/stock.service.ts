@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SearchResult } from 'src/app/models/search-result';
-import { Details } from 'src/app/models/details';
+import { DetailsAndSummary } from 'src/app/models/details-summary';
 import { NewsItem } from 'src/app/models/news-item';
 import { ChartItem } from 'src/app/models/chart-item';
 import { ApiError } from 'src/app/models/api-error';
@@ -32,11 +32,11 @@ export class StockService {
       );
   }
 
-  getDetails(ticker: string): Observable<ApiResponse<Details>> {
-    return this.get<SearchResult[]>(`details/${ticker}`)
+  getDetailsAndSummary(ticker: string): Observable<ApiResponse<DetailsAndSummary>> {
+    return this.get<SearchResult[]>(`details-summary/${ticker}`)
       .pipe(
-        map((response: { [key: string]: any }) => ApiResponse.success<Details>(response.data)),
-        catchError(this.handleError<Details>('getDetails'))
+        map((response: { [key: string]: any }) => ApiResponse.success<DetailsAndSummary>(response.data)),
+        catchError(this.handleError<DetailsAndSummary>('getDetailsAndSummary'))
       );
   }
 
@@ -53,14 +53,6 @@ export class StockService {
       .pipe(
         map((response: { [key: string]: any }) => ApiResponse.success<NewsItem[]>(response.data)),
         catchError(this.handleError<NewsItem[]>('getNews'))
-      );
-  }
-
-  getSummaryChartData(ticker: string): Observable<ApiResponse<ChartItem[]>> {
-    return this.get<ChartItem[]>(`summary-chart/${ticker}`)
-      .pipe(
-        map((response: { [key: string]: any }) => ApiResponse.success<ChartItem[]>(response.data)),
-        catchError(this.handleError<ChartItem[]>('getSummaryChartData'))
       );
   }
 

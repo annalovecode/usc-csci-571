@@ -61,23 +61,23 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>High Price:</td>
-                                                            <td>{{ details.highPrice | number:'.2-2' }}</td>
+                                                            <td>{{ summary.highPrice | number:'.2-2' }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Low Price:</td>
-                                                            <td>{{ details.lowPrice | number:'.2-2' }}</td>
+                                                            <td>{{ summary.lowPrice | number:'.2-2' }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Open Price:</td>
-                                                            <td>{{ details.openPrice | number:'.2-2' }}</td>
+                                                            <td>{{ summary.openPrice | number:'.2-2' }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Prev. Close:</td>
-                                                            <td>{{ details.prevClose | number:'.2-2' }}</td>
+                                                            <td>{{ summary.prevClose | number:'.2-2' }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Volume:</td>
-                                                            <td>{{ details.volume | number }}</td>
+                                                            <td>{{ summary.volume | number }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -92,23 +92,25 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td>Mid Price:</td>
-                                                                <td>{{ details.midPrice | number:'.2-2' }}</td>
+                                                                <td *ngIf="summary.midPrice === null">-</td>
+                                                                <td *ngIf="summary.midPrice !== null">
+                                                                    {{ summary.midPrice | number:'.2-2' }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Ask Price:</td>
-                                                                <td>{{ details.askPrice | number:'.2-2' }}</td>
+                                                                <td>{{ summary.askPrice | number:'.2-2' }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Ask Size:</td>
-                                                                <td>{{ details.askSize | number:'.2-2' }}</td>
+                                                                <td>{{ summary.askSize | number:'.2-2' }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Bid Price:</td>
-                                                                <td>{{ details.bidPrice | number:'.2-2' }}</td>
+                                                                <td>{{ summary.bidPrice | number:'.2-2' }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Bid Size:</td>
-                                                                <td>{{ details.bidSize | number:'.2-2' }}</td>
+                                                                <td>{{ summary.bidSize | number:'.2-2' }}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -119,13 +121,13 @@
                                     <div class="row" id="summary-description">
                                         <div class="col">
                                             <div class="row">Company's Description</div>
-                                            <div class="row">Start Date: {{ details.startDate }}</div>
-                                            <div class="row">{{ details.description }}</div>
+                                            <div class="row">Start Date: {{ summary.startDate }}</div>
+                                            <div class="row">{{ summary.description }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg" id="summary-chart">
-                                    <app-summary-chart [items]="summaryChartItems" [ticker]="ticker"
+                                    <app-summary-chart [items]="summary.chartData" [ticker]="ticker"
                                         [change]="details.change">
                                     </app-summary-chart>
                                 </div>

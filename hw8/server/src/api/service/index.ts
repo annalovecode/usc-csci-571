@@ -34,7 +34,7 @@ interface Details {
     readonly lastTimestamp: string;
 }
 
-const extractDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
+const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
     const ticker = Parser.parseString(metadata.ticker);
     const name = Parser.parseString(metadata.name);
     const exchangeCode = Parser.parseString(metadata.exchangeCode);
@@ -79,9 +79,35 @@ interface Summary {
     readonly askSize?: number;
     readonly bidPrice?: number;
     readonly bidSize?: number;
+    readonly chartData: ChartItem[];
 }
 
-const extractSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summary => {
+interface ChartItem {
+    readonly date: number;
+    readonly open?: number;
+    readonly high?: number;
+    readonly low?: number;
+    readonly close: number;
+    readonly volume?: number;
+}
+
+const getSummaryChartData = async (ticker: string, startDate: string): Promise<ChartItem[]> => {
+    const items = await Tiingo.getLastDayPrices(ticker, startDate);
+    const parsedItems = items.map((item: any) => ({
+        date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
+        close: Parser.parseNumber(item.close)
+    }));
+    return parsedItems;
+};
+
+const buildSummary = async (metadata: any, currentTopOfBookAndLastPrice: any): Promise<Summary> => {
+    const ticker = Parser.parseString(metadata.ticker);
+
+    const timestamp = Parser.parseString(currentTopOfBookAndLastPrice.timestamp);
+    const timestampMoment = moment(timestamp).tz('America/Los_Angeles');
+    const currentTimestampMoment = moment().tz('America/Los_Angeles');
+    const isMarketOpen = currentTimestampMoment.diff(timestampMoment, 'seconds') < 60;
+
     let summary: Summary = {
         startDate: Parser.parseString(metadata.startDate),
         description: Parser.parseString(metadata.description),
@@ -89,20 +115,16 @@ const extractSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summa
         lowPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.low),
         openPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.open),
         prevClose: Parser.parseNumber(currentTopOfBookAndLastPrice.prevClose),
-        volume: Parser.parseNumber(currentTopOfBookAndLastPrice.volume)
+        volume: Parser.parseNumber(currentTopOfBookAndLastPrice.volume),
+        chartData: await getSummaryChartData(ticker, timestampMoment.format('YYYY-MM-DD'))
     };
 
-    const timestamp = Parser.parseString(currentTopOfBookAndLastPrice.timestamp);
-    const lastTimestampMoment = moment(timestamp).tz('America/Los_Angeles');
-    const currentTimestampMoment = moment().tz('America/Los_Angeles');
-    const isMarketOpen = currentTimestampMoment.diff(lastTimestampMoment, 'seconds') < 60;
-
     if (isMarketOpen) {
-        let midPrice: number | string;
+        let midPrice: number;
         try {
             midPrice = Parser.parseNumber(currentTopOfBookAndLastPrice.mid);
         } catch (error) {
-            midPrice = "-";
+            midPrice = null;
         }
         summary = {
             ...summary,
@@ -117,7 +139,12 @@ const extractSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summa
     return summary;
 };
 
-export const getDetails = async (ticker: string): Promise<Details | Summary> => {
+interface DetailsAndSummary {
+    readonly details: Details;
+    readonly summary: Summary;
+}
+
+export const getDetailsAndSummary = async (ticker: string): Promise<DetailsAndSummary> => {
     const [
         metadata,
         currentTopOfBookAndLastPrice
@@ -126,12 +153,12 @@ export const getDetails = async (ticker: string): Promise<Details | Summary> => 
         Tiingo.getCurrentTopOfBookAndLastPrice(ticker)
     ]);
 
-    const details = extractDetails(metadata, currentTopOfBookAndLastPrice);
-    const summary = extractSummary(metadata, currentTopOfBookAndLastPrice);
+    const details = buildDetails(metadata, currentTopOfBookAndLastPrice);
+    const summary = await buildSummary(metadata, currentTopOfBookAndLastPrice);
 
     return {
-        ...details,
-        ...summary
+        details,
+        summary
     };
 };
 
@@ -170,25 +197,6 @@ export const getNews = async (ticker: string): Promise<NewsItem[]> => {
     }
     return Parser.parseArray(newsItems);
 };
-
-interface ChartItem {
-    readonly date: number;
-    readonly open?: number;
-    readonly high?: number;
-    readonly low?: number;
-    readonly close: number;
-    readonly volume?: number;
-}
-
-export const getSummaryChartData = async (ticker: string): Promise<ChartItem[]> => {
-    const items = await Tiingo.getLastDayPrices(ticker);
-    const parsedItems = items.map((item: any) => ({
-        date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
-        close: Parser.parseNumber(item.close)
-    }));
-    return Parser.parseArray(parsedItems);
-};
-
 
 export const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
     const items = await Tiingo.getLastTwoYearPrices(ticker);

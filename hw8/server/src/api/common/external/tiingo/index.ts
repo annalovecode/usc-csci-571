@@ -15,25 +15,20 @@ export const getMetadata = async (ticker: string) => {
     return await get(url);
 };
 
-export const getLastDayPrices = async (ticker: string): Promise<any[]> => {
+export const getLastDayPrices = async (ticker: string, startDate: string): Promise<any[]> => {
     const url = buildURL(`iex/${ticker}/prices`);
-    let startDate = moment().tz('America/Los_Angeles');
-    if (startDate.isoWeekday() > 5) {
-        startDate = startDate.subtract(startDate.isoWeekday() - 5, "days");
-    }
-    const data = await get(url, {
-        'startDate': startDate.format('YYYY-MM-DD'),
+    return await get(url, {
+        'startDate': startDate,
         'resampleFreq': '4min',
         'columns': 'close'
     });
-    return Parser.parseArray(data);
 };
 
 export const getLastTwoYearPrices = async (ticker: string): Promise<any[]> => {
-    const url = buildURL(`iex/${ticker}/prices`);
+    const url = buildURL(`tiingo/daily/${ticker}/prices`);
     const data = await get(url, {
         'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
-        'resampleFreq': '12hour',
+        'resampleFreq': 'daily',
         'columns': 'open,high,low,close,volume'
     });
     return Parser.parseArray(data);

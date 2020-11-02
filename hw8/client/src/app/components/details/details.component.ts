@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, timer, forkJoin } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { StockService } from 'src/app/services/stock/stock.service';
 import { WatchlistService } from 'src/app/services/watchlist/watchlist.service';
 import { PortfolioService } from 'src/app/services/portfolio/portfolio.service';
 import { ApiStatus } from 'src/app/models/api-status';
-import { Details } from 'src/app/models/details';
+import { Details, DetailsAndSummary, Summary } from 'src/app/models/details-summary';
 import { AlertManager } from 'src/app/models/alert-manager';
 import { Alert } from 'src/app/models/alert';
 import { BuySellModalComponent } from 'src/app/components/buy-sell-modal/buy-sell-modal.component';
@@ -23,7 +23,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   ticker: string = null;
   apiStatus = new ApiStatus();
   details: Details = null;
-  summaryChartItems: ChartItem[] = [];
+  summary: Summary = null;
   private subscription: Subscription = null;
   alertManager: AlertManager = new AlertManager();
   modalRef: NgbModalRef = null;
@@ -64,12 +64,15 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleFetch(detailsResponse: ApiResponse<Details>, summaryChartResponse: ApiResponse<ChartItem[]>): void {
-    if (detailsResponse.isSuccess() && summaryChartResponse.isSuccess()) {
-      this.details = detailsResponse.data;
-      this.summaryChartItems = summaryChartResponse.data;
+  handleFetch(response: ApiResponse<DetailsAndSummary>): void {
+    if (response.isSuccess()) {
+      this.details = response.data.details;
+      this.summary = response.data.summary;
       this.apiStatus.success();
-    } else if (detailsResponse.isFailure() && detailsResponse.error.isNotFound()) {
+      if (!this.details.isMarketOpen) {
+        this.cancelSubscription();
+      }
+    } else if (response.isFailure() && response.error.isNotFound()) {
       const errorMessage = `No results found. Please enter valid Ticker`;
       this.alertManager.addDangerAlert(errorMessage, false);
       this.apiStatus.error(errorMessage);
@@ -81,15 +84,18 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleRefetch(detailsResponse: ApiResponse<Details>, summaryChartResponse: ApiResponse<ChartItem[]>): void {
+  handleRefetch(response: ApiResponse<DetailsAndSummary>): void {
     this.alertManager.removeFixedAlerts();
-    if (detailsResponse.isSuccess() && summaryChartResponse.isSuccess()) {
-      this.details = detailsResponse.data;
+    if (response.isSuccess()) {
+      this.details = response.data.details;
+      this.summary = response.data.summary;
+      this.apiStatus.success();
       if (this.modalRef) {
         this.modalRef.componentInstance.currentPrice = this.details.lastPrice;
       }
-      this.summaryChartItems = summaryChartResponse.data;
-      this.apiStatus.success();
+      if (!this.details.isMarketOpen) {
+        this.cancelSubscription();
+      }
     } else {
       this.alertManager.addDangerAlert(`Error occurred while refetching details and summary.`, false);
     }
@@ -98,17 +104,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
   fetchDetails(): void {
     this.apiStatus.loading();
     this.subscription = timer(0, 15000).pipe(
-      switchMap(() => forkJoin([
-        this.stockService.getDetails(this.ticker),
-        this.stockService.getSummaryChartData(this.ticker)
-      ]))).subscribe(([detailsResponse, summaryChartResponse]: [ApiResponse<Details>, ApiResponse<ChartItem[]>]) => {
-        if (summaryChartResponse.isFailure() && summaryChartResponse.error.isNotFound()) {
-          summaryChartResponse = ApiResponse.success<ChartItem[]>([]);
-        }
+      switchMap(() =>
+        this.stockService.getDetailsAndSummary(this.ticker)
+      )).subscribe((response: ApiResponse<DetailsAndSummary>) => {
         if (this.apiStatus.isLoading()) {
-          this.handleFetch(detailsResponse, summaryChartResponse);
+          this.handleFetch(response);
         } else {
-          this.handleRefetch(detailsResponse, summaryChartResponse);
+          this.handleRefetch(response);
         }
       });
   }

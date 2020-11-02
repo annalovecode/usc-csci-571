@@ -92,7 +92,7 @@
 #summary {
   padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 }
 
 #summary-details {
@@ -127,15 +127,14 @@
 
 @include media-breakpoint-up(sm) {
   #summary-prices > div:first-child tbody > tr > td:first-child {
-    width: 90px;
+    width: 80px;
   }
 
   #summary-prices > div:last-child tbody > tr > td:first-child {
-    width: 80px;
+    width: 70px;
   }
 }
 
 td {
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding: 0px;
 }

@@ -1,3 +1,5 @@
+import { ChartItem } from './chart-item';
+
 export interface Details {
     ticker: string;
     name: string;
@@ -8,6 +10,9 @@ export interface Details {
     currentTimestamp: string;
     isMarketOpen: boolean;
     lastTimestamp: string;
+}
+
+export interface Summary {
     startDate: string;
     description: string;
     highPrice: number;
@@ -15,9 +20,15 @@ export interface Details {
     openPrice: number;
     prevClose: number;
     volume: number;
-    midPrice?: number | string;
+    midPrice?: number;
     askPrice?: number;
     askSize?: number;
     bidPrice?: number;
     bidSize?: number;
+    chartData: ChartItem[];
+}
+
+export interface DetailsAndSummary {
+    details: Details;
+    summary: Summary;
 }
