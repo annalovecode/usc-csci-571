@@ -24,7 +24,10 @@
     "build:gc": "npm run build:app",
     "start:gc": "cd server && node dist/index.js",
     "clean:gc": "npm run clean:app",
-    "start": "npm run start:aws"
+    "build:az": "npm run build:app",
+    "start:az": "cd server && node dist/index.js",
+    "clean:az": "npm run clean:app",
+    "start": "npm run start:app"
   },
   "author": "rochak84@gmail.com",
   "license": "MIT",

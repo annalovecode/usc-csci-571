@@ -19,7 +19,12 @@
 
 #### Azure
 
-- Not supported due to unknown issues.
+- Install dependencies using `npm install`.
+- Set `start` npm script to `npm run start:az`.
+- Build assets using `npm run build:az`.
+- Run `rm -rf node_modules`.
+- Create and deploy application using `az webapp up --sku F1 --name usc-csci-571-hw8-<unique> --location westus`. It saves information in `.azure/config`.
+- Clean generated files using `npm run clean:az`.
 
 #### Google Cloud
 
