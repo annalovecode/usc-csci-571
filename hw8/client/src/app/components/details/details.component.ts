@@ -45,7 +45,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.ticker = paramMap.get('ticker').toUpperCase();
-      this.fetchDetails();
+      this.fetchDetailsAndSummary();
       this.fetchHistoricalChartData();
     });
   }
@@ -101,7 +101,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  fetchDetails(): void {
+  fetchDetailsAndSummary(): void {
     this.apiStatus.loading();
     this.subscription = timer(0, 15000).pipe(
       switchMap(() =>

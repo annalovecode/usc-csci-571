@@ -3,6 +3,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
+import compression from 'compression';
 // import cors from 'cors';
 import api from './api';
 
@@ -30,6 +31,8 @@ app.use(expressWinston.logger({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(compression());
 
 // TODO: Remove cors
 // app.use(cors());
