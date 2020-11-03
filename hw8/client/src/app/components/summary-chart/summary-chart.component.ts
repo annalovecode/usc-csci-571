@@ -45,7 +45,7 @@ export class SummaryChartComponent implements OnInit, OnChanges {
     if (this.change > 0) {
       color = '#33a745';
     } else if (this.change < 0) {
-      color = '#dc3545';
+      color = '#f12b19';
     }
     return color;
   }

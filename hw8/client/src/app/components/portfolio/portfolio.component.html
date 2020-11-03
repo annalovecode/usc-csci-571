@@ -18,60 +18,60 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md">
-                        <div>
-                            Quantity:
+                        <div class="row justify-content-between">
+                            <div>
+                                Quantity:
+                            </div>
+                            <div>
+                                {{ item.quantity | number }}
+                            </div>
                         </div>
-                        <div>
-                            {{ item.quantity | number }}
+                        <div class="row justify-content-between">
+                            <div>
+                                Avg. Cost / Share:
+                            </div>
+                            <div>
+                                {{ item.price | number:'.2-2' }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md">
-                        <div>
-                            Change:
-                        </div>
-                        <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
-                            [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                            <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
-                            <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
-                            {{ item.getChange(lastPrices[item.ticker]) | number:'.2-2' }}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md">
-                        <div>
-                            Avg. Cost / Share:
-                        </div>
-                        <div>
-                            {{ item.price | number:'.2-2' }}
+                        <div class="row justify-content-between">
+                            <div>
+                                Total Cost:
+                            </div>
+                            <div>
+                                {{ item.getTotalCost() | number:'.2-2' }}
+                            </div>
                         </div>
                     </div>
                     <div class="col-md">
-                        <div>
-                            Current Price:
+                        <div class="row justify-content-between">
+                            <div>
+                                Change:
+                            </div>
+                            <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                                [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                                <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
+                                <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
+                                {{ item.getChange(lastPrices[item.ticker]) | number:'.2-2' }}
+                            </div>
                         </div>
-                        <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
-                            [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                            {{ lastPrices[item.ticker] | number:'.2-2' }}
+                        <div class="row justify-content-between">
+                            <div>
+                                Current Price:
+                            </div>
+                            <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                                [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                                {{ lastPrices[item.ticker] | number:'.2-2' }}
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md">
-                        <div>
-                            Total Cost:
-                        </div>
-                        <div>
-                            {{ item.getTotalCost() | number:'.2-2' }}
-                        </div>
-                    </div>
-                    <div class="col-md">
-                        <div>
-                            Market Value:
-                        </div>
-                        <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
-                            [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                            {{ item.getMarketValue(lastPrices[item.ticker]) | number:'.2-2' }}
+                        <div class="row justify-content-between">
+                            <div>
+                                Market Value:
+                            </div>
+                            <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                                [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                                {{ item.getMarketValue(lastPrices[item.ticker]) | number:'.2-2' }}
+                            </div>
                         </div>
                     </div>
                 </div>
