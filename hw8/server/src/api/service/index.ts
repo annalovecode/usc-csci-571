@@ -1,10 +1,6 @@
 import moment from 'moment-timezone';
 import { Parser, Tiingo, NewsAPI } from '../common';
-
-interface SearchResultItem {
-    ticker: string;
-    name: string;
-}
+import { SearchResultItem, Details, Summary, ChartItem, DetailsAndSummary, NewsItem, LastPrices } from './models';
 
 export const search = async (query: string): Promise<SearchResultItem[]> => {
     const items = await Tiingo.search(query);
@@ -21,18 +17,6 @@ export const search = async (query: string): Promise<SearchResultItem[]> => {
     });
     return Parser.parseArray(searchResultItems);
 };
-
-interface Details {
-    ticker: string;
-    name: string;
-    exchangeCode: string;
-    lastPrice: number;
-    change: number;
-    changePercent: number;
-    currentTimestamp: string;
-    isMarketOpen: boolean;
-    lastTimestamp: string;
-}
 
 const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
     const ticker = Parser.parseString(metadata.ticker);
@@ -65,31 +49,6 @@ const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details
         lastTimestamp
     };
 };
-
-interface Summary {
-    startDate: string;
-    description: string;
-    highPrice: number;
-    lowPrice: number;
-    openPrice: number;
-    prevClose: number;
-    volume: number;
-    midPrice?: number | string;
-    askPrice?: number;
-    askSize?: number;
-    bidPrice?: number;
-    bidSize?: number;
-    chartData: ChartItem[];
-}
-
-interface ChartItem {
-    date: number;
-    open?: number;
-    high?: number;
-    low?: number;
-    close: number;
-    volume?: number;
-}
 
 const getSummaryChartData = async (ticker: string, startDate: string): Promise<ChartItem[]> => {
     const items = await Tiingo.getLastDayPrices(ticker, startDate);
@@ -139,11 +98,6 @@ const buildSummary = async (metadata: any, currentTopOfBookAndLastPrice: any): P
     return summary;
 };
 
-interface DetailsAndSummary {
-    details: Details;
-    summary: Summary;
-}
-
 export const getDetailsAndSummary = async (ticker: string): Promise<DetailsAndSummary> => {
     const [
         metadata,
@@ -161,15 +115,6 @@ export const getDetailsAndSummary = async (ticker: string): Promise<DetailsAndSu
         summary
     };
 };
-
-interface NewsItem {
-    publisher: string;
-    publishedDate: string;
-    title: string;
-    description: string;
-    url: string;
-    urlToImage: string;
-}
 
 export const getNews = async (ticker: string): Promise<NewsItem[]> => {
     const newsItems: NewsItem[] = [];
@@ -211,7 +156,13 @@ export const getHistoricalChartData = async (ticker: string): Promise<ChartItem[
     return Parser.parseArray(parsedItems);
 };
 
-export const getLastPrice = async (ticker: string): Promise<number> => {
-    const currentTopOfBookAndLastPrice = await Tiingo.getCurrentTopOfBookAndLastPrice(ticker);
-    return Parser.parseNumber(currentTopOfBookAndLastPrice.last);
+export const getLastPrices = async (tickers: string[]): Promise<LastPrices> => {
+    const currentTopOfBookAndLastPrices = await Tiingo.getCurrentTopOfBookAndLastPrices(tickers);
+    const lastPrices: LastPrices = {};
+    currentTopOfBookAndLastPrices.forEach(currentTopOfBookAndLastPrice => {
+        const ticker = Parser.parseString(currentTopOfBookAndLastPrice.ticker);
+        const lastPrice = Parser.parseNumber(currentTopOfBookAndLastPrice.last);
+        lastPrices[ticker] = lastPrice;
+    });
+    return lastPrices;
 };

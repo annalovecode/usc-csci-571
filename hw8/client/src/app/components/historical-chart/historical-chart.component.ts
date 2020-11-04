@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts/highstock';
 import IndicatorsCore from 'highcharts/indicators/indicators';
 import vbp from 'highcharts/indicators/volume-by-price';
+import { Alert } from 'src/app/models/alert';
 import { AlertManager } from 'src/app/models/alert-manager';
 import { ApiStatus } from 'src/app/models/api-status';
 
@@ -24,5 +25,9 @@ export class HistoricalChartComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  removeAlert(alert: Alert): void {
+    this.alertManager.removeAlert(alert);
   }
 }

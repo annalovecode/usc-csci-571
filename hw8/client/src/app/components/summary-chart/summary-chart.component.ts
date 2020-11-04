@@ -30,9 +30,8 @@ export class SummaryChartComponent implements OnInit, OnChanges {
     this.alertManager.removeAllAlerts();
     const items: ChartItem[] = changes.items.currentValue;
     if (items.length === 0) {
-      const errorMessage = 'No chart data available.';
-      this.alertManager.addWarningAlert(errorMessage, false);
-      this.apiStatus.error(errorMessage);
+      this.alertManager.addWarningAlert('No chart data available.', false);
+      this.apiStatus.error();
     } else {
       this.setChartOptions();
       this.apiStatus.success();

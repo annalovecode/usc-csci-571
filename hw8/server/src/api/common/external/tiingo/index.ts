@@ -1,6 +1,7 @@
 import moment from 'moment';
 import * as Request from '../request';
 import * as Parser from '../../parser';
+import { NotFoundError } from '../../error';
 import { BaseURL, Token } from './config';
 
 const buildURL = (resource: string): string => `${BaseURL}/${resource}`;
@@ -39,6 +40,18 @@ export const getCurrentTopOfBookAndLastPrice = async (ticker: string) => {
     let data = await get(url);
     data = Parser.parseArray(data);
     return data[0];
+};
+
+export const getCurrentTopOfBookAndLastPrices = async (tickers: string[]): Promise<any[]> => {
+    const url = buildURL(`iex/`);
+    let data = await get(url, {
+        tickers: tickers.join(',')
+    });
+    data = Parser.parseArray(data);
+    if (data.length < tickers.length) {
+        throw new NotFoundError();
+    }
+    return data;
 };
 
 export const search = async (query: string): Promise<any[]> => {

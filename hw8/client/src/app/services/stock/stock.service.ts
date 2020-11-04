@@ -8,6 +8,7 @@ import { NewsItem } from 'src/app/models/news-item';
 import { ChartItem } from 'src/app/models/chart-item';
 import { ApiError } from 'src/app/models/api-error';
 import { ApiResponse } from 'src/app/models/api-response';
+import { LastPrices } from 'src/app/models/last-prices';
 
 @Injectable({
   providedIn: 'root'
@@ -40,11 +41,11 @@ export class StockService {
       );
   }
 
-  getLastPrice(ticker: string): Observable<ApiResponse<number>> {
-    return this.get<number>(`last-price/${ticker}`)
+  getLastPrices(tickers: string[]): Observable<ApiResponse<LastPrices>> {
+    return this.get<LastPrices>('last-price', { tickers: tickers.join(',') })
       .pipe(
-        map((response: { [key: string]: any }) => ApiResponse.success<number>(response.data)),
-        catchError(this.handleError<number>('getLastPrice'))
+        map((response: { [key: string]: any }) => ApiResponse.success<LastPrices>(response.data)),
+        catchError(this.handleError<LastPrices>('getLastPrices'))
       );
   }
 
@@ -66,7 +67,6 @@ export class StockService {
 
   private handleError<T>(operation = 'operation'): (error: HttpErrorResponse) => Observable<ApiResponse<T>> {
     return (error: HttpErrorResponse) => {
-      console.log(error);
       let apiError: ApiError;
       if (error.error instanceof ErrorEvent || !(error.error.message)) {
         // A client-side or network error occurred. Handle it accordingly.

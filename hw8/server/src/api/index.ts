@@ -6,7 +6,7 @@ const api = express.Router();
 
 api.get('/search', async (req: Request, res) => {
     try {
-        const query = Parser.parseParameter(req.query.query);
+        const query = Parser.parseStringParameter(req.query.query);
         const data = await Service.search(query);
         return Response.sendOk(res, data);
     } catch (error) {
@@ -16,7 +16,7 @@ api.get('/search', async (req: Request, res) => {
 
 api.get('/details-summary/:ticker', async (req: Request, res) => {
     try {
-        const ticker = Parser.parseParameter(req.params.ticker);
+        const ticker = Parser.parseStringParameter(req.params.ticker);
         const data = await Service.getDetailsAndSummary(ticker);
         return Response.sendOk(res, data);
     } catch (error) {
@@ -26,7 +26,7 @@ api.get('/details-summary/:ticker', async (req: Request, res) => {
 
 api.get('/news/:ticker', async (req: Request, res) => {
     try {
-        const ticker = Parser.parseParameter(req.params.ticker);
+        const ticker = Parser.parseStringParameter(req.params.ticker);
         const data = await Service.getNews(ticker);
         return Response.sendOk(res, data);
     } catch (error) {
@@ -36,7 +36,7 @@ api.get('/news/:ticker', async (req: Request, res) => {
 
 api.get('/historical-chart/:ticker', async (req: Request, res) => {
     try {
-        const ticker = Parser.parseParameter(req.params.ticker);
+        const ticker = Parser.parseStringParameter(req.params.ticker);
         const data = await Service.getHistoricalChartData(ticker);
         return Response.sendOk(res, data);
     } catch (error) {
@@ -44,10 +44,10 @@ api.get('/historical-chart/:ticker', async (req: Request, res) => {
     }
 });
 
-api.get('/last-price/:ticker', async (req: Request, res) => {
+api.get('/last-price', async (req: Request, res) => {
     try {
-        const ticker = Parser.parseParameter(req.params.ticker);
-        const data = await Service.getLastPrice(ticker);
+        const tickers = Parser.parseArrayParameter(req.query.tickers);
+        const data = await Service.getLastPrices(tickers);
         return Response.sendOk(res, data);
     } catch (error) {
         return Response.sendError(res, error);

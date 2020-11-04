@@ -10,35 +10,38 @@
             <app-alert *ngFor="let alert of alertManager.getAlerts()" [alert]="alert" (closed)="removeAlert($event)">
             </app-alert>
         </div>
-        <div class="row card" *ngFor="let item of successWatchlist" (click)="navigateToDetails(item.ticker)">
-            <div class="close-button">
-                <button type="button" class="close" (click)="removeFromWatchlist(item.ticker)">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="card-title">
-                    <div>
-                        {{ item.ticker }}
+        <ng-container *ngIf="apiStatus.isSuccess()">
+            <div class="row card" *ngFor="let item of watchlist" (click)="navigateToDetails(item.ticker)">
+                <div class="close-button">
+                    <button type="button" class="close"
+                        (click)="removeFromWatchlist(item.ticker);$event.stopPropagation()">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">
+                        <div>
+                            {{ item.ticker }}
+                        </div>
+                        <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                            [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                            {{ lastPrices[item.ticker] | number:'.2-2' }}
+                        </div>
                     </div>
-                    <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
-                        [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                        {{ lastPrices[item.ticker] | number:'.2-2' }}
+                    <div class="card-subtitle">
+                        <div>
+                            {{ item.name }}
+                        </div>
+                        <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
+                            [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
+                            <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
+                            <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
+                            {{ item.getChange(lastPrices[item.ticker]) | number:'.2-2' }}
+                            ({{ item.getChangePercent(lastPrices[item.ticker]) | number:'.2-2' }}%)
+                        </div>
                     </div>
                 </div>
-                <div class="card-subtitle">
-                    <div>
-                        {{ item.name }}
-                    </div>
-                    <div [class.text-success]="item.getChange(lastPrices[item.ticker]) > 0"
-                        [class.text-danger]="item.getChange(lastPrices[item.ticker]) < 0">
-                        <i *ngIf="item.getChange(lastPrices[item.ticker]) > 0" class="fa fa-caret-up"></i>
-                        <i *ngIf="item.getChange(lastPrices[item.ticker]) < 0" class="fa fa-caret-down"></i>
-                        {{ item.getChange(lastPrices[item.ticker]) | number:'.2-2' }}
-                        ({{ item.getChangePercent(lastPrices[item.ticker]) | number:'.2-2' }}%)
-                    </div>
-                </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </div>

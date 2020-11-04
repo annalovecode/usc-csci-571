@@ -73,14 +73,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.cancelSubscription();
       }
     } else if (response.isFailure() && response.error.isNotFound()) {
-      const errorMessage = `No results found. Please enter valid Ticker`;
-      this.alertManager.addDangerAlert(errorMessage, false);
-      this.apiStatus.error(errorMessage);
+      this.alertManager.addDangerAlert('No results found. Please enter valid Ticker', false);
+      this.apiStatus.error();
       this.cancelSubscription();
     } else {
-      const errorMessage = `Error occurred while fetching details and summary.`;
-      this.alertManager.addDangerAlert(errorMessage, false);
-      this.apiStatus.error(errorMessage);
+      this.alertManager.addDangerAlert('Error occurred while fetching details and summary.', false);
+      this.apiStatus.error();
     }
   }
 
@@ -158,13 +156,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.historicalChartSubscription = this.stockService.getHistoricalChartData(this.ticker)
       .subscribe((response: ApiResponse<ChartItem[]>) => {
         if (response.isFailure()) {
-          const error = response.error;
-          if (error.isNotFound()) {
+          if (response.error.isNotFound()) {
             this.historicalChartAlertManager.addWarningAlert('No chart data available.', false);
           } else {
             this.historicalChartAlertManager.addDangerAlert('Error occurred while fetching chart data.', false);
           }
-          this.historicalChartApiStatus.error(error.message);
+          this.historicalChartApiStatus.error();
         } else {
           this.setHistoricalChartOptions(response.data);
           this.historicalChartApiStatus.success();

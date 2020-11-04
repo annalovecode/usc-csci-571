@@ -37,13 +37,12 @@ export class NewsComponent implements OnInit, OnDestroy {
     this.apiStatus.loading();
     this.subscription = this.stockService.getNews(this.ticker).subscribe((response: ApiResponse<NewsItem[]>) => {
       if (response.isFailure()) {
-        const error = response.error;
-        if (error.isNotFound()) {
+        if (response.error.isNotFound()) {
           this.alertManager.addWarningAlert('No news available.', false);
         } else {
           this.alertManager.addDangerAlert('Error occurred while fetching news.', false);
         }
-        this.apiStatus.error(error.message);
+        this.apiStatus.error();
       } else {
         this.items = response.data;
         this.apiStatus.success();

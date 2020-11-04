@@ -9,6 +9,7 @@ import { ApiStatus } from 'src/app/models/api-status';
 import { AlertManager } from 'src/app/models/alert-manager';
 import { BuySellModalComponent } from 'src/app/components/buy-sell-modal/buy-sell-modal.component';
 import { ApiResponse } from 'src/app/models/api-response';
+import { LastPrices } from 'src/app/models/last-prices';
 
 @Component({
   selector: 'app-portfolio',
@@ -16,8 +17,8 @@ import { ApiResponse } from 'src/app/models/api-response';
   styleUrls: ['./portfolio.component.scss']
 })
 export class PortfolioComponent implements OnInit, OnDestroy {
-  successPortfolio: PortfolioItem[] = [];
-  lastPrices = {};
+  portfolio: PortfolioItem[] = null;
+  lastPrices = null;
   alertManager: AlertManager = new AlertManager();
   apiStatus = new ApiStatus();
   subscription: Subscription = null;
@@ -31,7 +32,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetchLastPricesAndBuildPortfolio();
+    this.fetchPortfolioAndLastPrices();
   }
 
   ngOnDestroy(): void {
@@ -40,54 +41,37 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     }
   }
 
-  private fetchLastPricesAndBuildPortfolio(refetching = false): void {
-    if (refetching) {
-      this.successPortfolio = [];
-      this.lastPrices = {};
-      this.alertManager.removeAllAlerts();
-    }
+  private fetchPortfolioAndLastPrices(refetching = false): void {
     if (this.portfolioService.isPortfolioEmpty()) {
-      this.showEmptyPortfolioAlert();
-      this.apiStatus.success();
-      return;
-    }
-    this.apiStatus.loading();
-    const portfolio = this.portfolioService.getPortfolio();
-    this.subscription = forkJoin(portfolio.map(item => this.stockService.getLastPrice(item.ticker)))
-      .subscribe((responses: ApiResponse<number>[]) => {
-        const successPortfolio: PortfolioItem[] = [];
-        const errorTickers: string[] = [];
-        for (let i = 0; i < portfolio.length; i++) {
-          const item = portfolio[i];
-          const ticker = item.ticker;
-          const response = responses[i];
+      this.addPortfolioEmptyAlert();
+      this.apiStatus.error();
+    } else {
+      if (!refetching) {
+        this.apiStatus.loading();
+      }
+      const portfolio = this.portfolioService.getPortfolio();
+      this.subscription = this.stockService.getLastPrices(portfolio.map(item => item.ticker))
+        .subscribe((response: ApiResponse<LastPrices>) => {
           if (response.isFailure()) {
-            errorTickers.push(ticker);
+            this.alertManager.addDangerAlert(
+              `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stocks.`,
+              false
+            );
+            this.apiStatus.error();
           } else {
-            this.lastPrices[ticker] = response.data;
-            successPortfolio.push(item);
+            this.portfolio = portfolio;
+            this.lastPrices = response.data;
+            this.apiStatus.success();
           }
-        }
-        let errorMessage: string = null;
-        if (errorTickers.length > 0) {
-          errorMessage =
-            `Error occurred while ${refetching ? 'refetching' : 'fetching'} last prices of stock(s): ${errorTickers.join(', ')}.`;
-          this.alertManager.addDangerAlert(errorMessage, false);
-        }
-        if (successPortfolio.length === 0) {
-          this.apiStatus.error(errorMessage);
-        } else {
-          this.successPortfolio = successPortfolio;
-          this.apiStatus.success();
-        }
-      });
+        });
+    }
   }
 
   navigateToDetails(ticker): void {
     this.router.navigate(['/details', ticker]);
   }
 
-  showEmptyPortfolioAlert(): void {
+  addPortfolioEmptyAlert(): void {
     this.alertManager.addWarningAlert('Currently you don\'t have any stock.', false);
   }
 
@@ -105,7 +89,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   buy(item: PortfolioItem, quantity: number): void {
     this.portfolioService.buy(item.ticker, item.name, quantity, this.lastPrices[item.ticker]);
-    this.fetchLastPricesAndBuildPortfolio(true);
+    this.fetchPortfolioAndLastPrices(true);
   }
 
   openSellModal(item: PortfolioItem): void {
@@ -123,6 +107,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   sell(item: PortfolioItem, quantity: number): void {
     this.portfolioService.sell(item.ticker, quantity);
-    this.fetchLastPricesAndBuildPortfolio(true);
+    this.fetchPortfolioAndLastPrices(true);
   }
 }

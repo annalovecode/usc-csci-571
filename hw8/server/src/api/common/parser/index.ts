@@ -1,3 +1,4 @@
+import { Parser } from '..';
 import { NotFoundError, BadRequestError } from '../error';
 import * as Validator from '../validator';
 
@@ -26,9 +27,12 @@ export const parseArray = (value: any): any[] => {
     return value as any[];
 };
 
-export const parseParameter = (value: any): string => {
+export const parseStringParameter = (value: any): string => {
     if (!Validator.isNonEmptyString(value)) {
         throw new BadRequestError();
     }
     return (value as string).trim();
 };
+
+export const parseArrayParameter = (values: any): string[] =>
+    parseStringParameter(values).split(',').map((value: string) => parseStringParameter(value));
