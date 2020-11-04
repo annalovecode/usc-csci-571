@@ -225,7 +225,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
       }],
 
       tooltip: {
-        split: true
+        split: true,
+        xDateFormat: '%A, %b %e, %Y'
       },
 
       plotOptions: {
@@ -237,7 +238,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
             ], [
               'month',
               [1, 2, 3, 4, 6]
-            ]]
+            ]],
+            groupPixelWidth: 5
           }
         }
       },
