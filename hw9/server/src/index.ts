@@ -3,7 +3,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 import * as bodyParser from 'body-parser';
 import compression from 'compression';
-// import cors from 'cors';
+import cors from 'cors';
 import api from './api';
 
 const app = express();
@@ -34,9 +34,13 @@ app.use(bodyParser.json());
 app.use(compression());
 
 // TODO: Remove cors
-// app.use(cors());
+app.use(cors());
 
 app.use('/api', api);
+
+app.get('*', (req, res) => {
+  return res.send('Hello World!');
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
