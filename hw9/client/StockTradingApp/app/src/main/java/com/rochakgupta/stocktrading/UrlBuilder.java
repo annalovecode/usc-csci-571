@@ -5,7 +5,7 @@ import android.net.Uri;
 public class UrlBuilder {
     private static final String SCHEME = "http";
 
-    private static final String AUTHORITY = "usccsci571hw8-env.eba-2irm2bhk.us-east-1.elasticbeanstalk.com";
+    private static final String AUTHORITY = "usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com";
 
     private final Uri.Builder uriBuilder;
 
