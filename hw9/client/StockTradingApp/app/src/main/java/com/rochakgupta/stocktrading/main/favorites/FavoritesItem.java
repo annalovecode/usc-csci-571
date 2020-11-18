@@ -44,6 +44,10 @@ public class FavoritesItem {
         this.currentPrice = currentPrice;
     }
 
+    public boolean isCurrentPriceSet() {
+        return this.currentPrice != null;
+    }
+
     public String getTicker() {
         return ticker;
     }
@@ -56,22 +60,28 @@ public class FavoritesItem {
         return name;
     }
 
-    public double getCurrentPrice() {
-        if (currentPrice == null) {
-            return 0.0;
-        }
+    public Double getCurrentPrice() {
         return currentPrice;
     }
 
-    public double getChange() {
-        return getCurrentPrice() - price;
+    public Double getChange() {
+        if (!isCurrentPriceSet()) {
+            return null;
+        }
+        return currentPrice - price;
     }
 
-    public boolean getShowTrending() {
+    public Boolean showTrending() {
+        if (!isCurrentPriceSet()) {
+            return null;
+        }
         return getChange() != 0;
     }
 
     public Integer getTrendingDrawable() {
+        if (!isCurrentPriceSet()) {
+            return null;
+        }
         double change = getChange();
         if (change < 0) {
             return R.drawable.ic_baseline_trending_down_24;

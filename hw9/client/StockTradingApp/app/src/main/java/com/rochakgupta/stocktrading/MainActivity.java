@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -20,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
-    private LinearLayout successLayout;
+    private NestedScrollView successLayout;
 
     private SearchAdapter searchAdapter;
 
@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
     private void initializeRecyclerView() {
         mSuccessViewAdapter = new SectionedRecyclerViewAdapter();
-        List<FavoritesItem> items = Storage.getFavorites();
-        favoritesSection = new FavoritesSection(this, items,this);
+        favoritesSection = new FavoritesSection(this,this);
         mSuccessViewAdapter.addSection(favoritesSection);
         RecyclerView mSuccessView = findViewById(R.id.main_rv_success);
         mSuccessView.setLayoutManager(new LinearLayoutManager(this));
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         lastPricesFetchTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                cancelLastPricesFetchRequest();
+                Api.cancelLastPricesFetchRequest();
                 List<String> tickers = Storage.getTickers();
                 if (tickers.size() > 0) {
                     Api.makeLastPricesFetchRequest(tickers, response -> {
@@ -191,11 +190,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     private void stopLastPricesFetchTimer() {
         Log.d(TAG, "Stopping last prices fetch timer");
         lastPricesFetchTimer.cancel();
-        cancelLastPricesFetchRequest();
-    }
-
-    private void cancelLastPricesFetchRequest() {
-        Api.cancelRequests(Api.LAST_PRICES_FETCH_REQUEST_TAG);
+        Api.cancelLastPricesFetchRequest();
     }
 
     @Override
@@ -208,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     protected void onPause() {
         super.onPause();
         stopLastPricesFetchTimer();
-        cancelSearchOptionsFetchRequests();
     }
 
     @SuppressLint("RestrictedApi")
@@ -273,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
                 if (itemClicked.get()) {
                     itemClicked.set(false);
                 } else {
-                    cancelSearchOptionsFetchRequests();
+                    Api.cancelSearchOptionsFetchRequest();
                     handler.removeMessages(TRIGGER_AUTO_COMPLETE);
                     handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, 300);
                 }
@@ -301,10 +295,6 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
             message = "Error occurred while fetching search options";
         }
         ToastUtils.show(this, message);
-    }
-
-    private void cancelSearchOptionsFetchRequests() {
-        Api.cancelRequests(Api.SEARCH_OPTIONS_FETCH_REQUEST_TAG);
     }
 
     public void onFooterClick(View view) {

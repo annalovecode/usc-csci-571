@@ -135,7 +135,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Api.cancelRequests(Api.EVERYTHING_FETCH_REQUEST_TAG);
+        Api.cancelEverythingFetchRequest();
         super.onDestroy();
     }
 

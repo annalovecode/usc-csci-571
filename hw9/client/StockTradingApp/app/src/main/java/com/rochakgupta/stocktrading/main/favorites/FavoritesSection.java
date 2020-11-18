@@ -7,7 +7,9 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
+import com.rochakgupta.stocktrading.format.FormattingUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
@@ -17,20 +19,20 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
 public class FavoritesSection extends Section {
     private final Context context;
-    private List<FavoritesItem> items;
+    private final List<FavoritesItem> items;
     private final OnClickListener onClickListener;
 
     public interface OnClickListener {
         void onFavoritesItemClicked(FavoritesItem item);
     }
 
-    public FavoritesSection(Context context, List<FavoritesItem> items, OnClickListener onClickListener) {
+    public FavoritesSection(Context context, OnClickListener onClickListener) {
         super(SectionParameters.builder()
                                .itemResourceId(R.layout.favorites_section_item)
                                .headerResourceId(R.layout.favorites_section_header)
                                .build());
         this.context = context;
-        this.items = items;
+        this.items = new ArrayList<>();
         this.onClickListener = onClickListener;
     }
 
@@ -76,14 +78,16 @@ public class FavoritesSection extends Section {
         FavoritesItem item = items.get(position);
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
-        viewHolder.currentPriceView.setText(String.valueOf(item.getCurrentPrice()));
-        viewHolder.changeView.setText(String.valueOf(item.getChange()));
-        viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
-        if (item.getShowTrending()) {
-            viewHolder.trendingView.setImageResource(item.getTrendingDrawable());
-            viewHolder.trendingView.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.trendingView.setVisibility(View.INVISIBLE);
+        if (item.isCurrentPriceSet()) {
+            viewHolder.currentPriceView.setText(FormattingUtils.doubleToString(item.getCurrentPrice()));
+            viewHolder.changeView.setText(FormattingUtils.doubleToString(item.getChange()));
+            viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
+            if (item.showTrending()) {
+                viewHolder.trendingView.setImageResource(item.getTrendingDrawable());
+                viewHolder.trendingView.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.trendingView.setVisibility(View.INVISIBLE);
+            }
         }
         viewHolder.arrowView.setOnClickListener(v -> onClickListener.onFavoritesItemClicked(item));
     }

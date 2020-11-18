@@ -23,11 +23,11 @@ public class FavoritesItemViewHolder extends RecyclerView.ViewHolder {
 
     public FavoritesItemViewHolder(View view) {
         super(view);
-        tickerView = (TextView) view.findViewById(R.id.fav_item_tv_ticker);
-        descriptionView = (TextView) view.findViewById(R.id.fav_item_tv_description);
-        currentPriceView = (TextView) view.findViewById(R.id.fav_item_tv_current_price);
-        changeView = (TextView) view.findViewById(R.id.fav_item_tv_change);
-        trendingView = (ImageView) view.findViewById(R.id.fav_item_iv_trending);
-        arrowView = (ImageView) view.findViewById(R.id.fav_item_iv_arrow);
+        tickerView = (TextView) view.findViewById(R.id.favorites_tv_ticker);
+        descriptionView = (TextView) view.findViewById(R.id.favorites_tv_description);
+        currentPriceView = (TextView) view.findViewById(R.id.favorites_tv_current_price);
+        changeView = (TextView) view.findViewById(R.id.favorites_tv_change);
+        trendingView = (ImageView) view.findViewById(R.id.favorites_iv_trending);
+        arrowView = (ImageView) view.findViewById(R.id.favorites_iv_arrow);
     }
 }

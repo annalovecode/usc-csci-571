@@ -20,9 +20,9 @@ public class Api {
     private static boolean initialized;
     private static RequestQueue requestQueue;
 
-    public static final String LAST_PRICES_FETCH_REQUEST_TAG = "LAST_PRICES_FETCH_REQUEST_TAG";
-    public static final String SEARCH_OPTIONS_FETCH_REQUEST_TAG = "SEARCH_OPTIONS_FETCH_REQUEST_TAG";
-    public static final String EVERYTHING_FETCH_REQUEST_TAG = "DETAILS_FETCH_REQUEST_TAG";
+    private static final String LAST_PRICES_FETCH_REQUEST_TAG = "LAST_PRICES_FETCH_REQUEST_TAG";
+    private static final String SEARCH_OPTIONS_FETCH_REQUEST_TAG = "SEARCH_OPTIONS_FETCH_REQUEST_TAG";
+    private static final String EVERYTHING_FETCH_REQUEST_TAG = "DETAILS_FETCH_REQUEST_TAG";
 
     synchronized public static void initialize(Context context) {
         if (!initialized) {
@@ -76,8 +76,16 @@ public class Api {
         requestQueue.add(request);
     }
 
-    synchronized public static void cancelRequests(String tag) {
-        requestQueue.cancelAll(tag);
+    synchronized public static void cancelLastPricesFetchRequest() {
+        requestQueue.cancelAll(LAST_PRICES_FETCH_REQUEST_TAG);
+    }
+
+    synchronized public static void cancelSearchOptionsFetchRequest() {
+        requestQueue.cancelAll(SEARCH_OPTIONS_FETCH_REQUEST_TAG);
+    }
+
+    synchronized public static void cancelEverythingFetchRequest() {
+        requestQueue.cancelAll(EVERYTHING_FETCH_REQUEST_TAG);
     }
 
     public static boolean isNotFoundError(VolleyError error) {
