@@ -11,17 +11,22 @@ import java.util.List;
 import java.util.Map;
 
 public class GsonUtils {
-    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
-                                                      .serializeNulls().create();
+    private static final Gson gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation().setPrettyPrinting()
+            .serializeNulls()
+            .create();
 
-    private static final Type favoritesItemsType = new TypeToken<List<FavoritesItem>>() {}.getType();
+    private static final Type favoritesItemsType = new TypeToken<List<FavoritesItem>>() {
+    }.getType();
 
     public static Map<String, Double> jsonToLastPrices(String json) {
-        return gson.fromJson(json, new TypeToken<Map<String, Double>>() {}.getType());
+        return gson.fromJson(json, new TypeToken<Map<String, Double>>() {
+        }.getType());
     }
 
     public static List<SearchOption> jsonToSearchOptions(String json) {
-        return gson.fromJson(json, new TypeToken<List<SearchOption>>() {}.getType());
+        return gson.fromJson(json, new TypeToken<List<SearchOption>>() {
+        }.getType());
     }
 
     public static List<FavoritesItem> jsonToFavorites(String json) {

@@ -49,7 +49,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity implements FavoritesSection.OnClickListener {
-    private final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     private SectionedRecyclerViewAdapter mSuccessViewAdapter;
 
     private Timer lastPricesFetchTimer;
+    private static final int TIMER_DURATION_SECONDS = 15;
     private ApiStatus lastPricesFetchStatus;
 
     @Override
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
                     onLastPricesFetchError();
                 });
             }
-        }, 0, TimeUnit.SECONDS.toMillis(1000));
+        }, 0, TimeUnit.SECONDS.toMillis(TIMER_DURATION_SECONDS));
     }
 
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {

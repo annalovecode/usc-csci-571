@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.rochakgupta.stocktrading.storage.StockPreferences;
 
 public class DetailActivity extends AppCompatActivity {
-    private final String TAG = DetailActivity.class.getSimpleName();
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     private String ticker;
 
@@ -30,7 +30,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (!intent.hasExtra("ticker")) {
-            throw new RuntimeException("ticker cannot be null for DetailActivity");
+            throw new RuntimeException("DetailActivity needs ticker in intent to run");
         }
         ticker = intent.getStringExtra("ticker");
     }
