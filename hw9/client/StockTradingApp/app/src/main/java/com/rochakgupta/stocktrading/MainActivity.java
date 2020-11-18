@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +32,7 @@ import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
 import com.rochakgupta.stocktrading.storage.Storage;
+import com.rochakgupta.stocktrading.toast.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -184,8 +184,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
             showErrorView();
             lastPricesFetchStatus.error();
         } else {
-            Toast.makeText(
-                    this, "Error occurred while refetching last prices", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, "Error occurred while refetching last prices");
         }
     }
 
@@ -301,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         if (message == null) {
             message = "Error occurred while fetching search options";
         }
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ToastUtils.show(this, message);
     }
 
     private void cancelSearchOptionsFetchRequests() {

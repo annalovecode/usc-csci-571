@@ -6,9 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +23,7 @@ import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.storage.Storage;
+import com.rochakgupta.stocktrading.toast.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,7 +149,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             onBackPressed();
@@ -164,19 +163,20 @@ public class DetailActivity extends AppCompatActivity {
 
     private void onFavoriteClicked(MenuItem item) {
         if (everythingFetchStatus.isLoading()) {
-            Toast.makeText(this, "Still fetching data", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, "Still fetching data");
         } else if (everythingFetchStatus.isError()) {
-            Toast.makeText(this, "Failed to fetch data", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, "Failed to fetch data");
         } else {
             boolean isFavorite = Storage.isFavorite(ticker);
-            int icon = getFavoriteIcon(!isFavorite);
             if (isFavorite) {
                 Storage.removeFromFavorites(ticker);
-                item.setIcon(icon);
+                ToastUtils.show(this, "\"" + ticker + "\" was removed from favorites");
             } else {
                 Storage.addToFavorites(FavoritesItem.with(ticker, detail.getName(), detail.getLastPrice()));
-                item.setIcon(icon);
+                ToastUtils.show(this, "\"" + ticker + "\" was added to favorites");
             }
+            int icon = getFavoriteIcon(!isFavorite);
+            item.setIcon(icon);
         }
     }
 
