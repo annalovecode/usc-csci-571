@@ -1,7 +1,6 @@
 import moment from 'moment-timezone';
-import { parse } from 'url';
 import { Parser, Tiingo, NewsAPI } from '../common';
-import { SearchResultItem, Everything, Details, Summary, ChartItem, NewsItem, LastPrices } from './models';
+import { SearchResultItem, Everything, Detail, Summary, ChartItem, NewsItem, LastPrices } from './models';
 
 export const search = async (query: string): Promise<SearchResultItem[]> => {
     const items = await Tiingo.search(query);
@@ -19,7 +18,7 @@ export const search = async (query: string): Promise<SearchResultItem[]> => {
     return Parser.parseNonEmptyArray(searchResultItems);
 };
 
-const buildDetails = (metadata: any, currentTopOfBookAndLastPrice: any): Details => {
+const buildDetail = (metadata: any, currentTopOfBookAndLastPrice: any): Detail => {
     const ticker = Parser.parseString(metadata.ticker);
     const name = Parser.parseString(metadata.name);
 
@@ -108,11 +107,11 @@ export const getEverything = async (ticker: string): Promise<Everything> => {
         getHistoricalChartData(ticker)
     ]);
 
-    const details = buildDetails(metadata, currentTopOfBookAndLastPrice);
+    const detail = buildDetail(metadata, currentTopOfBookAndLastPrice);
     const summary = buildSummary(metadata, currentTopOfBookAndLastPrice);
 
     return {
-        details,
+        detail,
         summary,
         news,
         chart

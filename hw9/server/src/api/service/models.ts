@@ -3,7 +3,7 @@ export interface SearchResultItem {
     name: string;
 }
 
-export interface Details {
+export interface Detail {
     ticker: string;
     name: string;
     lastPrice: number;
@@ -43,7 +43,7 @@ export interface NewsItem {
 }
 
 export interface Everything {
-    details: Details;
+    detail: Detail;
     summary: Summary;
     news: NewsItem[];
     chart: ChartItem[];
