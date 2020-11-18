@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -19,19 +19,19 @@
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_loading"
+        android:id="@+id/main_cl_loading"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/cl_success"
+        app:layout_constraintBottom_toBottomOf="@+id/main_ll_success"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
         android:visibility="invisible">
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/main_pb"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:indeterminateTint="@color/purple"
@@ -44,14 +44,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fetching Data"
-            app:layout_constraintEnd_toEndOf="@+id/progressBar"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar"
+            app:layout_constraintEnd_toEndOf="@+id/main_pb"
+            app:layout_constraintStart_toStartOf="@+id/main_pb"
+            app:layout_constraintTop_toBottomOf="@+id/main_pb"
             android:paddingTop="4dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tv_error"
+        android:id="@+id/main_tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Error occurred while fetching last prices"
@@ -59,25 +59,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_success"
+    <LinearLayout
+        android:id="@+id/main_ll_success"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:visibility="invisible">
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_success"
+            android:id="@+id/main_rv_success"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_footer"
+            android:id="@+id/main_tv_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -87,7 +87,7 @@
             android:paddingBottom="16dp"
             android:text="Powered by tiingo"
             android:textStyle="italic"
-            app:layout_constraintTop_toBottomOf="@+id/rv_success"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/main_rv_success" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

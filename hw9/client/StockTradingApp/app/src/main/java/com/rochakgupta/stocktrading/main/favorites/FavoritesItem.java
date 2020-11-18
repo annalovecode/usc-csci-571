@@ -6,20 +6,42 @@ import com.rochakgupta.stocktrading.R;
 
 public class FavoritesItem {
 
-    private final String ticker;
+    private String ticker;
 
-    private final String name;
+    private String name;
 
-    private final double price;
+    private double price;
 
     private transient Integer stocks;
 
     private transient Double currentPrice;
 
-    public FavoritesItem(String ticker, String name, double price) {
+    public static FavoritesItem with(String ticker, String name, double price) {
+        FavoritesItem item = new FavoritesItem();
+        item.setTicker(ticker);
+        item.setName(name);
+        item.setPrice(price);
+        return item;
+    }
+
+    private void setTicker(String ticker) {
         this.ticker = ticker;
+    }
+
+    private void setName(String name) {
         this.name = name;
+    }
+
+    private void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setStocks(int stocks) {
+        this.stocks = stocks;
+    }
+
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
     public String getTicker() {
@@ -34,28 +56,23 @@ public class FavoritesItem {
         return name;
     }
 
-    public void setStocks(int stocks) {
-        this.stocks = stocks;
-    }
-
-    public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
-    public Double getCurrentPrice() {
+    public double getCurrentPrice() {
+        if (currentPrice == null) {
+            return 0.0;
+        }
         return currentPrice;
     }
 
-    public Double getChange() {
-        return currentPrice - price;
+    public double getChange() {
+        return getCurrentPrice() - price;
     }
 
-    public Boolean getShowTrending() {
+    public boolean getShowTrending() {
         return getChange() != 0;
     }
 
     public Integer getTrendingDrawable() {
-        Double change = getChange();
+        double change = getChange();
         if (change < 0) {
             return R.drawable.ic_baseline_trending_down_24;
         } else if (change > 0) {
@@ -64,8 +81,8 @@ public class FavoritesItem {
         return null;
     }
 
-    public Integer getChangeColor() {
-        Double change = getChange();
+    public int getChangeColor() {
+        double change = getChange();
         if (change < 0) {
             return R.color.red;
         } else if (change > 0) {

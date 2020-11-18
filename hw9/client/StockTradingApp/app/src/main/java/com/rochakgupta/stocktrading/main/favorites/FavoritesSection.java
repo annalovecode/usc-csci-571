@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
 
-import java.util.Collections;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
@@ -24,19 +24,39 @@ public class FavoritesSection extends Section {
         void onFavoritesItemClicked(FavoritesItem item);
     }
 
-    public FavoritesSection(Context context, OnClickListener onClickListener) {
+    public FavoritesSection(Context context, List<FavoritesItem> items, OnClickListener onClickListener) {
         super(SectionParameters.builder()
                                .itemResourceId(R.layout.favorites_section_item)
                                .headerResourceId(R.layout.favorites_section_header)
-                               .footerResourceId(R.layout.favorites_section_footer)
                                .build());
         this.context = context;
-        this.items = Collections.emptyList();
+        this.items = items;
         this.onClickListener = onClickListener;
     }
 
-    public void setItems(List<FavoritesItem> items) {
-        this.items = items;
+    public void setItems(List<FavoritesItem> newItems, SectionAdapter adapter) {
+        if (newItems.isEmpty()) {
+            int count = getContentItemsTotal();
+            items.clear();
+            adapter.notifyItemRangeRemoved(0, count);
+        } else if (items.isEmpty()) {
+            items.addAll(newItems);
+            adapter.notifyAllItemsInserted();
+        } else {
+            int count = getContentItemsTotal();
+            items.clear();
+            items.addAll(newItems);
+            int newCount = newItems.size();
+            if (count < newCount) {
+                adapter.notifyItemRangeChanged(0, count);
+                adapter.notifyItemRangeInserted(count, newCount);
+            } else if (count > newCount) {
+                adapter.notifyItemRangeChanged(0, count);
+                adapter.notifyItemRangeRemoved(count, newCount);
+            } else {
+                adapter.notifyAllItemsChanged(null);
+            }
+        }
     }
 
     @Override
@@ -56,8 +76,8 @@ public class FavoritesSection extends Section {
         FavoritesItem item = items.get(position);
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
-        viewHolder.currentPriceView.setText(item.getCurrentPrice().toString());
-        viewHolder.changeView.setText(item.getChange().toString());
+        viewHolder.currentPriceView.setText(String.valueOf(item.getCurrentPrice()));
+        viewHolder.changeView.setText(String.valueOf(item.getChange()));
         viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
         if (item.getShowTrending()) {
             viewHolder.trendingView.setImageResource(item.getTrendingDrawable());
@@ -70,11 +90,6 @@ public class FavoritesSection extends Section {
 
     @Override
     public RecyclerView.ViewHolder getHeaderViewHolder(View view) {
-        return new EmptyViewHolder(view);
-    }
-
-    @Override
-    public RecyclerView.ViewHolder getFooterViewHolder(View view) {
         return new EmptyViewHolder(view);
     }
 }

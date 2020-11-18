@@ -3,24 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:paddingStart="4dp"
     android:paddingEnd="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/fav_item_cl_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/fav_item_iv_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingStart="8dp"
-        android:paddingEnd="4dp">
+        android:paddingEnd="4dp"
+        android:paddingBottom="6dp">
 
         <TextView
-            android:id="@+id/tv_ticker"
+            android:id="@+id/fav_item_tv_ticker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -30,43 +31,43 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/tv_current_price"
+            android:id="@+id/fav_item_tv_current_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tv_ticker"
+            app:layout_constraintBaseline_toBaselineOf="@+id/fav_item_tv_ticker"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/tv_description"
+            android:id="@+id/fav_item_tv_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_ticker" />
+            app:layout_constraintTop_toBottomOf="@+id/fav_item_tv_ticker" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_change"
+            android:id="@+id/fav_item_cl_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_current_price">
+            app:layout_constraintTop_toBottomOf="@+id/fav_item_tv_current_price">
             <ImageView
-                android:id="@+id/iv_trending"
+                android:id="@+id/fav_item_iv_trending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tv_change"
+                app:layout_constraintEnd_toStartOf="@+id/fav_item_tv_change"
                 android:layout_marginEnd="4dp"
                 android:visibility="invisible"/>
             <TextView
-                android:id="@+id/tv_change"
+                android:id="@+id/fav_item_tv_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -79,13 +80,19 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/iv_arrow"
+        android:id="@+id/fav_item_iv_arrow"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toEndOf="@+id/fav_item_cl_content"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/fav_item_cl_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

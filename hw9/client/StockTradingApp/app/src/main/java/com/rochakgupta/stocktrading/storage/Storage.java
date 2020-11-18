@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StockPreferences {
+public class Storage {
     private static boolean initialized;
 
     private static Context context;
@@ -23,16 +23,22 @@ public class StockPreferences {
         if (!initialized) {
             initialized = true;
             context = _context.getApplicationContext();
+            List<FavoritesItem> items = getFavorites();
+            updateFavorites(items);
         }
     }
 
+    synchronized public static List<String> getTickers() {
+        List<FavoritesItem> items = getFavorites();
+        return items.stream().map(FavoritesItem::getTicker).collect(Collectors.toList());
+    }
 
     synchronized public static List<FavoritesItem> getFavorites() {
         SharedPreferences preferences = getSharedPreferences();
         if (preferences.contains(FAVORITES_KEY)) {
             return GsonUtils.jsonToFavorites(preferences.getString(FAVORITES_KEY, null));
         }
-        return Collections.singletonList(new FavoritesItem("AAPL", "Apple", 32.1));
+        return Collections.emptyList();
     }
 
     synchronized public static boolean isFavorite(String ticker) {
@@ -40,7 +46,7 @@ public class StockPreferences {
         return items.stream().anyMatch(favoritesItem -> favoritesItem.getTicker().equals(ticker));
     }
 
-    synchronized public static void addToFavorite(FavoritesItem item) {
+    synchronized public static void addToFavorites(FavoritesItem item) {
         List<FavoritesItem> items = getFavorites();
         items.add(item);
         items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));

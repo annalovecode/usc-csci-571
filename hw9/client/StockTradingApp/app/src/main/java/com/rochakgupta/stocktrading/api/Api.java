@@ -14,14 +14,15 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class ApiUtils {
-    private static final String TAG = ApiUtils.class.getName();
+public class Api {
+    private static final String TAG = Api.class.getName();
 
     private static boolean initialized;
     private static RequestQueue requestQueue;
 
     public static final String LAST_PRICES_FETCH_REQUEST_TAG = "LAST_PRICES_FETCH_REQUEST_TAG";
     public static final String SEARCH_OPTIONS_FETCH_REQUEST_TAG = "SEARCH_OPTIONS_FETCH_REQUEST_TAG";
+    public static final String EVERYTHING_FETCH_REQUEST_TAG = "DETAILS_FETCH_REQUEST_TAG";
 
     synchronized public static void initialize(Context context) {
         if (!initialized) {
@@ -49,6 +50,17 @@ public class ApiUtils {
                 .addQueryParameter("query", query)
                 .build();
         JsonObjectRequest request = buildRequest(url, listener, errorListener, SEARCH_OPTIONS_FETCH_REQUEST_TAG);
+        addRequestToQueue(request);
+    }
+
+    public static void makeEverythingFetchRequest(String ticker, Response.Listener<JSONObject> listener,
+                                                  Response.ErrorListener errorListener) {
+        Log.d(TAG, "Fetching details");
+        String url = (new UrlBuilder())
+                .path("api/everything")
+                .addQueryParameter("ticker", ticker)
+                .build();
+        JsonObjectRequest request = buildRequest(url, listener, errorListener, EVERYTHING_FETCH_REQUEST_TAG);
         addRequestToQueue(request);
     }
 

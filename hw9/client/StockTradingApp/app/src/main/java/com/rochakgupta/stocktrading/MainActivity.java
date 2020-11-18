@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,15 +24,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.api.ApiUtils;
-import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
+import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
-import com.rochakgupta.stocktrading.storage.StockPreferences;
+import com.rochakgupta.stocktrading.storage.Storage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
-    private ConstraintLayout successLayout;
+    private LinearLayout successLayout;
 
     private SearchAdapter searchAdapter;
 
@@ -73,23 +74,24 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
         initializeActionBar();
 
-        loadingLayout = findViewById(R.id.cl_loading);
-        errorView = findViewById(R.id.tv_error);
-        successLayout = findViewById(R.id.cl_success);
+        loadingLayout = findViewById(R.id.main_cl_loading);
+        errorView = findViewById(R.id.main_tv_error);
+        successLayout = findViewById(R.id.main_ll_success);
+
+        Storage.initialize(this);
+
+        Api.initialize(this);
 
         initializeRecyclerView();
 
-        StockPreferences.initialize(this);
-
-        ApiUtils.initialize(this);
-
         lastPricesFetchStatus = new ApiStatus();
+        lastPricesFetchStatus.loading();
 
         showLoadingLayout();
     }
 
     private void initializeActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,9 +101,10 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
     private void initializeRecyclerView() {
         mSuccessViewAdapter = new SectionedRecyclerViewAdapter();
-        favoritesSection = new FavoritesSection(this, this);
+        List<FavoritesItem> items = Storage.getFavorites();
+        favoritesSection = new FavoritesSection(this, items,this);
         mSuccessViewAdapter.addSection(favoritesSection);
-        RecyclerView mSuccessView = findViewById(R.id.rv_success);
+        RecyclerView mSuccessView = findViewById(R.id.main_rv_success);
         mSuccessView.setLayoutManager(new LinearLayoutManager(this));
         mSuccessView.setAdapter(mSuccessViewAdapter);
     }
@@ -109,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     @Override
     public void onFavoritesItemClicked(FavoritesItem item) {
         String ticker = item.getTicker();
+        startDetailActivity(ticker);
+    }
+
+    private void startDetailActivity(String ticker) {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("ticker", ticker);
         startActivity(intent);
@@ -132,43 +139,37 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         lastPricesFetchTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ApiUtils.makeLastPricesFetchRequest(Collections.singletonList("AAPL"), response -> {
-                    try {
-                        JSONObject jsonData = response.getJSONObject("data");
-                        LoggingUtils.logJSONObject(jsonData);
-                        Map<String, Double> lastPrices = GsonUtils.jsonToLastPrices(jsonData.toString());
-                        onLastPricesFetchSuccess(lastPrices);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                cancelLastPricesFetchRequest();
+                List<String> tickers = Storage.getTickers();
+                if (tickers.size() > 0) {
+                    Api.makeLastPricesFetchRequest(tickers, response -> {
+                        try {
+                            JSONObject jsonData = response.getJSONObject("data");
+                            LoggingUtils.logJSONObject(jsonData);
+                            Map<String, Double> lastPrices = GsonUtils.jsonToLastPrices(jsonData.toString());
+                            onLastPricesFetchSuccess(lastPrices);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            onLastPricesFetchError();
+                        }
+                    }, error -> {
+                        LoggingUtils.logError(error);
                         onLastPricesFetchError();
-                    }
-                }, error -> {
-                    LoggingUtils.logError(error);
-                    onLastPricesFetchError();
-                });
+                    });
+                } else {
+                    runOnUiThread(() -> onLastPricesFetchSuccess(Collections.emptyMap()));
+                }
             }
         }, 0, TimeUnit.SECONDS.toMillis(TIMER_DURATION_SECONDS));
     }
 
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {
-        List<FavoritesItem> favoritesItems = buildFavoritesItems(lastPrices);
-        updateFavoritesSection(favoritesItems);
+        List<FavoritesItem> items = Storage.getFavorites();
+        items.forEach(item -> item.setCurrentPrice(lastPrices.get(item.getTicker())));
+        SectionAdapter adapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
+        favoritesSection.setItems(items, adapter);
         showSuccessLayout();
         lastPricesFetchStatus.success();
-    }
-
-    private List<FavoritesItem> buildFavoritesItems(Map<String, Double> lastPrices) {
-        List<FavoritesItem> items = StockPreferences.getFavorites();
-        items.forEach(favoritesItem -> {
-            favoritesItem.setCurrentPrice(lastPrices.get(favoritesItem.getTicker()));
-        });
-        return items;
-    }
-
-    private void updateFavoritesSection(List<FavoritesItem> items) {
-        favoritesSection.setItems(items);
-        SectionAdapter adapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
-        adapter.notifyAllItemsChanged();
     }
 
     private void showSuccessLayout() {
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     }
 
     private void onLastPricesFetchError() {
-        if (!lastPricesFetchStatus.isComplete()) {
+        if (lastPricesFetchStatus.isLoading()) {
             // First load
             showErrorView();
             lastPricesFetchStatus.error();
@@ -191,7 +192,11 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     private void stopLastPricesFetchTimer() {
         Log.d(TAG, "Stopping last prices fetch timer");
         lastPricesFetchTimer.cancel();
-        ApiUtils.cancelRequests(ApiUtils.LAST_PRICES_FETCH_REQUEST_TAG);
+        cancelLastPricesFetchRequest();
+    }
+
+    private void cancelLastPricesFetchRequest() {
+        Api.cancelRequests(Api.LAST_PRICES_FETCH_REQUEST_TAG);
     }
 
     @Override
@@ -212,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
 
-        MenuItem searchMenu = menu.findItem(R.id.action_search);
+        MenuItem searchMenu = menu.findItem(R.id.main_action_search);
 
         SearchView searchView = (SearchView) searchMenu.getActionView();
 
@@ -234,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
             if (message.what == TRIGGER_AUTO_COMPLETE) {
                 String query = searchAutoComplete.getText().toString();
                 if (!TextUtils.isEmpty(query) && query.length() > 2) {
-                    ApiUtils.makeSearchOptionsFetchRequest(query, response -> {
+                    Api.makeSearchOptionsFetchRequest(query, response -> {
                         try {
                             JSONArray jsonData = response.getJSONArray("data");
                             LoggingUtils.logJSONArray(jsonData);
@@ -247,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
                     }, error -> {
                         LoggingUtils.logError(error);
                         String errorMessage = null;
-                        if (ApiUtils.isNotFoundError(error)) {
+                        if (Api.isNotFoundError(error)) {
                             errorMessage = "No search options found";
                         }
                         onSearchOptionsRequestFailure(errorMessage);
@@ -284,8 +289,8 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
             String formattedSearchOption = (String) adapterView.getItemAtPosition(itemIndex);
             itemClicked.set(true);
             searchAutoComplete.setText(formattedSearchOption);
-            Log.d(TAG, formattedSearchOption);
-            // Launch detail activity
+            String ticker = SearchOption.extractTickerFromFormattedOption(formattedSearchOption);
+            startDetailActivity(ticker);
         });
 
         return super.onCreateOptionsMenu(menu);
@@ -300,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     }
 
     private void cancelSearchOptionsFetchRequests() {
-        ApiUtils.cancelRequests(ApiUtils.SEARCH_OPTIONS_FETCH_REQUEST_TAG);
+        Api.cancelRequests(Api.SEARCH_OPTIONS_FETCH_REQUEST_TAG);
     }
 
     public void onFooterClick(View view) {

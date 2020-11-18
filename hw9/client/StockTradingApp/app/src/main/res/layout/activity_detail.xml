@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".DetailActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/detail_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -17,5 +17,48 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detail_cl_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar"
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:id="@+id/detail_pb"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:indeterminateTint="@color/purple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fetching Data"
+            app:layout_constraintEnd_toEndOf="@+id/detail_pb"
+            app:layout_constraintStart_toStartOf="@+id/detail_pb"
+            app:layout_constraintTop_toBottomOf="@+id/detail_pb"
+            android:paddingTop="4dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/detail_tv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Error occurred while fetching last prices"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,4 +15,8 @@ public class SearchOption {
     public static List<String> getFormattedOptions(List<SearchOption> searchOptions) {
         return searchOptions.stream().map(SearchOption::getFormattedText).collect(Collectors.toList());
     }
+
+    public static String extractTickerFromFormattedOption(String formattedOption) {
+        return formattedOption.split(" - ")[0];
+    }
 }
