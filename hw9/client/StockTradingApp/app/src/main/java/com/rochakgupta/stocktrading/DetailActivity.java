@@ -21,7 +21,6 @@ import com.rochakgupta.stocktrading.detail.NewsItem;
 import com.rochakgupta.stocktrading.detail.Summary;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
-import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.storage.Storage;
 import com.rochakgupta.stocktrading.toast.ToastManager;
 
@@ -176,7 +175,7 @@ public class DetailActivity extends AppCompatActivity {
                 Storage.removeFromFavorites(ticker);
                 toastManager.show(String.format("\"%s\" was removed from favorites", ticker));
             } else {
-                Storage.addToFavorites(FavoritesItem.with(ticker, detail.getName(), detail.getLastPrice()));
+                Storage.addToFavorites(ticker, detail.getName(), detail.getLastPrice());
                 toastManager.show(String.format("\"%s\" was added to favorites", ticker));
             }
             int icon = getFavoriteIcon(!isFavorite);

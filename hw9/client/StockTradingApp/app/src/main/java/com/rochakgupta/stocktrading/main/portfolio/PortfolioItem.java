@@ -1,25 +1,23 @@
-package com.rochakgupta.stocktrading.main.favorites;
+package com.rochakgupta.stocktrading.main.portfolio;
 
 import android.annotation.SuppressLint;
 
 import com.rochakgupta.stocktrading.R;
 
-public class FavoritesItem {
+public class PortfolioItem {
 
     private String ticker;
 
-    private String name;
-
     private double price;
 
-    private transient Integer stocks;
+    private int stocks;
 
     private transient Double currentPrice;
 
-    public static FavoritesItem with(String ticker, String name, double price) {
-        FavoritesItem item = new FavoritesItem();
+    public static PortfolioItem with(String ticker, int stocks, double price) {
+        PortfolioItem item = new PortfolioItem();
         item.setTicker(ticker);
-        item.setName(name);
+        item.setStocks(stocks);
         item.setPrice(price);
         return item;
     }
@@ -28,16 +26,12 @@ public class FavoritesItem {
         this.ticker = ticker;
     }
 
-    private void setName(String name) {
-        this.name = name;
+    private void setStocks(int stocks) {
+        this.stocks = stocks;
     }
 
     private void setPrice(double price) {
         this.price = price;
-    }
-
-    public void setStocks(Integer stocks) {
-        this.stocks = stocks;
     }
 
     public void setCurrentPrice(double currentPrice) {
@@ -54,10 +48,11 @@ public class FavoritesItem {
 
     @SuppressLint("DefaultLocale")
     public String getDescription() {
-        if (stocks != null && stocks > 0) {
-            return String.format("%d.0 shares", stocks);
-        }
-        return name;
+        return String.format("%d.0 shares", stocks);
+    }
+
+    public int getStocks() {
+        return stocks;
     }
 
     public Double getCurrentPrice() {

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.rochakgupta.stocktrading.detail.Everything;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
+import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
 
 import java.lang.reflect.Type;
@@ -15,6 +16,9 @@ public class GsonUtils {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
     private static final Type favoritesItemsType = new TypeToken<List<FavoritesItem>>() {
+    }.getType();
+
+    private static final Type portfolioItemsType = new TypeToken<List<PortfolioItem>>() {
     }.getType();
 
     public static Map<String, Double> jsonToLastPrices(String json) {
@@ -33,6 +37,14 @@ public class GsonUtils {
 
     public static String favoritesToJson(List<FavoritesItem> items) {
         return gson.toJson(items, favoritesItemsType);
+    }
+
+    public static List<PortfolioItem> jsonToPortfolio(String json) {
+        return gson.fromJson(json, portfolioItemsType);
+    }
+
+    public static String portfolioToJson(List<PortfolioItem> items) {
+        return gson.toJson(items, portfolioItemsType);
     }
 
     public static Everything jsonToEverything(String json) {

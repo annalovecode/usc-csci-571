@@ -29,6 +29,8 @@ import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
+import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
+import com.rochakgupta.stocktrading.main.portfolio.PortfolioSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
 import com.rochakgupta.stocktrading.storage.Storage;
@@ -49,17 +51,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class MainActivity extends AppCompatActivity implements FavoritesSection.OnClickListener {
+public class MainActivity extends AppCompatActivity implements PortfolioSection.ClickListener,
+        FavoritesSection.ClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
     private NestedScrollView successLayout;
-    
+
     private ToastManager toastManager;
 
     private SearchAdapter searchAdapter;
 
+    private PortfolioSection portfolioSection;
     private FavoritesSection favoritesSection;
     private SectionedRecyclerViewAdapter mSuccessViewAdapter;
 
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         loadingLayout = findViewById(R.id.main_cl_loading);
         errorView = findViewById(R.id.main_tv_error);
         successLayout = findViewById(R.id.main_ll_success);
-        
+
         toastManager = new ToastManager(this);
 
         Storage.initialize(this);
@@ -105,11 +109,19 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
 
     private void initializeRecyclerView() {
         mSuccessViewAdapter = new SectionedRecyclerViewAdapter();
-        favoritesSection = new FavoritesSection(this,this);
+        portfolioSection = new PortfolioSection(this, this);
+        favoritesSection = new FavoritesSection(this, this);
+        mSuccessViewAdapter.addSection(portfolioSection);
         mSuccessViewAdapter.addSection(favoritesSection);
         RecyclerView mSuccessView = findViewById(R.id.main_rv_success);
         mSuccessView.setLayoutManager(new LinearLayoutManager(this));
         mSuccessView.setAdapter(mSuccessViewAdapter);
+    }
+
+    @Override
+    public void onPortfolioItemClicked(PortfolioItem item) {
+        String ticker = item.getTicker();
+        startDetailActivity(ticker);
     }
 
     @Override
@@ -167,12 +179,29 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     }
 
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {
-        List<FavoritesItem> items = Storage.getFavorites();
-        items.forEach(item -> item.setCurrentPrice(lastPrices.get(item.getTicker())));
-        SectionAdapter adapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
-        favoritesSection.setItems(items, adapter);
+        updatePortfolioSection(lastPrices);
+        updateFavoritesSection(lastPrices);
         showSuccessLayout();
         lastPricesFetchStatus.success();
+    }
+
+    private void updatePortfolioSection(Map<String, Double> lastPrices) {
+        List<PortfolioItem> portfolioItems = Storage.getPortfolio();
+        portfolioItems.forEach(item -> item.setCurrentPrice(lastPrices.get(item.getTicker())));
+        SectionAdapter portfolioAdapter = mSuccessViewAdapter.getAdapterForSection(portfolioSection);
+        portfolioSection.setItems(portfolioItems, portfolioAdapter);
+    }
+
+    private void updateFavoritesSection(Map<String, Double> lastPrices) {
+        List<FavoritesItem> favoritesItems = Storage.getFavorites();
+        Map<String, Integer> stocks = Storage.getPortfolioStocks();
+        favoritesItems.forEach(item -> {
+            String ticker = item.getTicker();
+            item.setCurrentPrice(lastPrices.get(ticker));
+            item.setStocks(stocks.get(ticker));
+        });
+        SectionAdapter favoritesAdapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
+        favoritesSection.setItems(favoritesItems, favoritesAdapter);
     }
 
     private void showSuccessLayout() {
@@ -221,9 +250,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         final SearchView.SearchAutoComplete searchAutoComplete =
                 searchView.findViewById(androidx.appcompat.R.id.search_src_text);
 
-        searchAdapter = new SearchAdapter(
-                this,
-                android.R.layout.simple_dropdown_item_1line);
+        searchAdapter = new SearchAdapter(this, android.R.layout.simple_dropdown_item_1line);
 
         searchAutoComplete.setAdapter(searchAdapter);
         searchAutoComplete.setThreshold(3);
