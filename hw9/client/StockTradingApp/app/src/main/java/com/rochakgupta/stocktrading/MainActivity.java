@@ -1,6 +1,8 @@
 package com.rochakgupta.stocktrading;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -10,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.rochakgupta.stocktrading.api.ApiStatus;
+import com.rochakgupta.stocktrading.api.ApiUtils;
+import com.rochakgupta.stocktrading.log.LoggingUtils;
+import com.rochakgupta.stocktrading.gson.GsonUtils;
+import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
+import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
+import com.rochakgupta.stocktrading.main.search.SearchAdapter;
+import com.rochakgupta.stocktrading.main.search.SearchOption;
+import com.rochakgupta.stocktrading.storage.StockPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,15 +43,25 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MainActivity extends AppCompatActivity {
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+
+public class MainActivity extends AppCompatActivity implements FavoritesSection.OnClickListener {
     private final String TAG = MainActivity.class.getSimpleName();
 
-    private ProgressBar mProgressBar;
-    private TextView mErrorView;
+    private ConstraintLayout loadingLayout;
+    private TextView errorView;
+    private ConstraintLayout successLayout;
 
-    private Timer mLastPricesFetchTimer;
-    private RequestStatus mLastPricesFetchStatus;
+    private SearchAdapter searchAdapter;
+
+    private FavoritesSection favoritesSection;
+    private SectionedRecyclerViewAdapter mSuccessViewAdapter;
+
+    private Timer lastPricesFetchTimer;
+    private ApiStatus lastPricesFetchStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +72,19 @@ public class MainActivity extends AppCompatActivity {
 
         initializeActionBar();
 
-        mProgressBar = findViewById(R.id.pb);
-        mErrorView = findViewById(R.id.tv_error);
+        loadingLayout = findViewById(R.id.cl_loading);
+        errorView = findViewById(R.id.tv_error);
+        successLayout = findViewById(R.id.cl_success);
 
-        RequestUtils.initialize(this);
+        initializeRecyclerView();
 
-        mLastPricesFetchStatus = new RequestStatus();
+        StockPreferences.initialize(this);
 
-        showProgressBar();
+        ApiUtils.initialize(this);
+
+        lastPricesFetchStatus = new ApiStatus();
+
+        showLoadingLayout();
     }
 
     private void initializeActionBar() {
@@ -67,60 +96,91 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showProgressBar() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mErrorView.setVisibility(View.INVISIBLE);
+    private void initializeRecyclerView() {
+        mSuccessViewAdapter = new SectionedRecyclerViewAdapter();
+        favoritesSection = new FavoritesSection(this, this);
+        mSuccessViewAdapter.addSection(favoritesSection);
+        RecyclerView mSuccessView = findViewById(R.id.rv_success);
+        mSuccessView.setLayoutManager(new LinearLayoutManager(this));
+        mSuccessView.setAdapter(mSuccessViewAdapter);
+    }
+
+    @Override
+    public void onFavoritesItemClicked(FavoritesItem item) {
+        String ticker = item.getTicker();
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("ticker", ticker);
+        startActivity(intent);
+    }
+
+    private void showLoadingLayout() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.INVISIBLE);
+        successLayout.setVisibility(View.INVISIBLE);
     }
 
     private void showErrorView() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mErrorView.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.INVISIBLE);
+        errorView.setVisibility(View.VISIBLE);
+        successLayout.setVisibility(View.INVISIBLE);
     }
 
     private void startLastPricesFetchTimer() {
         Log.d(TAG, "Starting last prices fetch timer");
-        mLastPricesFetchTimer = new Timer();
-        mLastPricesFetchTimer.scheduleAtFixedRate(new TimerTask() {
+        lastPricesFetchTimer = new Timer();
+        lastPricesFetchTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                RequestUtils.makeLastPricesFetchRequest(Collections.singletonList("AAPL"), response -> {
+                ApiUtils.makeLastPricesFetchRequest(Collections.singletonList("AAPL"), response -> {
                     try {
                         JSONObject jsonData = response.getJSONObject("data");
-                        ResponseUtils.logJSONObject(jsonData);
-                        Map<String, Double> lastPrices = ResponseUtils.parseLastPrices(jsonData);
+                        LoggingUtils.logJSONObject(jsonData);
+                        Map<String, Double> lastPrices = GsonUtils.jsonToLastPrices(jsonData.toString());
                         onLastPricesFetchSuccess(lastPrices);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         onLastPricesFetchError();
                     }
                 }, error -> {
-                    ResponseUtils.logError(error);
+                    LoggingUtils.logError(error);
                     onLastPricesFetchError();
                 });
             }
-        }, 0, TimeUnit.MINUTES.toMillis(15));
+        }, 0, TimeUnit.SECONDS.toMillis(1000));
     }
 
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {
-        if (!mLastPricesFetchStatus.isComplete()) {
-            // First load
-            showData();
-        } else {
-//            updateData();
-        }
-        mLastPricesFetchStatus.success();
+        List<FavoritesItem> favoritesItems = buildFavoritesItems(lastPrices);
+        updateFavoritesSection(favoritesItems);
+        showSuccessLayout();
+        lastPricesFetchStatus.success();
     }
 
-    private void showData() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mErrorView.setVisibility(View.INVISIBLE);
+    private List<FavoritesItem> buildFavoritesItems(Map<String, Double> lastPrices) {
+        List<FavoritesItem> items = StockPreferences.getFavorites();
+        items.forEach(favoritesItem -> {
+            favoritesItem.setCurrentPrice(lastPrices.get(favoritesItem.getTicker()));
+        });
+        return items;
+    }
+
+    private void updateFavoritesSection(List<FavoritesItem> items) {
+        favoritesSection.setItems(items);
+        SectionAdapter adapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
+        adapter.notifyAllItemsChanged();
+    }
+
+    private void showSuccessLayout() {
+        loadingLayout.setVisibility(View.INVISIBLE);
+        errorView.setVisibility(View.INVISIBLE);
+        successLayout.setVisibility(View.VISIBLE);
     }
 
     private void onLastPricesFetchError() {
-        if (!mLastPricesFetchStatus.isComplete()) {
+        if (!lastPricesFetchStatus.isComplete()) {
             // First load
             showErrorView();
-            mLastPricesFetchStatus.error();
+            lastPricesFetchStatus.error();
         } else {
             Toast.makeText(
                     this, "Error occurred while refetching last prices", Toast.LENGTH_SHORT).show();
@@ -129,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopLastPricesFetchTimer() {
         Log.d(TAG, "Stopping last prices fetch timer");
-        mLastPricesFetchTimer.cancel();
-        RequestUtils.cancelRequests(RequestUtils.LAST_PRICES_FETCH_REQUEST_TAG);
+        lastPricesFetchTimer.cancel();
+        ApiUtils.cancelRequests(ApiUtils.LAST_PRICES_FETCH_REQUEST_TAG);
     }
 
     @Override
@@ -158,38 +218,41 @@ public class MainActivity extends AppCompatActivity {
         final SearchView.SearchAutoComplete searchAutoComplete =
                 searchView.findViewById(androidx.appcompat.R.id.search_src_text);
 
-        SearchAdapter adapter = new SearchAdapter(
+        searchAdapter = new SearchAdapter(
                 this,
                 android.R.layout.simple_dropdown_item_1line);
 
-        searchAutoComplete.setAdapter(adapter);
+        searchAutoComplete.setAdapter(searchAdapter);
         searchAutoComplete.setThreshold(3);
 
         int TRIGGER_AUTO_COMPLETE = 7;
+        // Set to true when user clicks on an item in autocomplete to prevent autocomplete from triggering API request
+        AtomicBoolean itemClicked = new AtomicBoolean(false);
 
         Handler handler = new Handler(message -> {
             if (message.what == TRIGGER_AUTO_COMPLETE) {
                 String query = searchAutoComplete.getText().toString();
-                if (!TextUtils.isEmpty(query)) {
-                    RequestUtils.makeSearchOptionsFetchRequest(query, response -> {
+                if (!TextUtils.isEmpty(query) && query.length() > 2) {
+                    ApiUtils.makeSearchOptionsFetchRequest(query, response -> {
                         try {
                             JSONArray jsonData = response.getJSONArray("data");
-                            ResponseUtils.logJSONArray(jsonData);
-                            List<SearchOption> searchOptions = ResponseUtils.parseSearchOptions(jsonData);
-                            adapter.setData(SearchOption.getFormattedOptions(searchOptions));
-                            adapter.notifyDataSetChanged();
+                            LoggingUtils.logJSONArray(jsonData);
+                            List<SearchOption> searchOptions = GsonUtils.jsonToSearchOptions(jsonData.toString());
+                            searchAdapter.setItemsAndNotify(SearchOption.getFormattedOptions(searchOptions));
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            onSearchOptionsRequestFailure(null, adapter);
+                            onSearchOptionsRequestFailure(null);
                         }
                     }, error -> {
-                        ResponseUtils.logError(error);
+                        LoggingUtils.logError(error);
                         String errorMessage = null;
-                        if (ResponseUtils.isNotFoundError(error)) {
+                        if (ApiUtils.isNotFoundError(error)) {
                             errorMessage = "No search options found";
                         }
-                        onSearchOptionsRequestFailure(errorMessage, adapter);
+                        onSearchOptionsRequestFailure(errorMessage);
                     });
+                } else {
+                    searchAdapter.clearItemsAndNotify();
                 }
             }
             return false;
@@ -197,16 +260,18 @@ public class MainActivity extends AppCompatActivity {
 
         searchAutoComplete.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int
-                    count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                cancelSearchOptionsFetchRequests();
-                handler.removeMessages(TRIGGER_AUTO_COMPLETE);
-                handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, 300);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (itemClicked.get()) {
+                    itemClicked.set(false);
+                } else {
+                    cancelSearchOptionsFetchRequests();
+                    handler.removeMessages(TRIGGER_AUTO_COMPLETE);
+                    handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, 300);
+                }
             }
 
             @Override
@@ -216,6 +281,8 @@ public class MainActivity extends AppCompatActivity {
 
         searchAutoComplete.setOnItemClickListener((adapterView, view, itemIndex, id) -> {
             String formattedSearchOption = (String) adapterView.getItemAtPosition(itemIndex);
+            itemClicked.set(true);
+            searchAutoComplete.setText(formattedSearchOption);
             Log.d(TAG, formattedSearchOption);
             // Launch detail activity
         });
@@ -223,9 +290,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void onSearchOptionsRequestFailure(String message, SearchAdapter adapter) {
-        adapter.clear();
-        adapter.notifyDataSetChanged();
+    private void onSearchOptionsRequestFailure(String message) {
+        searchAdapter.clearItemsAndNotify();
         if (message == null) {
             message = "Error occurred while fetching search options";
         }
@@ -233,6 +299,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void cancelSearchOptionsFetchRequests() {
-        RequestUtils.cancelRequests(RequestUtils.SEARCH_OPTIONS_FETCH_REQUEST_TAG);
+        ApiUtils.cancelRequests(ApiUtils.SEARCH_OPTIONS_FETCH_REQUEST_TAG);
+    }
+
+    public void onFooterClick(View view) {
+        Uri uri = Uri.parse("https://www.tiingo.com");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading;
+package com.rochakgupta.stocktrading.main.search;
 
 import java.util.List;
 import java.util.stream.Collectors;

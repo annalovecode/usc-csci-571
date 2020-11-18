@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading;
+package com.rochakgupta.stocktrading.api;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -13,19 +14,19 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class RequestUtils {
-    private static final String TAG = RequestUtils.class.getName();
+public class ApiUtils {
+    private static final String TAG = ApiUtils.class.getName();
 
-    private static boolean sInitialized;
-    private static RequestQueue mRequestQueue;
+    private static boolean initialized;
+    private static RequestQueue requestQueue;
 
     public static final String LAST_PRICES_FETCH_REQUEST_TAG = "LAST_PRICES_FETCH_REQUEST_TAG";
     public static final String SEARCH_OPTIONS_FETCH_REQUEST_TAG = "SEARCH_OPTIONS_FETCH_REQUEST_TAG";
 
     synchronized public static void initialize(Context context) {
-        if (!sInitialized) {
-            sInitialized = true;
-            mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        if (!initialized) {
+            initialized = true;
+            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
     }
 
@@ -60,10 +61,14 @@ public class RequestUtils {
     }
 
     synchronized private static void addRequestToQueue(JsonObjectRequest request) {
-        mRequestQueue.add(request);
+        requestQueue.add(request);
     }
 
     synchronized public static void cancelRequests(String tag) {
-        mRequestQueue.cancelAll(tag);
+        requestQueue.cancelAll(tag);
+    }
+
+    public static boolean isNotFoundError(VolleyError error) {
+        return error.networkResponse != null && error.networkResponse.statusCode == 404;
     }
 }

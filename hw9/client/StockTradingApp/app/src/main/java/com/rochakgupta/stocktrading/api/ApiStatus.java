@@ -1,6 +1,6 @@
-package com.rochakgupta.stocktrading;
+package com.rochakgupta.stocktrading.api;
 
-public class RequestStatus {
+public class ApiStatus {
     private enum Status {
         INITIAL,
         LOADING,
@@ -10,7 +10,7 @@ public class RequestStatus {
 
     private Status status;
 
-    public RequestStatus() {
+    public ApiStatus() {
         status = Status.INITIAL;
     }
 
