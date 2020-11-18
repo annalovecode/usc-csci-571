@@ -32,7 +32,7 @@ import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
 import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastUtils;
+import com.rochakgupta.stocktrading.toast.ToastManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
     private ConstraintLayout loadingLayout;
     private TextView errorView;
     private NestedScrollView successLayout;
+    
+    private ToastManager toastManager;
 
     private SearchAdapter searchAdapter;
 
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         loadingLayout = findViewById(R.id.main_cl_loading);
         errorView = findViewById(R.id.main_tv_error);
         successLayout = findViewById(R.id.main_ll_success);
+        
+        toastManager = new ToastManager(this);
 
         Storage.initialize(this);
 
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
             showErrorView();
             lastPricesFetchStatus.error();
         } else {
-            ToastUtils.show(this, "Error occurred while refetching last prices");
+            toastManager.show("Error occurred while refetching last prices");
         }
     }
 
@@ -294,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements FavoritesSection.
         if (message == null) {
             message = "Error occurred while fetching search options";
         }
-        ToastUtils.show(this, message);
+        toastManager.show(message);
     }
 
     public void onFooterClick(View view) {

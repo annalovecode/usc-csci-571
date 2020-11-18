@@ -23,7 +23,7 @@ import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastUtils;
+import com.rochakgupta.stocktrading.toast.ToastManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +35,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
+
+    private ToastManager toastManager;
 
     private ApiStatus everythingFetchStatus;
 
@@ -64,6 +66,8 @@ public class DetailActivity extends AppCompatActivity {
 
         loadingLayout = findViewById(R.id.detail_cl_loading);
         errorView = findViewById(R.id.detail_tv_error);
+
+        toastManager = new ToastManager(this);
 
         Storage.initialize(this);
 
@@ -163,17 +167,17 @@ public class DetailActivity extends AppCompatActivity {
 
     private void onFavoriteClicked(MenuItem item) {
         if (everythingFetchStatus.isLoading()) {
-            ToastUtils.show(this, "Still fetching data");
+            toastManager.show("Still fetching data");
         } else if (everythingFetchStatus.isError()) {
-            ToastUtils.show(this, "Failed to fetch data");
+            toastManager.show("Failed to fetch data");
         } else {
             boolean isFavorite = Storage.isFavorite(ticker);
             if (isFavorite) {
                 Storage.removeFromFavorites(ticker);
-                ToastUtils.show(this, "\"" + ticker + "\" was removed from favorites");
+                toastManager.show(String.format("\"%s\" was removed from favorites", ticker));
             } else {
                 Storage.addToFavorites(FavoritesItem.with(ticker, detail.getName(), detail.getLastPrice()));
-                ToastUtils.show(this, "\"" + ticker + "\" was added to favorites");
+                toastManager.show(String.format("\"%s\" was added to favorites", ticker));
             }
             int icon = getFavoriteIcon(!isFavorite);
             item.setIcon(icon);
