@@ -14,30 +14,10 @@ api.get('/search', async (req: Request, res) => {
     }
 });
 
-api.get('/details-summary/:ticker', async (req: Request, res) => {
+api.get('/everything', async (req: Request, res) => {
     try {
-        const ticker = Parser.parseStringParameter(req.params.ticker);
-        const data = await Service.getDetailsAndSummary(ticker);
-        return Response.sendOk(res, data);
-    } catch (error) {
-        return Response.sendError(res, error);
-    }
-});
-
-api.get('/news/:ticker', async (req: Request, res) => {
-    try {
-        const ticker = Parser.parseStringParameter(req.params.ticker);
-        const data = await Service.getNews(ticker);
-        return Response.sendOk(res, data);
-    } catch (error) {
-        return Response.sendError(res, error);
-    }
-});
-
-api.get('/historical-chart/:ticker', async (req: Request, res) => {
-    try {
-        const ticker = Parser.parseStringParameter(req.params.ticker);
-        const data = await Service.getHistoricalChartData(ticker);
+        const ticker = Parser.parseStringParameter(req.query.ticker);
+        const data = await Service.getEverything(ticker);
         return Response.sendOk(res, data);
     } catch (error) {
         return Response.sendError(res, error);

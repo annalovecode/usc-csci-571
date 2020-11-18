@@ -16,29 +16,30 @@ export const getMetadata = async (ticker: string) => {
     return await get(url);
 };
 
-export const getLastDayPrices = async (ticker: string, startDate: string): Promise<any[]> => {
-    const url = buildURL(`iex/${ticker}/prices`);
-    return await get(url, {
-        'startDate': startDate,
-        'resampleFreq': '4min',
-        'columns': 'close'
-    });
-};
-
 export const getLastTwoYearPrices = async (ticker: string): Promise<any[]> => {
     const url = buildURL(`tiingo/daily/${ticker}/prices`);
-    const data = await get(url, {
-        'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
-        'resampleFreq': 'daily',
-        'columns': 'open,high,low,close,volume'
-    });
-    return Parser.parseArray(data);
+    let data: any[];
+    try {
+        data = await get(url, {
+            'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
+            'resampleFreq': 'daily',
+            'columns': 'open,high,low,close,volume'
+        });
+        data = Parser.parseArray(data);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            data = [];
+        } else {
+            throw error;
+        }
+    }
+    return data;
 };
 
 export const getCurrentTopOfBookAndLastPrice = async (ticker: string) => {
     const url = buildURL(`iex/${ticker}`);
     let data = await get(url);
-    data = Parser.parseArray(data);
+    data = Parser.parseNonEmptyArray(data);
     return data[0];
 };
 
@@ -47,7 +48,7 @@ export const getCurrentTopOfBookAndLastPrices = async (tickers: string[]): Promi
     let data = await get(url, {
         tickers: tickers.join(',')
     });
-    data = Parser.parseArray(data);
+    data = Parser.parseNonEmptyArray(data);
     if (data.length < tickers.length) {
         throw new NotFoundError();
     }
@@ -59,5 +60,5 @@ export const search = async (query: string): Promise<any[]> => {
     const data = await get(url, {
         columns: 'ticker,name'
     });
-    return Parser.parseArray(data);
+    return Parser.parseNonEmptyArray(data);
 };

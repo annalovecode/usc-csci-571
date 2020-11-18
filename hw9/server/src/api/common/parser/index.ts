@@ -1,4 +1,3 @@
-import { Parser } from '..';
 import { NotFoundError, BadRequestError } from '../error';
 import * as Validator from '../validator';
 
@@ -20,7 +19,26 @@ export const parseNumber = (value: any): number => {
     return value;
 };
 
+export const parseOptionalNumber = (value: any): number => {
+    if (!Validator.isNumber(value)) {
+        return 0;
+    }
+    value = value as number;
+    if (!Number.isInteger(value)) {
+        value = +(value.toFixed(2));
+    }
+    return value;
+};
+
+
 export const parseArray = (value: any): any[] => {
+    if (!Array.isArray(value)) {
+        throw new NotFoundError(value);
+    }
+    return value as any[];
+};
+
+export const parseNonEmptyArray = (value: any): any[] => {
     if (!Validator.isNonEmptyArray(value)) {
         throw new NotFoundError(value);
     }
