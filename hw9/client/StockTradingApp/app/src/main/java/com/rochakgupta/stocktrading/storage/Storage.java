@@ -31,7 +31,6 @@ public class Storage {
             context = _context.getApplicationContext();
             initializePortfolio();
             initializeFavorites();
-
         }
     }
 
