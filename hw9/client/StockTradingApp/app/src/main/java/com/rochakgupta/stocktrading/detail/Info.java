@@ -1,9 +1,15 @@
 package com.rochakgupta.stocktrading.detail;
 
-public class Summary {
+public class Info {
+    private String ticker;
+
+    private String name;
+
     private String description;
 
-    private Double currentPrice;
+    private Double lastPrice;
+
+    private Double change;
 
     private Double highPrice;
 
@@ -17,12 +23,16 @@ public class Summary {
 
     private Double bidPrice;
 
+    public String getName() {
+        return name;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public Double getCurrentPrice() {
-        return currentPrice;
+    public Double getLastPrice() {
+        return lastPrice;
     }
 
     public Double getHighPrice() {

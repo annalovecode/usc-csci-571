@@ -17,10 +17,9 @@ import androidx.core.widget.NestedScrollView;
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
 import com.rochakgupta.stocktrading.detail.ChartItem;
-import com.rochakgupta.stocktrading.detail.Detail;
 import com.rochakgupta.stocktrading.detail.Everything;
+import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.detail.NewsItem;
-import com.rochakgupta.stocktrading.detail.Summary;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
@@ -43,15 +42,12 @@ public class DetailActivity extends AppCompatActivity {
     private TextView errorView;
 
     private NestedScrollView successView;
-    private GridView statsView;
 
     private ToastManager toastManager;
 
     private ApiStatus everythingFetchStatus;
 
-    private Detail detail;
-
-    private Summary summary;
+    private Info info;
 
     private NewsItem[] news;
 
@@ -77,7 +73,6 @@ public class DetailActivity extends AppCompatActivity {
         errorView = findViewById(R.id.detail_tv_error);
 
         successView = findViewById(R.id.detail_nsv_success);
-        statsView = findViewById(R.id.detail_gv_stats);
 
         toastManager = new ToastManager(this);
 
@@ -133,8 +128,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void onEverythingFetchSuccess(Everything everything) {
-        detail = everything.getDetail();
-        summary = everything.getSummary();
+        info = everything.getInfo();
         news = everything.getNews();
         chart = everything.getChart();
         initializeStatsGrid();
@@ -144,14 +138,15 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeStatsGrid() {
         List<Stat> stats = Arrays.asList(
-                Stat.priceStat("Current Price", summary.getCurrentPrice()),
-                Stat.priceStat("Low", summary.getLowPrice()),
-                Stat.priceStat("Bid Price", summary.getBidPrice()),
-                Stat.priceStat("Open Price", summary.getOpenPrice()),
-                Stat.priceStat("Mid", summary.getMidPrice()),
-                Stat.priceStat("High", summary.getHighPrice()),
-                Stat.quantityStat("Volume", summary.getVolume()));
+                Stat.priceStat("Current Price", info.getLastPrice()),
+                Stat.priceStat("Low", info.getLowPrice()),
+                Stat.priceStat("Bid Price", info.getBidPrice()),
+                Stat.priceStat("Open Price", info.getOpenPrice()),
+                Stat.priceStat("Mid", info.getMidPrice()),
+                Stat.priceStat("High", info.getHighPrice()),
+                Stat.quantityStat("Volume", info.getVolume()));
         StatsAdapter adapter = new StatsAdapter(this, stats);
+        GridView statsView = findViewById(R.id.detail_gv_stats);
         statsView.setAdapter(adapter);
     }
 
@@ -205,7 +200,7 @@ public class DetailActivity extends AppCompatActivity {
                 Storage.removeFromFavorites(ticker);
                 toastManager.show(String.format("\"%s\" was removed from favorites", ticker));
             } else {
-                Storage.addToFavorites(ticker, detail.getName(), detail.getLastPrice());
+                Storage.addToFavorites(ticker, info.getName(), info.getLastPrice());
                 toastManager.show(String.format("\"%s\" was added to favorites", ticker));
             }
             int icon = getFavoriteIcon(!isFavorite);

@@ -1,20 +1,14 @@
 package com.rochakgupta.stocktrading.detail;
 
 public class Everything {
-    private Detail detail;
-
-    private Summary summary;
+    private Info info;
 
     private NewsItem[] news;
 
     private ChartItem[] chart;
 
-    public Detail getDetail() {
-        return detail;
-    }
-
-    public Summary getSummary() {
-        return summary;
+    public Info getInfo() {
+        return info;
     }
 
     public NewsItem[] getNews() {
