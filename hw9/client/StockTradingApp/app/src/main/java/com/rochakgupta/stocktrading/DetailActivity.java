@@ -138,13 +138,13 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeStatsGrid() {
         List<Stat> stats = Arrays.asList(
-                Stat.priceStat("Current Price", info.getLastPrice()),
-                Stat.priceStat("Low", info.getLowPrice()),
-                Stat.priceStat("Bid Price", info.getBidPrice()),
-                Stat.priceStat("Open Price", info.getOpenPrice()),
-                Stat.priceStat("Mid", info.getMidPrice()),
-                Stat.priceStat("High", info.getHighPrice()),
-                Stat.quantityStat("Volume", info.getVolume()));
+                Stat.ofPrice("Current Price", info.getLastPrice()),
+                Stat.ofPrice("Low", info.getLowPrice()),
+                Stat.ofPrice("Bid Price", info.getBidPrice()),
+                Stat.ofPrice("Open Price", info.getOpenPrice()),
+                Stat.ofPrice("Mid", info.getMidPrice()),
+                Stat.ofPrice("High", info.getHighPrice()),
+                Stat.ofQuantity("Volume", info.getVolume()));
         StatsAdapter adapter = new StatsAdapter(this, stats);
         GridView statsView = findViewById(R.id.detail_gv_stats);
         statsView.setAdapter(adapter);

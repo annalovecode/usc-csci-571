@@ -13,7 +13,7 @@ public class Stat {
 
     }
 
-    public static Stat priceStat(String name, double value) {
+    public static Stat ofPrice(String name, double value) {
         Stat stat = new Stat();
         stat.setName(name);
         stat.setValue(value);
@@ -21,7 +21,7 @@ public class Stat {
         return stat;
     }
 
-    public static Stat quantityStat(String name, double value) {
+    public static Stat ofQuantity(String name, double value) {
         Stat stat = new Stat();
         stat.setName(name);
         stat.setValue(value);
