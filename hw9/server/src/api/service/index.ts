@@ -37,16 +37,13 @@ const buildDetail = (metadata: any, currentTopOfBookAndLastPrice: any): Detail =
 
 const buildSummary = (metadata: any, currentTopOfBookAndLastPrice: any): Summary => ({
     description: Parser.parseString(metadata.description),
-    highPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.high),
-    lowPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.low),
-    openPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.open),
-    prevClose: Parser.parseNumber(currentTopOfBookAndLastPrice.prevClose),
-    volume: Parser.parseNumber(currentTopOfBookAndLastPrice.volume),
+    currentPrice: Parser.parseNumber(currentTopOfBookAndLastPrice.last),
+    highPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.high),
+    lowPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.low),
+    openPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.open),
+    volume: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.volume),
     midPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.mid),
-    askPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.askPrice),
-    askSize: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.askSize),
-    bidPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.bidPrice),
-    bidSize: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.bidSize)
+    bidPrice: Parser.parseOptionalNumber(currentTopOfBookAndLastPrice.bidPrice)
 });
 
 const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {

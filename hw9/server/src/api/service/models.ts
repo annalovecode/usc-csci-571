@@ -12,16 +12,13 @@ export interface Detail {
 
 export interface Summary {
     description: string;
+    currentPrice: number;
     highPrice: number;
     lowPrice: number;
     openPrice: number;
-    prevClose: number;
     volume: number;
     midPrice: number;
-    askPrice: number;
-    askSize: number;
     bidPrice: number;
-    bidSize: number;
 }
 
 export interface ChartItem {
