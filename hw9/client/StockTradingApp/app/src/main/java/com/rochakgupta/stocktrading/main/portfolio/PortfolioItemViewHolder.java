@@ -23,11 +23,11 @@ public class PortfolioItemViewHolder extends RecyclerView.ViewHolder {
 
     public PortfolioItemViewHolder(View view) {
         super(view);
-        tickerView = (TextView) view.findViewById(R.id.favorites_tv_ticker);
-        descriptionView = (TextView) view.findViewById(R.id.favorites_tv_description);
-        currentPriceView = (TextView) view.findViewById(R.id.favorites_tv_current_price);
-        changeView = (TextView) view.findViewById(R.id.favorites_tv_change);
-        trendingView = (ImageView) view.findViewById(R.id.favorites_iv_trending);
-        arrowView = (ImageView) view.findViewById(R.id.favorites_iv_arrow);
+        tickerView = (TextView) view.findViewById(R.id.portfolio_tv_ticker);
+        descriptionView = (TextView) view.findViewById(R.id.portfolio_tv_description);
+        currentPriceView = (TextView) view.findViewById(R.id.portfolio_tv_current_price);
+        changeView = (TextView) view.findViewById(R.id.portfolio_tv_change);
+        trendingView = (ImageView) view.findViewById(R.id.portfolio_iv_trending);
+        arrowView = (ImageView) view.findViewById(R.id.portfolio_iv_arrow);
     }
 }

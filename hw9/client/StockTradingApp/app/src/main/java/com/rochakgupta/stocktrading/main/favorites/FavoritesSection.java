@@ -28,8 +28,8 @@ public class FavoritesSection extends Section {
 
     public FavoritesSection(Context context, ClickListener clickListener) {
         super(SectionParameters.builder()
-                               .itemResourceId(R.layout.favorites_section_item)
-                               .headerResourceId(R.layout.favorites_section_header)
+                               .itemResourceId(R.layout.favorites_item)
+                               .headerResourceId(R.layout.favorites_header)
                                .build());
         this.context = context;
         this.items = new ArrayList<>();

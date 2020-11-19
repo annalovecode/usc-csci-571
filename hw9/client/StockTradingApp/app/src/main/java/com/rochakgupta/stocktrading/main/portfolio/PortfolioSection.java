@@ -28,8 +28,8 @@ public class PortfolioSection extends Section {
 
     public PortfolioSection(Context context, ClickListener clickListener) {
         super(SectionParameters.builder()
-                               .itemResourceId(R.layout.portfolio_section_item)
-                               .headerResourceId(R.layout.portfolio_section_header)
+                               .itemResourceId(R.layout.portfolio_item)
+                               .headerResourceId(R.layout.portfolio_header)
                                .build());
         this.context = context;
         this.items = new ArrayList<>();
