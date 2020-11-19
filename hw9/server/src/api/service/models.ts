@@ -3,16 +3,12 @@ export interface SearchResultItem {
     name: string;
 }
 
-export interface Detail {
+export interface Info {
     ticker: string;
     name: string;
+    description: string;
     lastPrice: number;
     change: number;
-}
-
-export interface Summary {
-    description: string;
-    currentPrice: number;
     highPrice: number;
     lowPrice: number;
     openPrice: number;
@@ -40,8 +36,7 @@ export interface NewsItem {
 }
 
 export interface Everything {
-    detail: Detail;
-    summary: Summary;
+    info: Info;
     news: NewsItem[];
     chart: ChartItem[];
 }
