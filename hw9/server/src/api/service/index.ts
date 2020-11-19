@@ -60,7 +60,7 @@ const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
     return parsedItems;
 };
 
-export const getNews = async (ticker: string): Promise<NewsItem[]> => {
+const getNews = async (ticker: string): Promise<NewsItem[]> => {
     const now = moment().tz('America/Los_Angeles');
     const newsItems: NewsItem[] = [];
     let page = 1;

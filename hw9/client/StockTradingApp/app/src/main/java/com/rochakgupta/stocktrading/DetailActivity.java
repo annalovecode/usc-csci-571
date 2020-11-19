@@ -44,7 +44,6 @@ public class DetailActivity extends AppCompatActivity {
     private TextView errorView;
 
     private NestedScrollView successView;
-
     private AboutManager aboutManager;
 
     private ToastManager toastManager;
