@@ -20,6 +20,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
         mSuccessViewAdapter.addSection(portfolioSection);
         mSuccessViewAdapter.addSection(favoritesSection);
         RecyclerView mSuccessView = findViewById(R.id.main_rv_success);
+        mSuccessView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mSuccessView.setLayoutManager(new LinearLayoutManager(this));
         mSuccessView.setAdapter(mSuccessViewAdapter);
     }
