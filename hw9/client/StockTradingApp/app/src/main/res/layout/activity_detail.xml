@@ -248,7 +248,7 @@
                 android:textSize="16sp"
                 tools:text="Show more..."
                 android:textColor="@color/darkGray"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:gravity="end"/>
 
         </LinearLayout>
