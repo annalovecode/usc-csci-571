@@ -16,12 +16,14 @@ import androidx.core.widget.NestedScrollView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
+import com.rochakgupta.stocktrading.detail.AboutManager;
 import com.rochakgupta.stocktrading.detail.ChartItem;
 import com.rochakgupta.stocktrading.detail.Everything;
 import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.detail.NewsItem;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
+import com.rochakgupta.stocktrading.format.FormattingUtils;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.storage.Storage;
@@ -42,6 +44,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView errorView;
 
     private NestedScrollView successView;
+
+    private AboutManager aboutManager;
 
     private ToastManager toastManager;
 
@@ -73,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
         errorView = findViewById(R.id.detail_tv_error);
 
         successView = findViewById(R.id.detail_nsv_success);
+        aboutManager = new AboutManager(this);
 
         toastManager = new ToastManager(this);
 
@@ -131,9 +136,23 @@ public class DetailActivity extends AppCompatActivity {
         info = everything.getInfo();
         news = everything.getNews();
         chart = everything.getChart();
+        initializeInfoView();
         initializeStatsGrid();
+        initializeAboutView();
         showSuccessLayout();
         everythingFetchStatus.success();
+    }
+
+    private void initializeInfoView() {
+        TextView tickerView = findViewById(R.id.detail_tv_info_ticker);
+        tickerView.setText(ticker);
+        TextView nameView = findViewById(R.id.detail_tv_info_name);
+        nameView.setText(info.getName());
+        TextView lastPriceView = findViewById(R.id.detail_tv_info_last_price);
+        lastPriceView.setText(FormattingUtils.getPriceStringWithSymbol(info.getLastPrice()));
+        TextView changeView = findViewById(R.id.detail_tv_info_change);
+        changeView.setText(FormattingUtils.getPriceStringWithSymbol(info.getChange()));
+        changeView.setTextColor(getColor(info.getChangeColor()));
     }
 
     private void initializeStatsGrid() {
@@ -148,6 +167,10 @@ public class DetailActivity extends AppCompatActivity {
         StatsAdapter adapter = new StatsAdapter(this, stats);
         GridView statsView = findViewById(R.id.detail_gv_stats);
         statsView.setAdapter(adapter);
+    }
+
+    private void initializeAboutView() {
+        aboutManager.display(info.getDescription());
     }
 
     private void onEverythingFetchError() {

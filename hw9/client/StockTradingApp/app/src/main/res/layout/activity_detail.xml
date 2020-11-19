@@ -128,6 +128,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="-$312.45" />
@@ -215,11 +216,40 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:horizontalSpacing="4dp"
                 android:verticalSpacing="20dp"
                 android:numColumns="3"
                 android:stretchMode="columnWidth"
                 android:isScrollContainer="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="About"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="-30dp" />
+
+            <TextView
+                android:id="@+id/detail_tv_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:inputType="none"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/detail_tv_about_toggler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:text="Show more..."
+                android:textColor="@color/darkGray"
+                android:layout_marginTop="8dp"
+                android:gravity="end"/>
 
         </LinearLayout>
 

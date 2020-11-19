@@ -1,5 +1,7 @@
 package com.rochakgupta.stocktrading.detail;
 
+import com.rochakgupta.stocktrading.R;
+
 public class Info {
     private String ticker;
 
@@ -35,6 +37,10 @@ public class Info {
         return lastPrice;
     }
 
+    public Double getChange() {
+        return change;
+    }
+
     public Double getHighPrice() {
         return highPrice;
     }
@@ -57,5 +63,14 @@ public class Info {
 
     public Double getBidPrice() {
         return bidPrice;
+    }
+
+    public int getChangeColor() {
+        if (change < 0) {
+            return R.color.red;
+        } else if (change > 0) {
+            return R.color.green;
+        }
+        return R.color.black;
     }
 }
