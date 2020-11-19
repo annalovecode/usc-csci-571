@@ -79,8 +79,8 @@ public class PortfolioSection extends Section {
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
         if (item.isCurrentPriceSet()) {
-            viewHolder.currentPriceView.setText(FormattingUtils.doubleToString(item.getCurrentPrice()));
-            viewHolder.changeView.setText(FormattingUtils.doubleToString(item.getChange()));
+            viewHolder.currentPriceView.setText(FormattingUtils.getPriceString(item.getCurrentPrice()));
+            viewHolder.changeView.setText(FormattingUtils.getPriceString(item.getChange()));
             viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
             if (item.showTrending()) {
                 viewHolder.trendingView.setImageResource(item.getTrendingDrawable());

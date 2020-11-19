@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
 
         loadingLayout = findViewById(R.id.main_cl_loading);
         errorView = findViewById(R.id.main_tv_error);
-        successLayout = findViewById(R.id.main_ll_success);
+        successLayout = findViewById(R.id.main_nsv_success);
 
         toastManager = new ToastManager(this);
 
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
             showErrorView();
             lastPricesFetchStatus.error();
         } else {
-            toastManager.show("Error occurred while refetching last prices");
+            toastManager.show("Error occurred while refetching data");
         }
     }
 
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
                         LoggingUtils.logError(error);
                         String errorMessage = null;
                         if (Api.isNotFoundError(error)) {
-                            errorMessage = "No search options found";
+                            errorMessage = "No results";
                         }
                         onSearchOptionsRequestFailure(errorMessage);
                     });
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
     private void onSearchOptionsRequestFailure(String message) {
         searchAdapter.clearItemsAndNotify();
         if (message == null) {
-            message = "Error occurred while fetching search options";
+            message = "Error occurred while fetching search results";
         }
         toastManager.show(message);
     }

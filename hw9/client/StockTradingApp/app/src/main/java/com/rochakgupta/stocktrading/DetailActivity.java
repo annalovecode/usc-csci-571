@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
@@ -19,6 +21,8 @@ import com.rochakgupta.stocktrading.detail.Detail;
 import com.rochakgupta.stocktrading.detail.Everything;
 import com.rochakgupta.stocktrading.detail.NewsItem;
 import com.rochakgupta.stocktrading.detail.Summary;
+import com.rochakgupta.stocktrading.detail.stats.Stat;
+import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
 import com.rochakgupta.stocktrading.storage.Storage;
@@ -27,6 +31,9 @@ import com.rochakgupta.stocktrading.toast.ToastManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
 
@@ -34,6 +41,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private ConstraintLayout loadingLayout;
     private TextView errorView;
+
+    private NestedScrollView successView;
+    private GridView statsView;
 
     private ToastManager toastManager;
 
@@ -66,6 +76,9 @@ public class DetailActivity extends AppCompatActivity {
         loadingLayout = findViewById(R.id.detail_cl_loading);
         errorView = findViewById(R.id.detail_tv_error);
 
+        successView = findViewById(R.id.detail_nsv_success);
+        statsView = findViewById(R.id.detail_gv_stats);
+
         toastManager = new ToastManager(this);
 
         Storage.initialize(this);
@@ -93,11 +106,13 @@ public class DetailActivity extends AppCompatActivity {
     private void showLoadingLayout() {
         loadingLayout.setVisibility(View.VISIBLE);
         errorView.setVisibility(View.INVISIBLE);
+        successView.setVisibility(View.INVISIBLE);
     }
 
     private void showErrorView() {
         loadingLayout.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.VISIBLE);
+        successView.setVisibility(View.INVISIBLE);
     }
 
     private void startEverythingFetch() {
@@ -122,8 +137,22 @@ public class DetailActivity extends AppCompatActivity {
         summary = everything.getSummary();
         news = everything.getNews();
         chart = everything.getChart();
+        initializeStatsGrid();
         showSuccessLayout();
         everythingFetchStatus.success();
+    }
+
+    private void initializeStatsGrid() {
+        List<Stat> stats = Arrays.asList(
+                Stat.priceStat("Current Price", summary.getCurrentPrice()),
+                Stat.priceStat("Low", summary.getLowPrice()),
+                Stat.priceStat("Bid Price", summary.getBidPrice()),
+                Stat.priceStat("Open Price", summary.getOpenPrice()),
+                Stat.priceStat("Mid", summary.getMidPrice()),
+                Stat.priceStat("High", summary.getHighPrice()),
+                Stat.quantityStat("Volume", summary.getVolume()));
+        StatsAdapter adapter = new StatsAdapter(this, stats);
+        statsView.setAdapter(adapter);
     }
 
     private void onEverythingFetchError() {
@@ -134,6 +163,7 @@ public class DetailActivity extends AppCompatActivity {
     private void showSuccessLayout() {
         loadingLayout.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.INVISIBLE);
+        successView.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.rochakgupta.stocktrading.main.portfolio;
 import android.annotation.SuppressLint;
 
 import com.rochakgupta.stocktrading.R;
+import com.rochakgupta.stocktrading.format.FormattingUtils;
 
 public class PortfolioItem {
 
@@ -13,6 +14,10 @@ public class PortfolioItem {
     private int stocks;
 
     private transient Double currentPrice;
+
+    private PortfolioItem() {
+
+    }
 
     public static PortfolioItem with(String ticker, int stocks, double price) {
         PortfolioItem item = new PortfolioItem();
@@ -48,7 +53,7 @@ public class PortfolioItem {
 
     @SuppressLint("DefaultLocale")
     public String getDescription() {
-        return String.format("%d.0 shares", stocks);
+        return String.format("%s shares", FormattingUtils.getQuantityString(stocks));
     }
 
     public int getStocks() {

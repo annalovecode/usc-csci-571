@@ -3,6 +3,7 @@ package com.rochakgupta.stocktrading.main.favorites;
 import android.annotation.SuppressLint;
 
 import com.rochakgupta.stocktrading.R;
+import com.rochakgupta.stocktrading.format.FormattingUtils;
 
 public class FavoritesItem {
 
@@ -15,6 +16,10 @@ public class FavoritesItem {
     private transient Integer stocks;
 
     private transient Double currentPrice;
+
+    private FavoritesItem() {
+
+    }
 
     public static FavoritesItem with(String ticker, String name, double price) {
         FavoritesItem item = new FavoritesItem();
@@ -55,7 +60,7 @@ public class FavoritesItem {
     @SuppressLint("DefaultLocale")
     public String getDescription() {
         if (stocks != null && stocks > 0) {
-            return String.format("%d.0 shares", stocks);
+            return String.format("%s shares", FormattingUtils.getQuantityString(stocks));
         }
         return name;
     }
