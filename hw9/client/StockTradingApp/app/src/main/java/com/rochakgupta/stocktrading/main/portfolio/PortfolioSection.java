@@ -47,17 +47,9 @@ public class PortfolioSection extends Section {
         } else {
             int count = getContentItemsTotal();
             items.clear();
+            adapter.notifyItemRangeRemoved(0, count);
             items.addAll(newItems);
-            int newCount = newItems.size();
-            if (count < newCount) {
-                adapter.notifyItemRangeChanged(0, count);
-                adapter.notifyItemRangeInserted(count, newCount);
-            } else if (count > newCount) {
-                adapter.notifyItemRangeChanged(0, count);
-                adapter.notifyItemRangeRemoved(count, newCount);
-            } else {
-                adapter.notifyAllItemsChanged(null);
-            }
+            adapter.notifyAllItemsInserted();
         }
     }
 
