@@ -31,6 +31,14 @@ public class GsonUtils {
         }.getType());
     }
 
+    public static double jsonToBalance(String json) {
+        return gson.fromJson(json, Double.class);
+    }
+
+    public static String balanceToJson(double balance) {
+        return gson.toJson(balance, Double.class);
+    }
+
     public static List<FavoritesItem> jsonToFavorites(String json) {
         return gson.fromJson(json, favoritesItemsType);
     }

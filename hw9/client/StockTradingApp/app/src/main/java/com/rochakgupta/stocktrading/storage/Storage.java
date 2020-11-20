@@ -22,6 +22,7 @@ public class Storage {
     private static Context context;
 
     private static final String PREFERENCES_FILE_NAME = "com.rochakgupta.stocktrading.PREFERENCES_FILE_NAME";
+    private static final String BALANCE_KEY = "com.rochakgupta.stocktrading.BALANCE_KEY";
     private static final String FAVORITES_KEY = "com.rochakgupta.stocktrading.FAVORITES_KEY";
     private static final String PORTFOLIO_KEY = "com.rochakgupta.stocktrading.PORTFOLIO_KEY";
 
@@ -29,18 +30,37 @@ public class Storage {
         if (!initialized) {
             initialized = true;
             context = _context.getApplicationContext();
+            initializeBalance();
             initializePortfolio();
             initializeFavorites();
         }
     }
 
-    synchronized private static void initializeFavorites() {
+    private static void initializeBalance() {
+        double balance = getBalance();
+        updateBalance(balance);
+    }
+
+    public static void updateBalance(double balance) {
+        String json = GsonUtils.balanceToJson(balance);
+        updatePreference(BALANCE_KEY, json);
+    }
+
+    public static double getBalance() {
+        SharedPreferences preferences = getSharedPreferences();
+        if (preferences.contains(BALANCE_KEY)) {
+            return GsonUtils.jsonToBalance(preferences.getString(BALANCE_KEY, null));
+        }
+        return 20000;
+    }
+
+    private static void initializeFavorites() {
         List<FavoritesItem> favoritesItems = getFavorites();
         updateFavorites(favoritesItems);
     }
 
     synchronized public static List<String> getTickers() {
-        Set<String> tickers =  getPortfolio().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
+        Set<String> tickers = getPortfolio().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
         tickers.addAll(getFavorites().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet()));
         return new ArrayList<>(tickers);
     }
@@ -96,6 +116,19 @@ public class Storage {
         return items.stream().anyMatch(portfolioItem -> portfolioItem.getTicker().equals(ticker));
     }
 
+    synchronized public static void addToPortfolio(String ticker, int stocks, double price) {
+        List<PortfolioItem> items = getPortfolio();
+        if (isPresentInPortfolio(ticker)) {
+            PortfolioItem portfolioItem = items.stream().filter(item -> item.getTicker().equals(ticker))
+                                               .findAny().orElse(null);
+            portfolioItem.buy(stocks, price);
+        } else {
+            items.add(PortfolioItem.with(ticker, stocks, price));
+            items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
+        }
+        updatePortfolio(items);
+    }
+
     synchronized public static PortfolioItem getPortfolioItem(String ticker) {
         List<PortfolioItem> items = getPortfolio();
         return items.stream().filter(item -> item.getTicker().equals(ticker)).findAny().orElse(null);
@@ -106,18 +139,13 @@ public class Storage {
         return items.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
     }
 
-    synchronized public static void addToPortfolio(PortfolioItem item) {
+    synchronized public static void removeFromPortfolio(String ticker, int stocks) {
         List<PortfolioItem> items = getPortfolio();
-        items.add(item);
-        items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
-        updatePortfolio(items);
-    }
-
-    synchronized public static void removeFromPortfolio(String ticker) {
-        List<PortfolioItem> items = getPortfolio()
-                .stream()
-                .filter(item -> !item.getTicker().equals(ticker))
-                .collect(Collectors.toList());
+        PortfolioItem portfolioItem = items.stream().filter(item -> item.getTicker().equals(ticker)).findAny()
+                                           .orElse(null);
+        if (portfolioItem.sell(stocks)) {
+            items = items.stream().filter(item -> !item.getTicker().equals(ticker)).collect(Collectors.toList());
+        }
         updatePortfolio(items);
     }
 

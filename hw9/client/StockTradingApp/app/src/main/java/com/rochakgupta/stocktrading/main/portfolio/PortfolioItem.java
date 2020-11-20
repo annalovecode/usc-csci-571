@@ -104,4 +104,16 @@ public class PortfolioItem {
     public Double getTotalLastPrice() {
         return stocks * lastPrice;
     }
+
+    public void buy(int stocks, double price) {
+        int totalStocks = this.stocks + stocks;
+        double totalPrice = ((this.stocks * this.price) + (stocks * price)) / totalStocks;
+        this.stocks = totalStocks;
+        this.price = totalPrice;
+    }
+
+    public boolean sell(int stocks) {
+        this.stocks -= stocks;
+        return this.stocks == 0;
+    }
 }

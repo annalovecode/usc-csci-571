@@ -156,9 +156,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializePortfolioView() {
-        portfolioManager = new PortfolioManager(this, info);
+        portfolioManager = new PortfolioManager(this, toastManager, info);
         portfolioManager.display();
-        portfolioManager.initializeTrading(this);
     }
 
     private void initializeStatsGrid() {
