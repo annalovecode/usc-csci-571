@@ -114,6 +114,6 @@ public class PortfolioItem {
 
     public boolean sell(int stocks) {
         this.stocks -= stocks;
-        return this.stocks == 0;
+        return this.stocks != 0;
     }
 }

@@ -11,7 +11,7 @@ public class ToastManager {
         this.context = context;
     }
 
-    synchronized public void show(String message) {
+    public void show(String message) {
         if (this.toast != null) {
             this.toast.cancel();
         }

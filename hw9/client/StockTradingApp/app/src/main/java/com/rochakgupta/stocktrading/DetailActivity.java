@@ -27,6 +27,7 @@ import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
 import com.rochakgupta.stocktrading.format.FormattingUtils;
 import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.log.LoggingUtils;
+import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.storage.Storage;
 import com.rochakgupta.stocktrading.toast.ToastManager;
 
@@ -46,7 +47,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private NestedScrollView successView;
     private PortfolioManager portfolioManager;
-    private AboutManager aboutManager;
 
     private ToastManager toastManager;
 
@@ -175,7 +175,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializeAboutView() {
-        aboutManager = new AboutManager(this, info.getDescription());
+        AboutManager aboutManager = new AboutManager(this, info.getDescription());
         aboutManager.display();
     }
 
@@ -229,7 +229,8 @@ public class DetailActivity extends AppCompatActivity {
                 Storage.removeFromFavorites(ticker);
                 toastManager.show(String.format("\"%s\" was removed from favorites", ticker));
             } else {
-                Storage.addToFavorites(ticker, info.getName(), info.getLastPrice());
+                FavoritesItem favoritesItem = FavoritesItem.with(ticker, info.getName(), info.getLastPrice());
+                Storage.addToFavorites(favoritesItem);
                 toastManager.show(String.format("\"%s\" was added to favorites", ticker));
             }
             int icon = getFavoriteIcon(!isFavorite);

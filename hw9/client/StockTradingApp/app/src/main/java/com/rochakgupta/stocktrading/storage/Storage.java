@@ -18,18 +18,21 @@ import java.util.stream.Collectors;
 public class Storage {
     private static boolean initialized;
 
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
+    private static SharedPreferences preferences;
 
     private static final String PREFERENCES_FILE_NAME = "com.rochakgupta.stocktrading.PREFERENCES_FILE_NAME";
+
     private static final String BALANCE_KEY = "com.rochakgupta.stocktrading.BALANCE_KEY";
+    private static final double DEFAULT_BALANCE = 20000;
+
     private static final String FAVORITES_KEY = "com.rochakgupta.stocktrading.FAVORITES_KEY";
+
     private static final String PORTFOLIO_KEY = "com.rochakgupta.stocktrading.PORTFOLIO_KEY";
 
-    synchronized public static void initialize(Context _context) {
+    synchronized public static void initialize(Context context) {
         if (!initialized) {
             initialized = true;
-            context = _context.getApplicationContext();
+            preferences = context.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
             initializeBalance();
             initializePortfolio();
             initializeFavorites();
@@ -41,17 +44,16 @@ public class Storage {
         updateBalance(balance);
     }
 
-    public static void updateBalance(double balance) {
-        String json = GsonUtils.balanceToJson(balance);
-        updatePreference(BALANCE_KEY, json);
-    }
-
     public static double getBalance() {
-        SharedPreferences preferences = getSharedPreferences();
         if (preferences.contains(BALANCE_KEY)) {
             return GsonUtils.jsonToBalance(preferences.getString(BALANCE_KEY, null));
         }
-        return 20000;
+        return DEFAULT_BALANCE;
+    }
+
+    synchronized public static void updateBalance(double balance) {
+        String json = GsonUtils.balanceToJson(balance);
+        updatePreference(BALANCE_KEY, json);
     }
 
     private static void initializeFavorites() {
@@ -59,28 +61,31 @@ public class Storage {
         updateFavorites(favoritesItems);
     }
 
-    synchronized public static List<String> getTickers() {
-        Set<String> tickers = getPortfolio().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
-        tickers.addAll(getFavorites().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet()));
+    public static List<String> getTickers() {
+        Set<String> tickers = getPortfolioTickers();
+        tickers.addAll(getFavoriteTickers());
         return new ArrayList<>(tickers);
     }
 
-    synchronized public static List<FavoritesItem> getFavorites() {
-        SharedPreferences preferences = getSharedPreferences();
+    private static Set<String> getFavoriteTickers() {
+        return getFavorites().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet());
+    }
+
+    public static List<FavoritesItem> getFavorites() {
         if (preferences.contains(FAVORITES_KEY)) {
             return GsonUtils.jsonToFavorites(preferences.getString(FAVORITES_KEY, null));
         }
         return Collections.emptyList();
     }
 
-    synchronized public static boolean isFavorite(String ticker) {
+    public static boolean isFavorite(String ticker) {
         List<FavoritesItem> items = getFavorites();
         return items.stream().anyMatch(favoritesItem -> favoritesItem.getTicker().equals(ticker));
     }
 
-    synchronized public static void addToFavorites(String ticker, String name, double price) {
+    synchronized public static void addToFavorites(FavoritesItem item) {
         List<FavoritesItem> items = getFavorites();
-        items.add(FavoritesItem.with(ticker, name, price));
+        items.add(item);
         items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
         updateFavorites(items);
     }
@@ -103,49 +108,44 @@ public class Storage {
         updatePortfolio(portfolioItems);
     }
 
-    synchronized public static List<PortfolioItem> getPortfolio() {
-        SharedPreferences preferences = getSharedPreferences();
+    private static Set<String> getPortfolioTickers() {
+        return getPortfolio().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
+    }
+
+    public static List<PortfolioItem> getPortfolio() {
         if (preferences.contains(PORTFOLIO_KEY)) {
             return GsonUtils.jsonToPortfolio(preferences.getString(PORTFOLIO_KEY, null));
         }
         return Collections.emptyList();
     }
 
-    synchronized public static boolean isPresentInPortfolio(String ticker) {
-        List<PortfolioItem> items = getPortfolio();
-        return items.stream().anyMatch(portfolioItem -> portfolioItem.getTicker().equals(ticker));
-    }
-
-    synchronized public static void addToPortfolio(String ticker, int stocks, double price) {
-        List<PortfolioItem> items = getPortfolio();
-        if (isPresentInPortfolio(ticker)) {
-            PortfolioItem portfolioItem = items.stream().filter(item -> item.getTicker().equals(ticker))
-                                               .findAny().orElse(null);
-            portfolioItem.buy(stocks, price);
-        } else {
-            items.add(PortfolioItem.with(ticker, stocks, price));
-            items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
-        }
-        updatePortfolio(items);
-    }
-
-    synchronized public static PortfolioItem getPortfolioItem(String ticker) {
+    public static PortfolioItem getPortfolioItem(String ticker) {
         List<PortfolioItem> items = getPortfolio();
         return items.stream().filter(item -> item.getTicker().equals(ticker)).findAny().orElse(null);
     }
 
-    synchronized public static Map<String, Integer> getPortfolioStocks() {
+    public static Map<String, Integer> getPortfolioStocks() {
         List<PortfolioItem> items = getPortfolio();
         return items.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
     }
 
-    synchronized public static void removeFromPortfolio(String ticker, int stocks) {
+    public static boolean isPresentInPortfolio(String ticker) {
         List<PortfolioItem> items = getPortfolio();
-        PortfolioItem portfolioItem = items.stream().filter(item -> item.getTicker().equals(ticker)).findAny()
-                                           .orElse(null);
-        if (portfolioItem.sell(stocks)) {
-            items = items.stream().filter(item -> !item.getTicker().equals(ticker)).collect(Collectors.toList());
-        }
+        return items.stream().anyMatch(portfolioItem -> portfolioItem.getTicker().equals(ticker));
+    }
+
+    synchronized public static void addToPortfolio(PortfolioItem item) {
+        List<PortfolioItem> items = getPortfolio();
+        items.add(item);
+        items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
+        updatePortfolio(items);
+    }
+
+    synchronized public static void removeFromPortfolio(String ticker) {
+        List<PortfolioItem> items = getPortfolio()
+                .stream()
+                .filter(item -> !item.getTicker().equals(ticker))
+                .collect(Collectors.toList());
         updatePortfolio(items);
     }
 
@@ -156,13 +156,8 @@ public class Storage {
 
     @SuppressLint("ApplySharedPref")
     private static void updatePreference(String key, String json) {
-        SharedPreferences preferences = getSharedPreferences();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, json);
         editor.commit();
-    }
-
-    private static SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
     }
 }

@@ -14,9 +14,7 @@ import android.widget.TextView;
 import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.format.FormattingUtils;
-import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastManager;
 
 public class TradeDialog {
     private final Dialog dialog;
@@ -25,19 +23,18 @@ public class TradeDialog {
 
     private final TextView stocksPriceView;
 
-    private final ToastManager toastManager;
-
-    private final SuccessListener successListener;
+    private final ActionListener actionListener;
 
     private final Info info;
 
     private int stocks;
 
-    interface SuccessListener {
-        void onTradeSuccess();
+    interface ActionListener {
+        void onBuy(int stocks);
+        void onSell(int stocks);
     }
 
-    public TradeDialog(Context context, ToastManager toastManager, Info info, SuccessListener successListener) {
+    public TradeDialog(Context context, Info info, ActionListener actionListener) {
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.trade_dialog);
 
@@ -47,11 +44,9 @@ public class TradeDialog {
         Window window = dialog.getWindow();
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
-        this.toastManager = toastManager;
-
         this.info = info;
 
-        this.successListener = successListener;
+        this.actionListener = actionListener;
 
         initializeTitleText();
         initializeStocksEditText();
@@ -69,6 +64,10 @@ public class TradeDialog {
     public void show() {
         reset();
         dialog.show();
+    }
+
+    public void dismiss() {
+        dialog.dismiss();
     }
 
     private void initializeTitleText() {
@@ -98,13 +97,12 @@ public class TradeDialog {
 
             }
         });
-
     }
 
     @SuppressLint("DefaultLocale")
     private void initializeStocksPriceView() {
         String lastPriceString = FormattingUtils.getPriceStringWithSymbol(info.getLastPrice());
-        String stocksPriceString = FormattingUtils.getPriceStringWithSymbol(getStocksPrice());
+        String stocksPriceString = FormattingUtils.getPriceStringWithSymbol(stocks * info.getLastPrice());
         stocksPriceView.setText(String.format("%d x %s/share = %s", stocks, lastPriceString, stocksPriceString));
     }
 
@@ -117,58 +115,14 @@ public class TradeDialog {
     private void initializeBuyButton() {
         Button buyButton = dialog.findViewById(R.id.trade_b_buy);
         buyButton.setOnClickListener(v1 -> {
-            buy();
+            this.actionListener.onBuy(stocks);
         });
     }
 
     public void initializeSellButton() {
         Button sellButton = dialog.findViewById(R.id.trade_b_sell);
         sellButton.setOnClickListener(v1 -> {
-            sell();
+            this.actionListener.onSell(stocks);
         });
-    }
-
-    private void buy() {
-        if (stocks == 0) {
-            toastManager.show("Cannot buy less than 0 shares");
-        } else {
-            double balance = Storage.getBalance();
-            double stocksPrice = getStocksPrice();
-            if (stocksPrice > balance) {
-                toastManager.show("Not enough money to buy");
-            } else {
-                Storage.updateBalance(balance - stocksPrice);
-                Storage.addToPortfolio(info.getTicker(), stocks, info.getLastPrice());
-                dialog.dismiss();
-                this.successListener.onTradeSuccess();
-            }
-        }
-    }
-
-    private void sell() {
-        if (stocks == 0) {
-            toastManager.show("Cannot sell less than 0 shares");
-        } else {
-            String ticker = info.getTicker();
-            Integer portfolioStocks = null;
-            if (Storage.isPresentInPortfolio(ticker)) {
-                PortfolioItem item = Storage.getPortfolioItem(ticker);
-                portfolioStocks = item.getStocks();
-            } else {
-                portfolioStocks = 0;
-            }
-            if (stocks > portfolioStocks) {
-                toastManager.show("Not enough shares to sell");
-            } else {
-                Storage.updateBalance(Storage.getBalance() + getStocksPrice());
-                Storage.removeFromPortfolio(ticker, stocks);
-                dialog.dismiss();
-                this.successListener.onTradeSuccess();
-            }
-        }
-    }
-
-    private double getStocksPrice() {
-        return stocks * info.getLastPrice();
     }
 }

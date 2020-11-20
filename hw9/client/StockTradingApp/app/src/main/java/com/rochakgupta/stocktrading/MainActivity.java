@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
 
     private Timer lastPricesFetchTimer;
     private static final int TIMER_DURATION_SECONDS = 15;
+
     private ApiStatus lastPricesFetchStatus;
 
     @Override
