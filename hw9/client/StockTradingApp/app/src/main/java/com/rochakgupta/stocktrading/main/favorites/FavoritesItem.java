@@ -15,7 +15,7 @@ public class FavoritesItem {
 
     private transient Integer stocks;
 
-    private transient Double currentPrice;
+    private transient Double lastPrice;
 
     private FavoritesItem() {
 
@@ -45,12 +45,12 @@ public class FavoritesItem {
         this.stocks = stocks;
     }
 
-    public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
+    public void setLastPrice(double lastPrice) {
+        this.lastPrice = lastPrice;
     }
 
-    public boolean isCurrentPriceSet() {
-        return this.currentPrice != null;
+    public boolean isLastPriceSet() {
+        return this.lastPrice != null;
     }
 
     public String getTicker() {
@@ -65,26 +65,26 @@ public class FavoritesItem {
         return name;
     }
 
-    public Double getCurrentPrice() {
-        return currentPrice;
+    public Double getLastPrice() {
+        return lastPrice;
     }
 
     public Double getChange() {
-        if (!isCurrentPriceSet()) {
+        if (!isLastPriceSet()) {
             return null;
         }
-        return currentPrice - price;
+        return lastPrice - price;
     }
 
     public Boolean showTrending() {
-        if (!isCurrentPriceSet()) {
+        if (!isLastPriceSet()) {
             return null;
         }
         return getChange() != 0;
     }
 
     public Integer getTrendingDrawable() {
-        if (!isCurrentPriceSet()) {
+        if (!isLastPriceSet()) {
             return null;
         }
         double change = getChange();

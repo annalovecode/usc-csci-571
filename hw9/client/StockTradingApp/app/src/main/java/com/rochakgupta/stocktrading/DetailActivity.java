@@ -16,11 +16,12 @@ import androidx.core.widget.NestedScrollView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.detail.AboutManager;
+import com.rochakgupta.stocktrading.detail.about.AboutManager;
 import com.rochakgupta.stocktrading.detail.ChartItem;
 import com.rochakgupta.stocktrading.detail.Everything;
 import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.detail.NewsItem;
+import com.rochakgupta.stocktrading.detail.portfolio.PortfolioManager;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
 import com.rochakgupta.stocktrading.format.FormattingUtils;
@@ -44,6 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView errorView;
 
     private NestedScrollView successView;
+    private PortfolioManager portfolioManager;
     private AboutManager aboutManager;
 
     private ToastManager toastManager;
@@ -74,9 +76,7 @@ public class DetailActivity extends AppCompatActivity {
 
         loadingLayout = findViewById(R.id.detail_cl_loading);
         errorView = findViewById(R.id.detail_tv_error);
-
         successView = findViewById(R.id.detail_nsv_success);
-        aboutManager = new AboutManager(this);
 
         toastManager = new ToastManager(this);
 
@@ -136,6 +136,7 @@ public class DetailActivity extends AppCompatActivity {
         news = everything.getNews();
         chart = everything.getChart();
         initializeInfoView();
+        initializePortfolioView();
         initializeStatsGrid();
         initializeAboutView();
         showSuccessLayout();
@@ -154,6 +155,12 @@ public class DetailActivity extends AppCompatActivity {
         changeView.setTextColor(getColor(info.getChangeColor()));
     }
 
+    private void initializePortfolioView() {
+        portfolioManager = new PortfolioManager(this, info);
+        portfolioManager.display();
+        portfolioManager.initializeTrading(this);
+    }
+
     private void initializeStatsGrid() {
         List<Stat> stats = Arrays.asList(
                 Stat.ofPrice("Current Price", info.getLastPrice()),
@@ -169,7 +176,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializeAboutView() {
-        aboutManager.display(info.getDescription());
+        aboutManager = new AboutManager(this, info.getDescription());
+        aboutManager.display();
     }
 
     private void onEverythingFetchError() {

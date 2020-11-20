@@ -33,7 +33,7 @@
             tools:text="AMZN" />
 
         <TextView
-            android:id="@+id/favorites_tv_current_price"
+            android:id="@+id/favorites_tv_last_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/favorites_tv_current_price">
+            app:layout_constraintTop_toBottomOf="@+id/favorites_tv_last_price">
 
             <ImageView
                 android:id="@+id/favorites_iv_trending"

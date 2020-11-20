@@ -78,8 +78,8 @@ public class FavoritesSection extends Section {
         FavoritesItem item = items.get(position);
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
-        if (item.isCurrentPriceSet()) {
-            viewHolder.currentPriceView.setText(FormattingUtils.getPriceString(item.getCurrentPrice()));
+        if (item.isLastPriceSet()) {
+            viewHolder.lastPriceView.setText(FormattingUtils.getPriceString(item.getLastPrice()));
             viewHolder.changeView.setText(FormattingUtils.getPriceString(item.getChange()));
             viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
             if (item.showTrending()) {

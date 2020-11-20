@@ -25,6 +25,10 @@ public class Info {
 
     private Double bidPrice;
 
+    public String getTicker() {
+        return ticker;
+    }
+
     public String getName() {
         return name;
     }

@@ -169,18 +169,20 @@
                     app:layout_constraintBottom_toBottomOf="parent">
 
                     <TextView
+                        android:id="@+id/detail_tv_portfolio_stocks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         tools:text="You have 0 shares of AMZN." />
 
                     <TextView
+                        android:id="@+id/detail_tv_portfolio_market_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         tools:text="Start trading!" />
                 </LinearLayout>
@@ -188,7 +190,7 @@
                 <Button
                     android:id="@+id/detail_b_portfolio_trade"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="34dp"
                     android:text="TRADE"
                     android:textColor="@color/white"
                     android:textStyle="bold"

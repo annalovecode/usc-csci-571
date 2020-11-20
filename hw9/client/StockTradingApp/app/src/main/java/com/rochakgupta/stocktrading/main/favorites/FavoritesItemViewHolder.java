@@ -13,7 +13,7 @@ public class FavoritesItemViewHolder extends RecyclerView.ViewHolder {
 
     final TextView descriptionView;
 
-    final TextView currentPriceView;
+    final TextView lastPriceView;
 
     final TextView changeView;
 
@@ -25,7 +25,7 @@ public class FavoritesItemViewHolder extends RecyclerView.ViewHolder {
         super(view);
         tickerView = (TextView) view.findViewById(R.id.favorites_tv_ticker);
         descriptionView = (TextView) view.findViewById(R.id.favorites_tv_description);
-        currentPriceView = (TextView) view.findViewById(R.id.favorites_tv_current_price);
+        lastPriceView = (TextView) view.findViewById(R.id.favorites_tv_last_price);
         changeView = (TextView) view.findViewById(R.id.favorites_tv_change);
         trendingView = (ImageView) view.findViewById(R.id.favorites_iv_trending);
         arrowView = (ImageView) view.findViewById(R.id.favorites_iv_arrow);

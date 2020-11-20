@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
 
     private void updatePortfolioSection(Map<String, Double> lastPrices) {
         List<PortfolioItem> portfolioItems = Storage.getPortfolio();
-        portfolioItems.forEach(item -> item.setCurrentPrice(lastPrices.get(item.getTicker())));
+        portfolioItems.forEach(item -> item.setLastPrice(lastPrices.get(item.getTicker())));
         SectionAdapter portfolioAdapter = mSuccessViewAdapter.getAdapterForSection(portfolioSection);
         portfolioSection.setItems(portfolioItems, portfolioAdapter);
     }
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
         Map<String, Integer> stocks = Storage.getPortfolioStocks();
         favoritesItems.forEach(item -> {
             String ticker = item.getTicker();
-            item.setCurrentPrice(lastPrices.get(ticker));
+            item.setLastPrice(lastPrices.get(ticker));
             item.setStocks(stocks.get(ticker));
         });
         SectionAdapter favoritesAdapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);

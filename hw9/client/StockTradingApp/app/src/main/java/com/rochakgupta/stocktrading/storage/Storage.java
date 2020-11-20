@@ -91,6 +91,16 @@ public class Storage {
         return Collections.emptyList();
     }
 
+    synchronized public static boolean isPresentInPortfolio(String ticker) {
+        List<PortfolioItem> items = getPortfolio();
+        return items.stream().anyMatch(portfolioItem -> portfolioItem.getTicker().equals(ticker));
+    }
+
+    synchronized public static PortfolioItem getPortfolioItem(String ticker) {
+        List<PortfolioItem> items = getPortfolio();
+        return items.stream().filter(item -> item.getTicker().equals(ticker)).findAny().orElse(null);
+    }
+
     synchronized public static Map<String, Integer> getPortfolioStocks() {
         List<PortfolioItem> items = getPortfolio();
         return items.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));

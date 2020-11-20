@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.detail;
+package com.rochakgupta.stocktrading.detail.about;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,15 +14,18 @@ public class AboutManager {
 
     private final TextView aboutTogglerView;
 
+    private final String description;
+
     private boolean collapsed;
 
-    public AboutManager(Activity activity) {
+    public AboutManager(Activity activity, String description) {
         aboutView = activity.findViewById(R.id.detail_tv_about);
         aboutTogglerView = activity.findViewById(R.id.detail_tv_about_toggler);
+        this.description = description;
     }
 
-    public void display(String about) {
-        aboutView.setText(about);
+    public void display() {
+        aboutView.setText(description);
         Layout layout = aboutView.getLayout();
         if (layout.getLineCount() > 2) {
             aboutTogglerView.setVisibility(View.VISIBLE);
