@@ -37,15 +37,14 @@ public class PortfolioSection extends Section {
     }
 
     public void setItems(List<PortfolioItem> newItems, SectionAdapter adapter) {
-        if (newItems.isEmpty()) {
-            int count = getContentItemsTotal();
+        int count = getContentItemsTotal();
+        if (newItems.isEmpty() && count > 0) {
             items.clear();
             adapter.notifyItemRangeRemoved(0, count);
-        } else if (items.isEmpty()) {
+        } else if (!newItems.isEmpty() && count == 0) {
             items.addAll(newItems);
             adapter.notifyAllItemsInserted();
-        } else {
-            int count = getContentItemsTotal();
+        } else if (!newItems.isEmpty() && count > 0) {
             items.clear();
             adapter.notifyItemRangeRemoved(0, count);
             items.addAll(newItems);

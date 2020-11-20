@@ -37,15 +37,14 @@ public class FavoritesSection extends Section {
     }
 
     public void setItems(List<FavoritesItem> newItems, SectionAdapter adapter) {
-        if (newItems.isEmpty()) {
-            int count = getContentItemsTotal();
+        int count = getContentItemsTotal();
+        if (count > 0 && newItems.isEmpty()) {
             items.clear();
             adapter.notifyItemRangeRemoved(0, count);
-        } else if (items.isEmpty()) {
+        } else if (count == 0 && !newItems.isEmpty()) {
             items.addAll(newItems);
             adapter.notifyAllItemsInserted();
-        } else {
-            int count = getContentItemsTotal();
+        } else if (count > 0 && !newItems.isEmpty()) {
             items.clear();
             adapter.notifyItemRangeRemoved(0, count);
             items.addAll(newItems);
