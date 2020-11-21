@@ -30,8 +30,8 @@ public class TradeDialog {
     private int stocks;
 
     interface ActionListener {
-        void onBuy(int stocks);
-        void onSell(int stocks);
+        void onStockBuy(int stocks);
+        void onStockSell(int stocks);
     }
 
     public TradeDialog(Context context, Info info, ActionListener actionListener) {
@@ -115,14 +115,14 @@ public class TradeDialog {
     private void initializeBuyButton() {
         Button buyButton = dialog.findViewById(R.id.trade_b_buy);
         buyButton.setOnClickListener(v1 -> {
-            this.actionListener.onBuy(stocks);
+            this.actionListener.onStockBuy(stocks);
         });
     }
 
     public void initializeSellButton() {
         Button sellButton = dialog.findViewById(R.id.trade_b_sell);
         sellButton.setOnClickListener(v1 -> {
-            this.actionListener.onSell(stocks);
+            this.actionListener.onStockSell(stocks);
         });
     }
 }
