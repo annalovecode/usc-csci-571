@@ -19,6 +19,8 @@ public class PortfolioManager implements TradeDialog.ActionListener {
 
     private TradeDialog tradeDialog;
 
+    private TradeSuccessDialog tradeSuccessDialog;
+
     private final ToastManager toastManager;
 
     private final Info info;
@@ -26,17 +28,14 @@ public class PortfolioManager implements TradeDialog.ActionListener {
     public PortfolioManager(Activity activity, ToastManager toastManager, Info info) {
         stocksView = activity.findViewById(R.id.detail_tv_portfolio_stocks);
         marketPriceView = activity.findViewById(R.id.detail_tv_portfolio_market_value);
-        this.toastManager = toastManager;
-        this.info = info;
-        initializeTrading(activity);
-    }
-
-    private void initializeTrading(Activity activity) {
         tradeDialog = new TradeDialog(activity, info, this);
         Button tradeButton = activity.findViewById(R.id.detail_b_portfolio_trade);
         tradeButton.setOnClickListener(v -> {
             tradeDialog.show();
         });
+        tradeSuccessDialog = new TradeSuccessDialog(activity, info.getTicker());
+        this.toastManager = toastManager;
+        this.info = info;
     }
 
     @SuppressLint("SetTextI18n")
@@ -69,7 +68,7 @@ public class PortfolioManager implements TradeDialog.ActionListener {
                 toastManager.show("Not enough money to buy");
             } else {
                 buy(stocks);
-                onTradeSuccess();
+                onTradeSuccess(TradeType.BUY, stocks);
             }
         }
     }
@@ -108,7 +107,7 @@ public class PortfolioManager implements TradeDialog.ActionListener {
                 toastManager.show("Not enough shares to sell");
             } else {
                 sell(stocks);
-                onTradeSuccess();
+                onTradeSuccess(TradeType.SELL, stocks);
             }
         }
     }
@@ -126,9 +125,10 @@ public class PortfolioManager implements TradeDialog.ActionListener {
         Storage.updateBalance(Storage.getBalance() + getStocksPrice(stocks, lastPrice));
     }
 
-    private void onTradeSuccess() {
+    private void onTradeSuccess(TradeType tradeType, int stocks) {
         tradeDialog.dismiss();
         display();
+        tradeSuccessDialog.show(tradeType, stocks);
     }
 
     private double getStocksPrice(int stocks, double pricePerStock) {

@@ -195,7 +195,7 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="14sp"
-                    android:background="@drawable/round_btn"
+                    android:background="@drawable/round_btn_green"
                     android:paddingLeft="36dp"
                     android:paddingRight="36dp"
                     app:layout_constraintTop_toTopOf="parent"
