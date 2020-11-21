@@ -1,21 +1,23 @@
 package com.rochakgupta.stocktrading.detail;
 
+import java.util.List;
+
 public class Everything {
     private Info info;
 
-    private NewsItem[] news;
+    private List<NewsItem> news;
 
-    private ChartItem[] chart;
+    private List<ChartItem> chart;
 
     public Info getInfo() {
         return info;
     }
 
-    public NewsItem[] getNews() {
+    public List<NewsItem> getNews() {
         return news;
     }
 
-    public ChartItem[] getChart() {
+    public List<ChartItem> getChart() {
         return chart;
     }
 }

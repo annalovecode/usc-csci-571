@@ -2,6 +2,7 @@ package com.rochakgupta.stocktrading;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,14 +14,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.detail.about.AboutManager;
 import com.rochakgupta.stocktrading.detail.ChartItem;
 import com.rochakgupta.stocktrading.detail.Everything;
 import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.detail.NewsItem;
+import com.rochakgupta.stocktrading.detail.about.AboutManager;
+import com.rochakgupta.stocktrading.detail.news.NewsAdapter;
 import com.rochakgupta.stocktrading.detail.portfolio.PortfolioManager;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
@@ -37,7 +41,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements NewsAdapter.NewsAdapterOnClickHandler {
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private String ticker;
@@ -54,9 +58,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private Info info;
 
-    private NewsItem[] news;
+    private List<NewsItem> news;
 
-    private ChartItem[] chart;
+    private List<ChartItem> chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +143,7 @@ public class DetailActivity extends AppCompatActivity {
         initializePortfolioView();
         initializeStatsGrid();
         initializeAboutView();
+        initializeNewsView();
         showSuccessLayout();
         everythingFetchStatus.success();
     }
@@ -177,6 +182,20 @@ public class DetailActivity extends AppCompatActivity {
     private void initializeAboutView() {
         AboutManager aboutManager = new AboutManager(this, info.getDescription());
         aboutManager.display();
+    }
+
+    private void initializeNewsView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.detail_rv_news);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        NewsAdapter adapter = new NewsAdapter(this, news, this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(NewsItem item) {
+        Log.d(TAG, "News clicked");
     }
 
     private void onEverythingFetchError() {
