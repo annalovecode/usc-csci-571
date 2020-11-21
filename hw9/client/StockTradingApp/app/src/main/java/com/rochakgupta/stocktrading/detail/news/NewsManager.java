@@ -59,7 +59,8 @@ public class NewsManager implements NewsAdapter.NewsAdapterOnClickHandler, NewsD
                 .appendQueryParameter("text", "Check out this Link:")
                 .appendQueryParameter("url", url)
                 .appendQueryParameter("hashtags", "CSCI571StockApp")
-                .build().toString();
+                .build()
+                .toString();
     }
 
     private void view(String url) {
