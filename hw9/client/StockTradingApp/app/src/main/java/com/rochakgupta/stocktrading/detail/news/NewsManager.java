@@ -41,13 +41,13 @@ public class NewsManager implements NewsAdapter.NewsAdapterOnClickHandler, NewsD
     }
 
     @Override
-    public void onShare(NewsItem item) {
+    public void onNewsShare(NewsItem item) {
         String url = getShareURL(item.getUrl());
         view(url);
     }
 
     @Override
-    public void onView(NewsItem item) {
+    public void onNewsView(NewsItem item) {
         view(item.getUrl());
     }
 

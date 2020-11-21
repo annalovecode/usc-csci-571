@@ -18,8 +18,8 @@ public class NewsDialog {
     private NewsItem item;
 
     interface ActionListener {
-        void onShare(NewsItem item);
-        void onView(NewsItem item);
+        void onNewsShare(NewsItem item);
+        void onNewsView(NewsItem item);
     }
 
     public NewsDialog(Context context, ActionListener actionListener) {
@@ -51,14 +51,14 @@ public class NewsDialog {
     private void initializeShareButton() {
         ImageButton shareButton = dialog.findViewById(R.id.news_dialog_b_share);
         shareButton.setOnClickListener(v1 -> {
-            this.actionListener.onShare(item);
+            this.actionListener.onNewsShare(item);
         });
     }
 
     public void initializeViewButton() {
         ImageButton viewButton = dialog.findViewById(R.id.news_dialog_b_view);
         viewButton.setOnClickListener(v1 -> {
-            this.actionListener.onView(item);
+            this.actionListener.onNewsView(item);
         });
     }
 }

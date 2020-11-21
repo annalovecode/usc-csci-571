@@ -68,7 +68,7 @@ public class PortfolioManager implements TradeDialog.ActionListener {
                 toastManager.show("Not enough money to buy");
             } else {
                 buy(stocks);
-                onTradeSuccess(TradeType.BUY, stocks);
+                onSuccess(TradeType.BUY, stocks);
             }
         }
     }
@@ -107,7 +107,7 @@ public class PortfolioManager implements TradeDialog.ActionListener {
                 toastManager.show("Not enough shares to sell");
             } else {
                 sell(stocks);
-                onTradeSuccess(TradeType.SELL, stocks);
+                onSuccess(TradeType.SELL, stocks);
             }
         }
     }
@@ -125,7 +125,7 @@ public class PortfolioManager implements TradeDialog.ActionListener {
         Storage.updateBalance(Storage.getBalance() + getStocksPrice(stocks, lastPrice));
     }
 
-    private void onTradeSuccess(TradeType tradeType, int stocks) {
+    private void onSuccess(TradeType tradeType, int stocks) {
         tradeDialog.dismiss();
         display();
         tradeSuccessDialog.show(tradeType, stocks);
