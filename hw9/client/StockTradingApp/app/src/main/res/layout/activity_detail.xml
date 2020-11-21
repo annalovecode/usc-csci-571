@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context=".DetailActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -34,7 +34,7 @@
             android:id="@+id/detail_pb"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:indeterminateTint="@color/purple"
+            android:indeterminateTint="@color/deepPurple"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="4dp"
-            android:textColor="@color/black"
             android:text="Fetching Data"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/detail_pb"
             app:layout_constraintStart_toStartOf="@+id/detail_pb"
             app:layout_constraintTop_toBottomOf="@+id/detail_pb" />
@@ -55,8 +55,8 @@
         android:id="@+id/detail_tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:text="Error occurred while fetching data"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,14 +66,14 @@
         android:id="@+id/detail_nsv_success"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,9 +126,9 @@
                     android:id="@+id/detail_tv_info_change"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="-$312.45" />
@@ -149,9 +149,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Portfolio"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -163,18 +163,18 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/detail_b_portfolio_trade"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/detail_tv_portfolio_stocks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="15sp"
                         android:textColor="@color/black"
+                        android:textSize="15sp"
                         tools:text="You have 0 shares of AMZN." />
 
                     <TextView
@@ -182,8 +182,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="15sp"
                         android:textColor="@color/black"
+                        android:textSize="15sp"
                         tools:text="Start trading!" />
                 </LinearLayout>
 
@@ -191,82 +191,82 @@
                     android:id="@+id/detail_b_portfolio_trade"
                     android:layout_width="wrap_content"
                     android:layout_height="34dp"
-                    android:text="TRADE"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="14sp"
                     android:background="@drawable/round_btn_green"
                     android:paddingLeft="36dp"
                     android:paddingRight="36dp"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="TRADE"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Stats"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="8dp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <com.rochakgupta.stocktrading.detail.stats.StatsGridView
-                android:layout_marginTop="8dp"
                 android:id="@+id/detail_gv_stats"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
                 android:horizontalSpacing="4dp"
-                android:verticalSpacing="20dp"
+                android:isScrollContainer="false"
                 android:numColumns="3"
                 android:stretchMode="columnWidth"
-                android:isScrollContainer="false" />
+                android:verticalSpacing="20dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-30dp"
                 android:text="About"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="-30dp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/detail_tv_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/black"
+                android:layout_marginTop="8dp"
                 android:inputType="none"
-                android:layout_marginTop="8dp" />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/detail_tv_about_toggler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                tools:text="Show more..."
-                android:textColor="@color/darkGray"
                 android:layout_marginTop="4dp"
-                android:gravity="end"/>
+                android:gravity="end"
+                android:textColor="@color/darkGray"
+                android:textSize="16sp"
+                tools:text="Show more..." />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="News"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="8dp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/detail_rv_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
 

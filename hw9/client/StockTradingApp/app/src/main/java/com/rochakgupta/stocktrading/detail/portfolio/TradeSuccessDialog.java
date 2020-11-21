@@ -34,8 +34,9 @@ public class TradeSuccessDialog {
     public void show(TradeType tradeType, int stocks) {
         String tradeString = tradeType.equals(TradeType.BUY) ? "bought" : "sold";
         String stocksString = FormattingUtils.getQuantityString(stocks);
-        messageView
-                .setText(String.format("You have successfully %s %s shares of %s", tradeString, stocksString, ticker));
+        String sharesString = stocks < 2 ? "share" : "shares";
+        messageView.setText(String.format(
+                "You have successfully %s %s %s of %s", tradeString, stocksString, sharesString, ticker));
         dialog.show();
     }
 }

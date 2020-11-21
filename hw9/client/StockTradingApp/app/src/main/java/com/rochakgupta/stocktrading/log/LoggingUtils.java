@@ -14,12 +14,18 @@ import java.util.Objects;
 public class LoggingUtils {
     private static final String TAG = LoggingUtils.class.getSimpleName();
 
+    private static final boolean LOG_JSON = false;
+
     public static void logJSONObject(JSONObject jsonObject) throws JSONException {
-        Log.d(TAG, jsonObject.toString(4));
+        if (LOG_JSON) {
+            Log.d(TAG, jsonObject.toString(4));
+        }
     }
 
     public static void logJSONArray(JSONArray jsonArray) throws JSONException {
-        Log.d(TAG, jsonArray.toString(4));
+        if (LOG_JSON) {
+            Log.d(TAG, jsonArray.toString(4));
+        }
     }
 
     public static void logError(VolleyError error) {

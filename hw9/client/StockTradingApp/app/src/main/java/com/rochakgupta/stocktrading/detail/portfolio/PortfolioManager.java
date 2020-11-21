@@ -17,9 +17,9 @@ public class PortfolioManager implements TradeDialog.ActionListener {
 
     private final TextView marketPriceView;
 
-    private TradeDialog tradeDialog;
+    private final TradeDialog tradeDialog;
 
-    private TradeSuccessDialog tradeSuccessDialog;
+    private final TradeSuccessDialog tradeSuccessDialog;
 
     private final ToastManager toastManager;
 

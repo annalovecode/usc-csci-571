@@ -26,7 +26,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
     private final NewsAdapterOnClickHandler clickHandler;
 
     public interface NewsAdapterOnClickHandler {
-        void onClick(NewsItem item);
+        void onNewsClick(NewsItem item);
+        void onNewsLongClick(NewsItem item);
     }
 
     public NewsAdapter(Context context, List<NewsItem> items, NewsAdapterOnClickHandler clickHandler) {
@@ -62,7 +63,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
         holder.publisherView.setText(item.getPublisher());
         holder.publishedAtView.setText(item.getPublishedAt());
         holder.titleView.setText(item.getTitle());
-        holder.itemView.setOnClickListener(v -> clickHandler.onClick(item));
+        holder.itemView.setOnClickListener(v -> clickHandler.onNewsClick(item));
+        holder.itemView.setOnLongClickListener(v -> {
+            clickHandler.onNewsLongClick(item);
+            return true;
+        });
     }
 
     @Override

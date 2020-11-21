@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp" />
+
+    <TextView
+        android:id="@+id/news_dialog_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingStart="6dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Amazon Web Services reports $11.6 billion third-quarter revenue, up 29% year over year (AMZN)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@drawable/news_share_border"
+            android:paddingStart="50dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="50dp"
+            android:paddingBottom="4dp">
+
+            <ImageButton
+                android:id="@+id/news_dialog_b_share"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_twitter_logo_dialog" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@drawable/news_share_border"
+            android:paddingStart="54dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="54dp"
+            android:paddingBottom="4dp">
+
+            <ImageButton
+                android:id="@+id/news_dialog_b_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_chrome" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingStart="24dp"
-    android:paddingEnd="24dp"
     android:paddingTop="50dp"
+    android:paddingEnd="24dp"
     android:paddingBottom="50dp">
 
     <TextView
         android:id="@+id/trade_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Trade Amazon.com Inc shares"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
         android:layout_gravity="start"
-        android:gravity="start"/>
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Trade Amazon.com Inc shares" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,11 +30,11 @@
             android:id="@+id/trade_et_stocks"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/purple"
+            android:backgroundTint="@color/deepPurple"
             android:hint="0"
+            android:inputType="number"
             android:textColor="@color/darkGray"
             android:textSize="30sp"
-            android:inputType="number"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/shares"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,19 +62,19 @@
         android:gravity="end"
         android:textColor="@color/black"
         android:textSize="16sp"
-        tools:text="2 x $3036.15/share = $6072.3"/>
+        tools:text="2 x $3036.15/share = $6072.3" />
 
     <TextView
         android:id="@+id/trade_tv_available_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
+        android:gravity="center"
         android:textColor="@color/darkGray"
         android:textSize="16sp"
         android:textStyle="bold"
-        tools:text="$8591.27 available to buy AMZN"/>
+        tools:text="$8591.27 available to buy AMZN" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -85,6 +85,7 @@
             android:id="@+id/trade_b_buy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:background="@drawable/round_btn_green"
             android:paddingLeft="46dp"
             android:paddingRight="46dp"
@@ -92,7 +93,6 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginStart="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -101,6 +101,7 @@
             android:id="@+id/trade_b_sell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/round_btn_green"
             android:paddingLeft="46dp"
             android:paddingRight="46dp"
@@ -108,7 +109,6 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
