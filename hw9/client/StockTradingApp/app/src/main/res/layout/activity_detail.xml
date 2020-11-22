@@ -136,9 +136,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:layout_height="300dp"
+                android:layout_marginTop="8dp">
 
                 <WebView
                     android:id="@+id/detail_wv_chart"
@@ -147,6 +146,7 @@
             </FrameLayout>
 
             <TextView
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Portfolio"
