@@ -162,9 +162,8 @@ const App = (() => {
       }
     }
 
-    return fetch(
-      `http://usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com/api/chart?ticker=${ticker}`
-    )
+    showLoading();
+    fetch(`http://usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com/api/chart?ticker=${ticker}`)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -202,7 +201,6 @@ const App = (() => {
   const init = () => {
     initializeTicker();
     initializeContainers();
-    showLoading();
     fetchDataAndLoadChart();
   };
 
