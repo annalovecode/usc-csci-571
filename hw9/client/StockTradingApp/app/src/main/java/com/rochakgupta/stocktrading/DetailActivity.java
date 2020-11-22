@@ -2,6 +2,7 @@ package com.rochakgupta.stocktrading;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -252,5 +253,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private int getFavoriteIcon(boolean isFavorite) {
         return isFavorite ? R.drawable.ic_baseline_star_24 : R.drawable.ic_baseline_star_border_24;
+    }
+
+    public void onFooterClick(View view) {
+        Uri uri = Uri.parse("https://www.tiingo.com");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 }
