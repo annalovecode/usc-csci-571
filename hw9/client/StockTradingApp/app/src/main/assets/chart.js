@@ -167,7 +167,7 @@ const App = (() => {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else if (response.statusCode === 404) {
+        } else if (response.status === 404) {
           throw new CheckedError("No data available");
         } else {
           throw new CheckedError("Error occurred while fetching data");

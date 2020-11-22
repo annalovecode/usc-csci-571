@@ -10,7 +10,7 @@ public class UrlBuilder {
     private final Uri.Builder uriBuilder;
 
     public UrlBuilder() {
-        uriBuilder = (new Uri.Builder()).scheme(SCHEME).authority(AUTHORITY);
+        uriBuilder = (new Uri.Builder()).scheme(SCHEME).encodedAuthority(AUTHORITY);
     }
 
     public UrlBuilder path(String path) {
