@@ -13,7 +13,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Set;
 
 public class Api {
     private static final String TAG = Api.class.getName();
@@ -23,7 +22,7 @@ public class Api {
 
     private static final String LAST_PRICES_FETCH_REQUEST_TAG = "LAST_PRICES_FETCH_REQUEST_TAG";
     private static final String SEARCH_OPTIONS_FETCH_REQUEST_TAG = "SEARCH_OPTIONS_FETCH_REQUEST_TAG";
-    private static final String EVERYTHING_FETCH_REQUEST_TAG = "DETAILS_FETCH_REQUEST_TAG";
+    private static final String DETAIL_FETCH_REQUEST_TAG = "DETAIL_FETCH_REQUEST_TAG";
 
     synchronized public static void initialize(Context context) {
         if (!initialized) {
@@ -54,14 +53,14 @@ public class Api {
         addRequestToQueue(request);
     }
 
-    public static void makeEverythingFetchRequest(String ticker, Response.Listener<JSONObject> listener,
-                                                  Response.ErrorListener errorListener) {
-        Log.d(TAG, "Fetching details");
+    public static void makeDetailFetchRequest(String ticker, Response.Listener<JSONObject> listener,
+                                              Response.ErrorListener errorListener) {
+        Log.d(TAG, "Fetching detail");
         String url = (new UrlBuilder())
-                .path("api/everything")
+                .path("api/detail")
                 .addQueryParameter("ticker", ticker)
                 .build();
-        JsonObjectRequest request = buildRequest(url, listener, errorListener, EVERYTHING_FETCH_REQUEST_TAG);
+        JsonObjectRequest request = buildRequest(url, listener, errorListener, DETAIL_FETCH_REQUEST_TAG);
         addRequestToQueue(request);
     }
 
@@ -85,8 +84,8 @@ public class Api {
         requestQueue.cancelAll(SEARCH_OPTIONS_FETCH_REQUEST_TAG);
     }
 
-    synchronized public static void cancelEverythingFetchRequest() {
-        requestQueue.cancelAll(EVERYTHING_FETCH_REQUEST_TAG);
+    synchronized public static void cancelDetailFetchRequest() {
+        requestQueue.cancelAll(DETAIL_FETCH_REQUEST_TAG);
     }
 
     public static boolean isNotFoundError(VolleyError error) {

@@ -1,10 +1,13 @@
 package com.rochakgupta.stocktrading;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -16,7 +19,7 @@ import androidx.core.widget.NestedScrollView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.detail.Everything;
+import com.rochakgupta.stocktrading.detail.Detail;
 import com.rochakgupta.stocktrading.detail.Info;
 import com.rochakgupta.stocktrading.detail.NewsItem;
 import com.rochakgupta.stocktrading.detail.about.AboutManager;
@@ -48,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private ToastManager toastManager;
 
-    private ApiStatus everythingFetchStatus;
+    private ApiStatus detailFetchStatus;
 
     private Info info;
 
@@ -78,12 +81,14 @@ public class DetailActivity extends AppCompatActivity {
 
         Api.initialize(this);
 
-        everythingFetchStatus = new ApiStatus();
-        everythingFetchStatus.loading();
+        initializeChartView();
+
+        detailFetchStatus = new ApiStatus();
+        detailFetchStatus.loading();
 
         showLoadingLayout();
 
-        startEverythingFetch();
+        startDetailFetch();
     }
 
     private void initializeActionBar() {
@@ -108,32 +113,32 @@ public class DetailActivity extends AppCompatActivity {
         successView.setVisibility(View.INVISIBLE);
     }
 
-    private void startEverythingFetch() {
-        Api.makeEverythingFetchRequest(ticker, response -> {
+    private void startDetailFetch() {
+        Api.makeDetailFetchRequest(ticker, response -> {
             try {
                 JSONObject jsonData = response.getJSONObject("data");
                 LoggingUtils.logJSONObject(jsonData);
-                Everything everything = GsonUtils.jsonToEverything(jsonData.toString());
-                onEverythingFetchSuccess(everything);
+                Detail detail = GsonUtils.jsonToDetail(jsonData.toString());
+                onDetailFetchSuccess(detail);
             } catch (JSONException e) {
                 e.printStackTrace();
-                onEverythingFetchError();
+                onDetailFetchError();
             }
         }, error -> {
             LoggingUtils.logError(error);
-            onEverythingFetchError();
+            onDetailFetchError();
         });
     }
 
-    private void onEverythingFetchSuccess(Everything everything) {
-        info = everything.getInfo();
+    private void onDetailFetchSuccess(Detail detail) {
+        info = detail.getInfo();
         initializeInfoView();
         initializePortfolioView();
         initializeStatsGrid();
         initializeAboutView();
-        initializeNewsView(everything.getNews());
+        initializeNewsView(detail.getNews());
         showSuccessLayout();
-        everythingFetchStatus.success();
+        detailFetchStatus.success();
     }
 
     private void initializeInfoView() {
@@ -146,6 +151,16 @@ public class DetailActivity extends AppCompatActivity {
         TextView changeView = findViewById(R.id.detail_tv_info_change);
         changeView.setText(FormattingUtils.getPriceStringWithSymbol(info.getChange()));
         changeView.setTextColor(getColor(info.getChangeColor()));
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initializeChartView() {
+        WebView chartView = findViewById(R.id.detail_wv_chart);
+        WebSettings settings = chartView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        chartView.loadUrl("file:///android_asset/chart.html?ticker=" + ticker);
     }
 
     private void initializePortfolioView() {
@@ -176,9 +191,9 @@ public class DetailActivity extends AppCompatActivity {
         new NewsManager(this, this, news);
     }
 
-    private void onEverythingFetchError() {
+    private void onDetailFetchError() {
         showErrorView();
-        everythingFetchStatus.error();
+        detailFetchStatus.error();
     }
 
     private void showSuccessLayout() {
@@ -189,7 +204,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Api.cancelEverythingFetchRequest();
+        Api.cancelDetailFetchRequest();
         super.onDestroy();
     }
 
@@ -216,9 +231,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void onFavoriteClicked(MenuItem item) {
-        if (everythingFetchStatus.isLoading()) {
+        if (detailFetchStatus.isLoading()) {
             toastManager.show("Still fetching data");
-        } else if (everythingFetchStatus.isError()) {
+        } else if (detailFetchStatus.isError()) {
             toastManager.show("Failed to fetch data");
         } else {
             boolean isFavorite = Storage.isFavorite(ticker);

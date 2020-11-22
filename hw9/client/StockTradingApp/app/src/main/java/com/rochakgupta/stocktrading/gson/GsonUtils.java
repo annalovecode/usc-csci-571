@@ -3,7 +3,7 @@ package com.rochakgupta.stocktrading.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.rochakgupta.stocktrading.detail.Everything;
+import com.rochakgupta.stocktrading.detail.Detail;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
@@ -55,7 +55,7 @@ public class GsonUtils {
         return gson.toJson(items, portfolioItemsType);
     }
 
-    public static Everything jsonToEverything(String json) {
-        return gson.fromJson(json, Everything.class);
+    public static Detail jsonToDetail(String json) {
+        return gson.fromJson(json, Detail.class);
     }
 }

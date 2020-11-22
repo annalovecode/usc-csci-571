@@ -14,7 +14,7 @@ import java.util.Objects;
 public class LoggingUtils {
     private static final String TAG = LoggingUtils.class.getSimpleName();
 
-    private static final boolean LOG_JSON = false;
+    private static final boolean LOG_JSON = true;
 
     public static void logJSONObject(JSONObject jsonObject) throws JSONException {
         if (LOG_JSON) {
