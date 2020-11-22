@@ -14,10 +14,10 @@ Axios.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
-// Axios.interceptors.response.use((response: AxiosResponse) => {
-//     console.info(`API Response: ${JSON.stringify(response.data, undefined, 2)}`);
-//     return response;
-// }, (error: AxiosError) => {
-//     console.info(`API Response: ${error}`);
-//     return Promise.reject(error);
-// });
+Axios.interceptors.response.use((response: AxiosResponse) => {
+    // console.info(`API Response: ${JSON.stringify(response.data, undefined, 2)}`);
+    return response;
+}, (error: AxiosError) => {
+    console.info(`API Response: ${error}`);
+    return Promise.reject(error);
+});

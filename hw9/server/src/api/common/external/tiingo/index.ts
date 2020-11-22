@@ -18,22 +18,12 @@ export const getMetadata = async (ticker: string) => {
 
 export const getLastTwoYearPrices = async (ticker: string): Promise<any[]> => {
     const url = buildURL(`tiingo/daily/${ticker}/prices`);
-    let data: any[];
-    try {
-        data = await get(url, {
-            'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
-            'resampleFreq': 'daily',
-            'columns': 'open,high,low,close,volume'
-        });
-        data = Parser.parseArray(data);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            data = [];
-        } else {
-            throw error;
-        }
-    }
-    return data;
+    const data = await get(url, {
+        'startDate': moment().tz('America/Los_Angeles').subtract(2, 'years').format('YYYY-MM-DD'),
+        'resampleFreq': 'daily',
+        'columns': 'open,high,low,close,volume'
+    });
+    return Parser.parseNonEmptyArray(data);
 };
 
 export const getCurrentTopOfBookAndLastPrice = async (ticker: string) => {

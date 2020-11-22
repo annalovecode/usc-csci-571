@@ -17,15 +17,6 @@ export interface Info {
     bidPrice: number;
 }
 
-export interface ChartItem {
-    date: number;
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volume: number;
-}
-
 export interface NewsItem {
     publisher: string;
     publishedAt: string;
@@ -34,10 +25,18 @@ export interface NewsItem {
     urlToImage: string;
 }
 
-export interface Everything {
+export interface Detail {
     info: Info;
     news: NewsItem[];
-    chart: ChartItem[];
+}
+
+export interface ChartItem {
+    date: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
 }
 
 export interface LastPrices {

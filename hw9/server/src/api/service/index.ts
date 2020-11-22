@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
 import { Parser, Tiingo, NewsAPI } from '../common';
-import { SearchResultItem, Everything, Info, ChartItem, NewsItem, LastPrices } from './models';
+import { SearchResultItem, Detail, Info, ChartItem, NewsItem, LastPrices } from './models';
 
 export const search = async (query: string): Promise<SearchResultItem[]> => {
     const items = await Tiingo.search(query);
@@ -47,7 +47,7 @@ const getInfo = async (ticker: string): Promise<Info> => {
     };
 };
 
-const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
+export const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
     const items = await Tiingo.getLastTwoYearPrices(ticker);
     const parsedItems = items.map((item: any) => ({
         date: moment(Parser.parseString(item.date)).tz('America/Los_Angeles').valueOf(),
@@ -57,7 +57,7 @@ const getHistoricalChartData = async (ticker: string): Promise<ChartItem[]> => {
         close: Parser.parseNumber(item.close),
         volume: Parser.parseNumber(item.volume)
     }));
-    return parsedItems;
+    return Parser.parseNonEmptyArray(parsedItems);
 };
 
 const getNews = async (ticker: string): Promise<NewsItem[]> => {
@@ -91,21 +91,18 @@ const getNews = async (ticker: string): Promise<NewsItem[]> => {
     return newsItems;
 };
 
-export const getEverything = async (ticker: string): Promise<Everything> => {
+export const getDetail = async (ticker: string): Promise<Detail> => {
     const [
         info,
-        news,
-        chart
+        news
     ] = await Promise.all([
         getInfo(ticker),
-        getNews(ticker),
-        getHistoricalChartData(ticker)
+        getNews(ticker)
     ]);
 
     return {
         info,
-        news,
-        chart
+        news
     };
 };
 

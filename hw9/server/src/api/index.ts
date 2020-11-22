@@ -14,10 +14,20 @@ api.get('/search', async (req: Request, res) => {
     }
 });
 
-api.get('/everything', async (req: Request, res) => {
+api.get('/detail', async (req: Request, res) => {
     try {
         const ticker = Parser.parseStringParameter(req.query.ticker);
-        const data = await Service.getEverything(ticker);
+        const data = await Service.getDetail(ticker);
+        return Response.sendOk(res, data);
+    } catch (error) {
+        return Response.sendError(res, error);
+    }
+});
+
+api.get('/chart', async (req: Request, res) => {
+    try {
+        const ticker = Parser.parseStringParameter(req.query.ticker);
+        const data = await Service.getHistoricalChartData(ticker);
         return Response.sendOk(res, data);
     } catch (error) {
         return Response.sendError(res, error);
