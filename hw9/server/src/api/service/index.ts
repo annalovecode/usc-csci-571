@@ -76,7 +76,6 @@ const getNews = async (ticker: string): Promise<NewsItem[]> => {
                     publisher: Parser.parseString(item.source.name),
                     publishedAt: `${moment.duration(now.diff(publishedAt)).humanize()} ago`,
                     title: Parser.parseString(item.title),
-                    description: Parser.parseString(item.description),
                     url: Parser.parseString(item.url),
                     urlToImage: Parser.parseString(item.urlToImage)
                 });

@@ -27,6 +27,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
 
     public interface NewsAdapterOnClickHandler {
         void onNewsClick(NewsItem item);
+
         void onNewsLongClick(NewsItem item);
     }
 
@@ -60,6 +61,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NewsAdapterViewHolder holder, int position) {
         NewsItem item = items.get(position);
+        ImageLoader.loadRounded(context, holder.imageView, item.getUrlToImage());
         holder.publisherView.setText(item.getPublisher());
         holder.publishedAtView.setText(item.getPublishedAt());
         holder.titleView.setText(item.getTitle());
