@@ -14,7 +14,7 @@ public class UrlBuilder {
     }
 
     public UrlBuilder path(String path) {
-        uriBuilder.path(path);
+        uriBuilder.encodedPath(path);
         return this;
     }
 
