@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.detail.Info;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
-import com.rochakgupta.stocktrading.storage.Storage;
+import com.rochakgupta.stocktrading.common.Formatter;
+import com.rochakgupta.stocktrading.common.Storage;
 
 public class TradeDialog {
     private final Dialog dialog;
@@ -101,14 +101,14 @@ public class TradeDialog {
 
     @SuppressLint("DefaultLocale")
     private void initializeStocksPriceView() {
-        String lastPriceString = FormattingUtils.getPriceStringWithSymbol(info.getLastPrice());
-        String stocksPriceString = FormattingUtils.getPriceStringWithSymbol(stocks * info.getLastPrice());
+        String lastPriceString = Formatter.getPriceStringWithSymbol(info.getLastPrice());
+        String stocksPriceString = Formatter.getPriceStringWithSymbol(stocks * info.getLastPrice());
         stocksPriceView.setText(String.format("%d x %s/share = %s", stocks, lastPriceString, stocksPriceString));
     }
 
     private void initializeAvailableAmountView() {
         TextView availableAmountView = dialog.findViewById(R.id.trade_tv_available_amount);
-        String balanceString = FormattingUtils.getPriceStringWithSymbol(Storage.getBalance());
+        String balanceString = Formatter.getPriceStringWithSymbol(Storage.getBalance());
         availableAmountView.setText(String.format("%s available to buy %s", balanceString, info.getTicker()));
     }
 

@@ -26,16 +26,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.api.Api;
 import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.gson.GsonUtils;
-import com.rochakgupta.stocktrading.log.LoggingUtils;
+import com.rochakgupta.stocktrading.common.Converter;
+import com.rochakgupta.stocktrading.common.Logger;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
-import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastManager;
+import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.common.ToastManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,15 +163,15 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
                     Api.makeLastPricesFetchRequest(tickers, response -> {
                         try {
                             JSONObject jsonData = response.getJSONObject("data");
-                            LoggingUtils.logJSONObject(jsonData);
-                            Map<String, Double> lastPrices = GsonUtils.jsonToLastPrices(jsonData.toString());
+                            Logger.logJSONObject(jsonData);
+                            Map<String, Double> lastPrices = Converter.jsonToLastPrices(jsonData.toString());
                             onLastPricesFetchSuccess(lastPrices);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             onLastPricesFetchError();
                         }
                     }, error -> {
-                        LoggingUtils.logError(error);
+                        Logger.logError(error);
                         onLastPricesFetchError();
                     });
                 } else {
@@ -269,15 +269,15 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
                     Api.makeSearchOptionsFetchRequest(query, response -> {
                         try {
                             JSONArray jsonData = response.getJSONArray("data");
-                            LoggingUtils.logJSONArray(jsonData);
-                            List<SearchOption> searchOptions = GsonUtils.jsonToSearchOptions(jsonData.toString());
+                            Logger.logJSONArray(jsonData);
+                            List<SearchOption> searchOptions = Converter.jsonToSearchOptions(jsonData.toString());
                             searchAdapter.setItemsAndNotify(SearchOption.getFormattedOptions(searchOptions));
                         } catch (JSONException e) {
                             e.printStackTrace();
                             onSearchOptionsRequestFailure(null);
                         }
                     }, error -> {
-                        LoggingUtils.logError(error);
+                        Logger.logError(error);
                         String errorMessage = null;
                         if (Api.isNotFoundError(error)) {
                             errorMessage = "No results";

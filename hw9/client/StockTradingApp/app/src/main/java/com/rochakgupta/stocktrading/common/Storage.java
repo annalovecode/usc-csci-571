@@ -1,10 +1,9 @@
-package com.rochakgupta.stocktrading.storage;
+package com.rochakgupta.stocktrading.common;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.rochakgupta.stocktrading.gson.GsonUtils;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 
@@ -46,13 +45,13 @@ public class Storage {
 
     public static double getBalance() {
         if (preferences.contains(BALANCE_KEY)) {
-            return GsonUtils.jsonToBalance(preferences.getString(BALANCE_KEY, null));
+            return Converter.jsonToBalance(preferences.getString(BALANCE_KEY, null));
         }
         return DEFAULT_BALANCE;
     }
 
     synchronized public static void updateBalance(double balance) {
-        String json = GsonUtils.balanceToJson(balance);
+        String json = Converter.balanceToJson(balance);
         updatePreference(BALANCE_KEY, json);
     }
 
@@ -73,7 +72,7 @@ public class Storage {
 
     public static List<FavoritesItem> getFavorites() {
         if (preferences.contains(FAVORITES_KEY)) {
-            return GsonUtils.jsonToFavorites(preferences.getString(FAVORITES_KEY, null));
+            return Converter.jsonToFavorites(preferences.getString(FAVORITES_KEY, null));
         }
         return Collections.emptyList();
     }
@@ -99,7 +98,7 @@ public class Storage {
     }
 
     private static void updateFavorites(List<FavoritesItem> items) {
-        String json = GsonUtils.favoritesToJson(items);
+        String json = Converter.favoritesToJson(items);
         updatePreference(FAVORITES_KEY, json);
     }
 
@@ -114,7 +113,7 @@ public class Storage {
 
     public static List<PortfolioItem> getPortfolio() {
         if (preferences.contains(PORTFOLIO_KEY)) {
-            return GsonUtils.jsonToPortfolio(preferences.getString(PORTFOLIO_KEY, null));
+            return Converter.jsonToPortfolio(preferences.getString(PORTFOLIO_KEY, null));
         }
         return Collections.emptyList();
     }
@@ -150,7 +149,7 @@ public class Storage {
     }
 
     private static void updatePortfolio(List<PortfolioItem> items) {
-        String json = GsonUtils.portfolioToJson(items);
+        String json = Converter.portfolioToJson(items);
         updatePreference(PORTFOLIO_KEY, json);
     }
 

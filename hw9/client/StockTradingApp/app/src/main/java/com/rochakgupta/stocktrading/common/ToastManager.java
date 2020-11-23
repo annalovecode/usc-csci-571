@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.toast;
+package com.rochakgupta.stocktrading.common;
 
 import android.content.Context;
 import android.widget.Toast;

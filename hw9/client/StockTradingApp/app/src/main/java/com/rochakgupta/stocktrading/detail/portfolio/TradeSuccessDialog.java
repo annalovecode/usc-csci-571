@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 
 public class TradeSuccessDialog {
     private final String ticker;
@@ -33,7 +33,7 @@ public class TradeSuccessDialog {
 
     public void show(TradeType tradeType, int stocks) {
         String tradeString = tradeType.equals(TradeType.BUY) ? "bought" : "sold";
-        String stocksString = FormattingUtils.getQuantityString(stocks);
+        String stocksString = Formatter.getQuantityString(stocks);
         String sharesString = stocks < 2 ? "share" : "shares";
         messageView.setText(String.format(
                 "You have successfully %s %s %s of %s", tradeString, stocksString, sharesString, ticker));

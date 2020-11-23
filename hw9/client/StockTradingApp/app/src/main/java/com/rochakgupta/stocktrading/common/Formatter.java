@@ -1,8 +1,8 @@
-package com.rochakgupta.stocktrading.format;
+package com.rochakgupta.stocktrading.common;
 
 import java.text.DecimalFormat;
 
-public class FormattingUtils {
+public class Formatter {
 
     private static final DecimalFormat priceFormatter = new DecimalFormat("#0.00;-#0.00");
 

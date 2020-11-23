@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.log;
+package com.rochakgupta.stocktrading.common;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,8 +11,8 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class LoggingUtils {
-    private static final String TAG = LoggingUtils.class.getSimpleName();
+public class Logger {
+    private static final String TAG = Logger.class.getSimpleName();
 
     private static final boolean LOG_JSON = true;
 

@@ -1,6 +1,6 @@
 package com.rochakgupta.stocktrading.detail.stats;
 
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 
 public class Stat {
     private String name;
@@ -52,9 +52,9 @@ public class Stat {
     public String getFormattedStat() {
         String stringValue = "";
         if (isValueQuantity) {
-            stringValue = FormattingUtils.getQuantityString((int) value);
+            stringValue = Formatter.getQuantityString((int) value);
         } else {
-            stringValue = FormattingUtils.getPriceString(value);
+            stringValue = Formatter.getPriceString(value);
         }
         return String.format("%s: %s", name, stringValue);
     }

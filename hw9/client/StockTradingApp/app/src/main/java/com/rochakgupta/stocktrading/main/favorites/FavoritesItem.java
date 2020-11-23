@@ -3,7 +3,7 @@ package com.rochakgupta.stocktrading.main.favorites;
 import android.annotation.SuppressLint;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 
 public class FavoritesItem {
 
@@ -60,7 +60,7 @@ public class FavoritesItem {
     @SuppressLint("DefaultLocale")
     public String getDescription() {
         if (stocks != null && stocks > 0) {
-            return String.format("%s shares", FormattingUtils.getQuantityString(stocks));
+            return String.format("%s shares", Formatter.getQuantityString(stocks));
         }
         return name;
     }

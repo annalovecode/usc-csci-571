@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.gson;
+package com.rochakgupta.stocktrading.common;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class GsonUtils {
+public class Converter {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
     private static final Type favoritesItemsType = new TypeToken<List<FavoritesItem>>() {

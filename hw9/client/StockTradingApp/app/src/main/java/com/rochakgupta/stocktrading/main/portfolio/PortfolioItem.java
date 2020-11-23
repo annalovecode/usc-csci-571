@@ -3,7 +3,7 @@ package com.rochakgupta.stocktrading.main.portfolio;
 import android.annotation.SuppressLint;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 
 public class PortfolioItem {
 
@@ -53,7 +53,7 @@ public class PortfolioItem {
 
     @SuppressLint("DefaultLocale")
     public String getDescription() {
-        return String.format("%s shares", FormattingUtils.getQuantityString(stocks));
+        return String.format("%s shares", Formatter.getQuantityString(stocks));
     }
 
     public int getStocks() {

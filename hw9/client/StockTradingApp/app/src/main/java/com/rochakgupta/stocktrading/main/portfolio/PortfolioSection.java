@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +70,8 @@ public class PortfolioSection extends Section {
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
         if (item.isLastPriceSet()) {
-            viewHolder.lastPriceView.setText(FormattingUtils.getPriceString(item.getLastPrice()));
-            viewHolder.changeView.setText(FormattingUtils.getPriceString(item.getChange()));
+            viewHolder.lastPriceView.setText(Formatter.getPriceString(item.getLastPrice()));
+            viewHolder.changeView.setText(Formatter.getPriceString(item.getChange()));
             viewHolder.changeView.setTextColor(context.getColor(item.getChangeColor()));
             if (item.showTrending()) {
                 viewHolder.trendingView.setImageResource(item.getTrendingDrawable());

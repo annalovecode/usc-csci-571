@@ -7,10 +7,10 @@ import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.detail.Info;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
-import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastManager;
+import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.common.ToastManager;
 
 public class PortfolioManager implements TradeDialog.OnActionHandler {
     private final TextView stocksView;
@@ -45,10 +45,10 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         String ticker = info.getTicker();
         if (Storage.isPresentInPortfolio(ticker)) {
             PortfolioItem item = Storage.getPortfolioItem(ticker);
-            stocksText = String.format("Shares owned: %s", FormattingUtils.getQuantityString(item.getStocks()));
+            stocksText = String.format("Shares owned: %s", Formatter.getQuantityString(item.getStocks()));
             item.setLastPrice(info.getLastPrice());
             marketPriceText = String
-                    .format("Market Value: %s", FormattingUtils.getPriceString(item.getTotalLastPrice()));
+                    .format("Market Value: %s", Formatter.getPriceString(item.getTotalLastPrice()));
         } else {
             stocksText = String.format("You have 0 shares of %s.", ticker);
             marketPriceText = "Start trading!";

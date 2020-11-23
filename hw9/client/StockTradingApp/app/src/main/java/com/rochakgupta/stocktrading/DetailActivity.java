@@ -28,12 +28,12 @@ import com.rochakgupta.stocktrading.detail.news.NewsManager;
 import com.rochakgupta.stocktrading.detail.portfolio.PortfolioManager;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
-import com.rochakgupta.stocktrading.format.FormattingUtils;
-import com.rochakgupta.stocktrading.gson.GsonUtils;
-import com.rochakgupta.stocktrading.log.LoggingUtils;
+import com.rochakgupta.stocktrading.common.Formatter;
+import com.rochakgupta.stocktrading.common.Converter;
+import com.rochakgupta.stocktrading.common.Logger;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
-import com.rochakgupta.stocktrading.storage.Storage;
-import com.rochakgupta.stocktrading.toast.ToastManager;
+import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.common.ToastManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,15 +118,15 @@ public class DetailActivity extends AppCompatActivity {
         Api.makeDetailFetchRequest(ticker, response -> {
             try {
                 JSONObject jsonData = response.getJSONObject("data");
-                LoggingUtils.logJSONObject(jsonData);
-                Detail detail = GsonUtils.jsonToDetail(jsonData.toString());
+                Logger.logJSONObject(jsonData);
+                Detail detail = Converter.jsonToDetail(jsonData.toString());
                 onDetailFetchSuccess(detail);
             } catch (JSONException e) {
                 e.printStackTrace();
                 onDetailFetchError();
             }
         }, error -> {
-            LoggingUtils.logError(error);
+            Logger.logError(error);
             onDetailFetchError();
         });
     }
@@ -148,9 +148,9 @@ public class DetailActivity extends AppCompatActivity {
         TextView nameView = findViewById(R.id.detail_tv_info_name);
         nameView.setText(info.getName());
         TextView lastPriceView = findViewById(R.id.detail_tv_info_last_price);
-        lastPriceView.setText(FormattingUtils.getPriceStringWithSymbol(info.getLastPrice()));
+        lastPriceView.setText(Formatter.getPriceStringWithSymbol(info.getLastPrice()));
         TextView changeView = findViewById(R.id.detail_tv_info_change);
-        changeView.setText(FormattingUtils.getPriceStringWithSymbol(info.getChange()));
+        changeView.setText(Formatter.getPriceStringWithSymbol(info.getChange()));
         changeView.setTextColor(getColor(info.getChangeColor()));
     }
 
