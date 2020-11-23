@@ -20,20 +20,20 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 public class PortfolioSection extends Section {
     private final Context context;
     private final List<PortfolioItem> items;
-    private final ClickListener clickListener;
+    private final OnClickHandler clickHandler;
 
-    public interface ClickListener {
-        void onPortfolioItemClicked(PortfolioItem item);
+    public interface OnClickHandler {
+        void onPortfolioItemClick(PortfolioItem item);
     }
 
-    public PortfolioSection(Context context, ClickListener clickListener) {
+    public PortfolioSection(Context context, OnClickHandler clickHandler) {
         super(SectionParameters.builder()
                                .itemResourceId(R.layout.portfolio_item)
                                .headerResourceId(R.layout.portfolio_header)
                                .build());
         this.context = context;
         this.items = new ArrayList<>();
-        this.clickListener = clickListener;
+        this.clickHandler = clickHandler;
     }
 
     public void setItems(List<PortfolioItem> newItems, SectionAdapter adapter) {
@@ -80,7 +80,7 @@ public class PortfolioSection extends Section {
                 viewHolder.trendingView.setVisibility(View.INVISIBLE);
             }
         }
-        viewHolder.arrowView.setOnClickListener(v -> clickListener.onPortfolioItemClicked(item));
+        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onPortfolioItemClick(item));
     }
 
     @Override

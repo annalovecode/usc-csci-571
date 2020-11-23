@@ -34,7 +34,7 @@ public class Api {
     public static void makeLastPricesFetchRequest(List<String> tickers, Response.Listener<JSONObject> listener,
                                                   Response.ErrorListener errorListener) {
         Log.d(TAG, "Fetching last prices");
-        String url = (new UrlBuilder())
+        String url = (new ApiUrlBuilder())
                 .path("api/last-price")
                 .addQueryParameter("tickers", String.join(",", tickers))
                 .build();
@@ -45,7 +45,7 @@ public class Api {
     public static void makeSearchOptionsFetchRequest(String query, Response.Listener<JSONObject> listener,
                                                      Response.ErrorListener errorListener) {
         Log.d(TAG, "Fetching search options");
-        String url = (new UrlBuilder())
+        String url = (new ApiUrlBuilder())
                 .path("api/search")
                 .addQueryParameter("query", query)
                 .build();
@@ -56,7 +56,7 @@ public class Api {
     public static void makeDetailFetchRequest(String ticker, Response.Listener<JSONObject> listener,
                                               Response.ErrorListener errorListener) {
         Log.d(TAG, "Fetching detail");
-        String url = (new UrlBuilder())
+        String url = (new ApiUrlBuilder())
                 .path("api/detail")
                 .addQueryParameter("ticker", ticker)
                 .build();

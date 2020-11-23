@@ -12,7 +12,7 @@ import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.storage.Storage;
 import com.rochakgupta.stocktrading.toast.ToastManager;
 
-public class PortfolioManager implements TradeDialog.ActionListener {
+public class PortfolioManager implements TradeDialog.OnActionHandler {
     private final TextView stocksView;
 
     private final TextView marketPriceView;

@@ -23,18 +23,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
 
     private final List<NewsItem> items;
 
-    private final NewsAdapterOnClickHandler clickHandler;
+    private final OnActionHandler actionHandler;
 
-    public interface NewsAdapterOnClickHandler {
+    public interface OnActionHandler {
         void onNewsClick(NewsItem item);
 
         void onNewsLongClick(NewsItem item);
     }
 
-    public NewsAdapter(Context context, List<NewsItem> items, NewsAdapterOnClickHandler clickHandler) {
+    public NewsAdapter(Context context, List<NewsItem> items, OnActionHandler actionHandler) {
         this.context = context;
         this.items = items;
-        this.clickHandler = clickHandler;
+        this.actionHandler = actionHandler;
     }
 
     @NonNull
@@ -65,9 +65,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapterViewHolder> {
         holder.publisherView.setText(item.getPublisher());
         holder.publishedAtView.setText(item.getPublishedAt());
         holder.titleView.setText(item.getTitle());
-        holder.itemView.setOnClickListener(v -> clickHandler.onNewsClick(item));
+        holder.itemView.setOnClickListener(v -> actionHandler.onNewsClick(item));
         holder.itemView.setOnLongClickListener(v -> {
-            clickHandler.onNewsLongClick(item);
+            actionHandler.onNewsLongClick(item);
             return true;
         });
     }

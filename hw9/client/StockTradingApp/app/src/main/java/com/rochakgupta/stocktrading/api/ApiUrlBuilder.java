@@ -2,23 +2,23 @@ package com.rochakgupta.stocktrading.api;
 
 import android.net.Uri;
 
-public class UrlBuilder {
+public class ApiUrlBuilder {
     private static final String SCHEME = "http";
 
     private static final String AUTHORITY = "usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com";
 
     private final Uri.Builder uriBuilder;
 
-    public UrlBuilder() {
+    public ApiUrlBuilder() {
         uriBuilder = (new Uri.Builder()).scheme(SCHEME).encodedAuthority(AUTHORITY);
     }
 
-    public UrlBuilder path(String path) {
+    public ApiUrlBuilder path(String path) {
         uriBuilder.encodedPath(path);
         return this;
     }
 
-    public UrlBuilder addQueryParameter(String key, String value) {
+    public ApiUrlBuilder addQueryParameter(String key, String value) {
         uriBuilder.appendQueryParameter(key, value);
         return this;
     }

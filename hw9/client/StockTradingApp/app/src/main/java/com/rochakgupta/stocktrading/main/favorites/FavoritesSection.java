@@ -20,20 +20,20 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 public class FavoritesSection extends Section {
     private final Context context;
     private final List<FavoritesItem> items;
-    private final ClickListener clickListener;
+    private final OnClickHandler clickHandler;
 
-    public interface ClickListener {
-        void onFavoritesItemClicked(FavoritesItem item);
+    public interface OnClickHandler {
+        void onFavoritesItemClick(FavoritesItem item);
     }
 
-    public FavoritesSection(Context context, ClickListener clickListener) {
+    public FavoritesSection(Context context, OnClickHandler clickHandler) {
         super(SectionParameters.builder()
                                .itemResourceId(R.layout.favorites_item)
                                .headerResourceId(R.layout.favorites_header)
                                .build());
         this.context = context;
         this.items = new ArrayList<>();
-        this.clickListener = clickListener;
+        this.clickHandler = clickHandler;
     }
 
     public void setItems(List<FavoritesItem> newItems, SectionAdapter adapter) {
@@ -80,7 +80,7 @@ public class FavoritesSection extends Section {
                 viewHolder.trendingView.setVisibility(View.INVISIBLE);
             }
         }
-        viewHolder.arrowView.setOnClickListener(v -> clickListener.onFavoritesItemClicked(item));
+        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onFavoritesItemClick(item));
     }
 
     @Override

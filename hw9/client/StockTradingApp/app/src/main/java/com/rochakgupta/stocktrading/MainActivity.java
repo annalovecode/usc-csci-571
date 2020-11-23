@@ -52,8 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class MainActivity extends AppCompatActivity implements PortfolioSection.ClickListener,
-        FavoritesSection.ClickListener {
+public class MainActivity extends AppCompatActivity implements PortfolioSection.OnClickHandler,
+        FavoritesSection.OnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ConstraintLayout loadingLayout;
@@ -122,13 +122,13 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
     }
 
     @Override
-    public void onPortfolioItemClicked(PortfolioItem item) {
+    public void onPortfolioItemClick(PortfolioItem item) {
         String ticker = item.getTicker();
         startDetailActivity(ticker);
     }
 
     @Override
-    public void onFavoritesItemClicked(FavoritesItem item) {
+    public void onFavoritesItemClick(FavoritesItem item) {
         String ticker = item.getTicker();
         startDetailActivity(ticker);
     }

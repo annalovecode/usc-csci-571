@@ -13,7 +13,7 @@ import com.rochakgupta.stocktrading.detail.NewsItem;
 
 import java.util.List;
 
-public class NewsManager implements NewsAdapter.NewsAdapterOnClickHandler, NewsDialog.ActionListener {
+public class NewsManager implements NewsAdapter.OnActionHandler, NewsDialog.OnActionHandler {
 
     private final Context context;
 
