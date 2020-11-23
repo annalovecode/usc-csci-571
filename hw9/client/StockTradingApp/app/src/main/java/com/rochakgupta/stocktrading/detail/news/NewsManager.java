@@ -54,8 +54,8 @@ public class NewsManager implements NewsAdapter.NewsAdapterOnClickHandler, NewsD
     private String getShareURL(String url) {
         return (new Uri.Builder())
                 .scheme("https")
-                .authority("twitter.com")
-                .path("intent/tweet")
+                .encodedAuthority("twitter.com")
+                .encodedPath("intent/tweet")
                 .appendQueryParameter("text", "Check out this Link:")
                 .appendQueryParameter("url", url)
                 .appendQueryParameter("hashtags", "CSCI571StockApp")
