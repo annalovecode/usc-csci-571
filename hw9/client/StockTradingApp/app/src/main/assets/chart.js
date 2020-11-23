@@ -32,7 +32,6 @@ const App = (() => {
     setMessage(message);
     show(messageContainer);
   };
-  ``;
 
   const showChart = () => {
     hide(messageContainer);
@@ -162,7 +161,6 @@ const App = (() => {
       }
     }
 
-    showLoading();
     fetch(`http://usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com/api/chart?ticker=${ticker}`)
       .then((response) => {
         if (response.ok) {
