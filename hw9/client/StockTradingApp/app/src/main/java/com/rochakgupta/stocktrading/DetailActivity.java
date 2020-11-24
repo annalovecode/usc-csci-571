@@ -18,11 +18,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 
-import com.rochakgupta.stocktrading.api.Api;
-import com.rochakgupta.stocktrading.api.ApiStatus;
-import com.rochakgupta.stocktrading.detail.Detail;
-import com.rochakgupta.stocktrading.detail.Info;
-import com.rochakgupta.stocktrading.detail.NewsItem;
+import com.rochakgupta.stocktrading.common.api.Api;
+import com.rochakgupta.stocktrading.common.api.ApiStatus;
+import com.rochakgupta.stocktrading.detail.common.Detail;
+import com.rochakgupta.stocktrading.detail.common.Info;
+import com.rochakgupta.stocktrading.detail.common.NewsItem;
 import com.rochakgupta.stocktrading.detail.about.AboutManager;
 import com.rochakgupta.stocktrading.detail.news.NewsManager;
 import com.rochakgupta.stocktrading.detail.portfolio.PortfolioManager;

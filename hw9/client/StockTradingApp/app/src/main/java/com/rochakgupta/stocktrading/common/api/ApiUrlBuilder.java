@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.api;
+package com.rochakgupta.stocktrading.common.api;
 
 import android.net.Uri;
 

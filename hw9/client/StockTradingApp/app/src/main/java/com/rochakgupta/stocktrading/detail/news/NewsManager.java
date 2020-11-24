@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.detail.NewsItem;
+import com.rochakgupta.stocktrading.detail.common.NewsItem;
 
 import java.util.List;
 

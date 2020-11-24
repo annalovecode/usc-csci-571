@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.detail.Info;
+import com.rochakgupta.stocktrading.detail.common.Info;
 import com.rochakgupta.stocktrading.common.Formatter;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.common.Storage;

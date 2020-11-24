@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.detail;
+package com.rochakgupta.stocktrading.detail.common;
 
 import com.rochakgupta.stocktrading.R;
 

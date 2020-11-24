@@ -24,8 +24,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rochakgupta.stocktrading.api.Api;
-import com.rochakgupta.stocktrading.api.ApiStatus;
+import com.rochakgupta.stocktrading.common.api.Api;
+import com.rochakgupta.stocktrading.common.api.ApiStatus;
 import com.rochakgupta.stocktrading.common.Converter;
 import com.rochakgupta.stocktrading.common.Logger;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;

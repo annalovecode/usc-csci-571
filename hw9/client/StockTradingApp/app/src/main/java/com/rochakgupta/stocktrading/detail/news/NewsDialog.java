@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.detail.NewsItem;
+import com.rochakgupta.stocktrading.detail.common.NewsItem;
 
 public class NewsDialog {
     private final Context context;
