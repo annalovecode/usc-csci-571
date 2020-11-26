@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
 public class PortfolioSection extends Section {
     private final Context context;
-    private final List<PortfolioItem> items;
+    private List<PortfolioItem> items;
     private final OnClickHandler clickHandler;
 
     public interface OnClickHandler {
@@ -36,20 +35,12 @@ public class PortfolioSection extends Section {
         this.clickHandler = clickHandler;
     }
 
-    public void setItems(List<PortfolioItem> newItems, SectionAdapter adapter) {
-        int count = getContentItemsTotal();
-        if (newItems.isEmpty() && count > 0) {
-            items.clear();
-            adapter.notifyItemRangeRemoved(0, count);
-        } else if (!newItems.isEmpty() && count == 0) {
-            items.addAll(newItems);
-            adapter.notifyAllItemsInserted();
-        } else if (!newItems.isEmpty() && count > 0) {
-            items.clear();
-            adapter.notifyItemRangeRemoved(0, count);
-            items.addAll(newItems);
-            adapter.notifyAllItemsInserted();
-        }
+    public void setItems(List<PortfolioItem> items) {
+        this.items = items;
+    }
+
+    public List<PortfolioItem> getItems() {
+        return items;
     }
 
     @Override

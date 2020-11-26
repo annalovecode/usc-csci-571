@@ -63,15 +63,11 @@ public class NewsDialog {
 
     private void initializeShareButton() {
         ImageButton shareButton = dialog.findViewById(R.id.news_dialog_b_share);
-        shareButton.setOnClickListener(v1 -> {
-            this.actionHandler.onNewsShare(item);
-        });
+        shareButton.setOnClickListener(v -> this.actionHandler.onNewsShare(item));
     }
 
     public void initializeViewButton() {
         ImageButton viewButton = dialog.findViewById(R.id.news_dialog_b_view);
-        viewButton.setOnClickListener(v1 -> {
-            this.actionHandler.onNewsView(item);
-        });
+        viewButton.setOnClickListener(v -> this.actionHandler.onNewsView(item));
     }
 }

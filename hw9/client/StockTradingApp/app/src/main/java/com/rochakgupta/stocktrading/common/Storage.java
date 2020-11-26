@@ -7,11 +7,8 @@ import android.content.SharedPreferences;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Storage {
@@ -60,16 +57,6 @@ public class Storage {
         updateFavorites(favoritesItems);
     }
 
-    public static List<String> getTickers() {
-        Set<String> tickers = getPortfolioTickers();
-        tickers.addAll(getFavoriteTickers());
-        return new ArrayList<>(tickers);
-    }
-
-    private static Set<String> getFavoriteTickers() {
-        return getFavorites().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet());
-    }
-
     public static List<FavoritesItem> getFavorites() {
         if (preferences.contains(FAVORITES_KEY)) {
             return Converter.jsonToFavorites(preferences.getString(FAVORITES_KEY, null));
@@ -107,10 +94,6 @@ public class Storage {
         updatePortfolio(portfolioItems);
     }
 
-    private static Set<String> getPortfolioTickers() {
-        return getPortfolio().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
-    }
-
     public static List<PortfolioItem> getPortfolio() {
         if (preferences.contains(PORTFOLIO_KEY)) {
             return Converter.jsonToPortfolio(preferences.getString(PORTFOLIO_KEY, null));
@@ -121,11 +104,6 @@ public class Storage {
     public static PortfolioItem getPortfolioItem(String ticker) {
         List<PortfolioItem> items = getPortfolio();
         return items.stream().filter(item -> item.getTicker().equals(ticker)).findAny().orElse(null);
-    }
-
-    public static Map<String, Integer> getPortfolioStocks() {
-        List<PortfolioItem> items = getPortfolio();
-        return items.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
     }
 
     public static boolean isPresentInPortfolio(String ticker) {

@@ -114,15 +114,11 @@ public class TradeDialog {
 
     private void initializeBuyButton() {
         Button buyButton = dialog.findViewById(R.id.trade_b_buy);
-        buyButton.setOnClickListener(v1 -> {
-            this.actionHandler.onStockBuy(stocks);
-        });
+        buyButton.setOnClickListener(v -> this.actionHandler.onStockBuy(stocks));
     }
 
     public void initializeSellButton() {
         Button sellButton = dialog.findViewById(R.id.trade_b_sell);
-        sellButton.setOnClickListener(v1 -> {
-            this.actionHandler.onStockSell(stocks);
-        });
+        sellButton.setOnClickListener(v -> this.actionHandler.onStockSell(stocks));
     }
 }

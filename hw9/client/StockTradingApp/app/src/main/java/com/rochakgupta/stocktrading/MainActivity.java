@@ -24,32 +24,34 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rochakgupta.stocktrading.common.api.Api;
-import com.rochakgupta.stocktrading.common.api.ApiStatus;
 import com.rochakgupta.stocktrading.common.Converter;
 import com.rochakgupta.stocktrading.common.Logger;
+import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.common.ToastManager;
+import com.rochakgupta.stocktrading.common.api.Api;
+import com.rochakgupta.stocktrading.common.api.ApiStatus;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.main.portfolio.PortfolioSection;
 import com.rochakgupta.stocktrading.main.search.SearchAdapter;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
-import com.rochakgupta.stocktrading.common.Storage;
-import com.rochakgupta.stocktrading.common.ToastManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity implements PortfolioSection.OnClickHandler,
@@ -93,11 +95,6 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
         Api.initialize(this);
 
         initializeRecyclerView();
-
-        lastPricesFetchStatus = new ApiStatus();
-        lastPricesFetchStatus.loading();
-
-        showLoadingLayout();
     }
 
     private void initializeActionBar() {
@@ -158,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
             @Override
             public void run() {
                 Api.cancelLastPricesFetchRequest();
-                List<String> tickers = Storage.getTickers();
+                List<String> tickers = getTickers();
                 if (tickers.size() > 0) {
                     Api.makeLastPricesFetchRequest(tickers, response -> {
                         try {
@@ -181,30 +178,34 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
         }, 0, TimeUnit.SECONDS.toMillis(TIMER_DURATION_SECONDS));
     }
 
+    private List<String> getTickers() {
+        Set<String> tickers = portfolioSection.getItems().stream().map(PortfolioItem::getTicker)
+                                              .collect(Collectors.toSet());
+        tickers.addAll(favoritesSection.getItems().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet()));
+        return new ArrayList<>(tickers);
+    }
+
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {
-        updatePortfolioSection(lastPrices);
-        updateFavoritesSection(lastPrices);
+        Map<String, Integer> stocks = updatePortfolioSection(lastPrices);
+        updateFavoritesSection(lastPrices, stocks);
+        mSuccessViewAdapter.notifyDataSetChanged();
         showSuccessLayout();
         lastPricesFetchStatus.success();
     }
 
-    private void updatePortfolioSection(Map<String, Double> lastPrices) {
-        List<PortfolioItem> portfolioItems = Storage.getPortfolio();
+    private Map<String, Integer> updatePortfolioSection(Map<String, Double> lastPrices) {
+        List<PortfolioItem> portfolioItems = portfolioSection.getItems();
         portfolioItems.forEach(item -> item.setLastPrice(lastPrices.get(item.getTicker())));
-        SectionAdapter portfolioAdapter = mSuccessViewAdapter.getAdapterForSection(portfolioSection);
-        portfolioSection.setItems(portfolioItems, portfolioAdapter);
+        return portfolioItems.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
     }
 
-    private void updateFavoritesSection(Map<String, Double> lastPrices) {
-        List<FavoritesItem> favoritesItems = Storage.getFavorites();
-        Map<String, Integer> stocks = Storage.getPortfolioStocks();
+    private void updateFavoritesSection(Map<String, Double> lastPrices, Map<String, Integer> stocks) {
+        List<FavoritesItem> favoritesItems = favoritesSection.getItems();
         favoritesItems.forEach(item -> {
             String ticker = item.getTicker();
             item.setLastPrice(lastPrices.get(ticker));
             item.setStocks(stocks.get(ticker));
         });
-        SectionAdapter favoritesAdapter = mSuccessViewAdapter.getAdapterForSection(favoritesSection);
-        favoritesSection.setItems(favoritesItems, favoritesAdapter);
     }
 
     private void showSuccessLayout() {
@@ -229,16 +230,26 @@ public class MainActivity extends AppCompatActivity implements PortfolioSection.
         Api.cancelLastPricesFetchRequest();
     }
 
+    public void initializeSections() {
+        portfolioSection.setItems(Storage.getPortfolio());
+        favoritesSection.setItems(Storage.getFavorites());
+        mSuccessViewAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
+        initializeSections();
+        lastPricesFetchStatus = new ApiStatus();
+        lastPricesFetchStatus.loading();
+        showLoadingLayout();
         startLastPricesFetchTimer();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         stopLastPricesFetchTimer();
+        super.onPause();
     }
 
     @SuppressLint("RestrictedApi")

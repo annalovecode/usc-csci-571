@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StockTradingApp.Launcher"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="stateAlwaysHidden">
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@menu/main" />

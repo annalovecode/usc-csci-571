@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
 public class FavoritesSection extends Section {
     private final Context context;
-    private final List<FavoritesItem> items;
+    private List<FavoritesItem> items;
     private final OnClickHandler clickHandler;
 
     public interface OnClickHandler {
@@ -36,20 +35,12 @@ public class FavoritesSection extends Section {
         this.clickHandler = clickHandler;
     }
 
-    public void setItems(List<FavoritesItem> newItems, SectionAdapter adapter) {
-        int count = getContentItemsTotal();
-        if (count > 0 && newItems.isEmpty()) {
-            items.clear();
-            adapter.notifyItemRangeRemoved(0, count);
-        } else if (count == 0 && !newItems.isEmpty()) {
-            items.addAll(newItems);
-            adapter.notifyAllItemsInserted();
-        } else if (count > 0 && !newItems.isEmpty()) {
-            items.clear();
-            adapter.notifyItemRangeRemoved(0, count);
-            items.addAll(newItems);
-            adapter.notifyAllItemsInserted();
-        }
+    public void setItems(List<FavoritesItem> items) {
+        this.items = items;
+    }
+
+    public List<FavoritesItem> getItems() {
+        return items;
     }
 
     @Override
