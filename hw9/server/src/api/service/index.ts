@@ -64,7 +64,7 @@ const getNews = async (ticker: string): Promise<NewsItem[]> => {
     const now = moment().tz('America/Los_Angeles');
     const newsItems: NewsItem[] = [];
     let page = 1;
-    while (page <= 5 && newsItems.length < 20) {
+    while (page <= 5) {
         const items = await NewsAPI.getEverything(ticker, page);
         if (items.length === 0) {
             break;
@@ -81,9 +81,6 @@ const getNews = async (ticker: string): Promise<NewsItem[]> => {
                 });
             } catch (error) {
                 // Skip item
-            }
-            if (newsItems.length === 20) {
-                break;
             }
         }
         page += 1;
