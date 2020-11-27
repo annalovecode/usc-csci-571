@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.main.favorites;
+package com.rochakgupta.stocktrading.main.section.portfolio;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,30 +16,30 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
-public class FavoritesSection extends Section {
+public class PortfolioSection extends Section {
     private final Context context;
-    private List<FavoritesItem> items;
+    private List<PortfolioItem> items;
     private final OnClickHandler clickHandler;
 
     public interface OnClickHandler {
-        void onFavoritesItemClick(FavoritesItem item);
+        void onPortfolioItemClick(PortfolioItem item);
     }
 
-    public FavoritesSection(Context context, OnClickHandler clickHandler) {
+    public PortfolioSection(Context context, OnClickHandler clickHandler) {
         super(SectionParameters.builder()
-                               .itemResourceId(R.layout.favorites_item)
-                               .headerResourceId(R.layout.favorites_header)
+                               .itemResourceId(R.layout.portfolio_item)
+                               .headerResourceId(R.layout.portfolio_header)
                                .build());
         this.context = context;
         this.items = new ArrayList<>();
         this.clickHandler = clickHandler;
     }
 
-    public void setItems(List<FavoritesItem> items) {
+    public void setItems(List<PortfolioItem> items) {
         this.items = items;
     }
 
-    public List<FavoritesItem> getItems() {
+    public List<PortfolioItem> getItems() {
         return items;
     }
 
@@ -50,14 +50,14 @@ public class FavoritesSection extends Section {
 
     @Override
     public RecyclerView.ViewHolder getItemViewHolder(View view) {
-        return new FavoritesItemViewHolder(view);
+        return new PortfolioItemViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
-        FavoritesItemViewHolder viewHolder = (FavoritesItemViewHolder) holder;
-        FavoritesItem item = items.get(position);
+        PortfolioItemViewHolder viewHolder = (PortfolioItemViewHolder) holder;
+        PortfolioItem item = items.get(position);
         viewHolder.tickerView.setText(item.getTicker());
         viewHolder.descriptionView.setText(item.getDescription());
         if (item.isLastPriceSet()) {
@@ -71,7 +71,7 @@ public class FavoritesSection extends Section {
                 viewHolder.trendingView.setVisibility(View.INVISIBLE);
             }
         }
-        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onFavoritesItemClick(item));
+        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onPortfolioItemClick(item));
     }
 
     @Override

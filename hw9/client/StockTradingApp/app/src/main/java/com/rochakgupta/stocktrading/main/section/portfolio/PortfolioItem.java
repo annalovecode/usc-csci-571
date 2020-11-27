@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.main.portfolio;
+package com.rochakgupta.stocktrading.main.section.portfolio;
 
 import android.annotation.SuppressLint;
 

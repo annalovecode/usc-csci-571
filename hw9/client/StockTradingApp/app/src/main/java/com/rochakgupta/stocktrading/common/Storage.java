@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
-import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
+import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
+import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
 
 import java.util.Collections;
 import java.util.List;

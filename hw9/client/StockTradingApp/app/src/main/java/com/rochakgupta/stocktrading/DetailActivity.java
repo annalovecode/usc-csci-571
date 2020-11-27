@@ -31,7 +31,7 @@ import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
 import com.rochakgupta.stocktrading.common.Formatter;
 import com.rochakgupta.stocktrading.common.Converter;
 import com.rochakgupta.stocktrading.common.Logger;
-import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
+import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.common.Storage;
 import com.rochakgupta.stocktrading.common.ToastManager;
 

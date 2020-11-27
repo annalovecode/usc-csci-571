@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.rochakgupta.stocktrading.detail.common.Detail;
-import com.rochakgupta.stocktrading.main.favorites.FavoritesItem;
-import com.rochakgupta.stocktrading.main.portfolio.PortfolioItem;
+import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
+import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.main.search.SearchOption;
 
 import java.lang.reflect.Type;

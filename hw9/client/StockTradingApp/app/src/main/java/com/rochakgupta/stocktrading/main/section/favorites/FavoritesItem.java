@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.main.favorites;
+package com.rochakgupta.stocktrading.main.section.favorites;
 
 import android.annotation.SuppressLint;
 
