@@ -12,6 +12,7 @@ import com.rochakgupta.stocktrading.common.Formatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
@@ -38,6 +39,14 @@ public class FavoritesSection extends Section {
 
     public void setItems(List<FavoritesItem> items) {
         this.items = items;
+    }
+
+    public void updateItems(Map<String, Double> lastPrices, Map<String, Integer> stocks) {
+        items.forEach(item -> {
+            String ticker = item.getTicker();
+            item.setLastPrice(lastPrices.get(ticker));
+            item.setStocks(stocks.get(ticker));
+        });
     }
 
     public List<FavoritesItem> getItems() {

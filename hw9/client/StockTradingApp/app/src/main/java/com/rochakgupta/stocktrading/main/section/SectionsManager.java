@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class SectionsManager implements PortfolioSection.OnClickHandler, FavoritesSection.OnClickHandler {
@@ -97,30 +98,32 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     public void initializeSections() {
+        portfolioSection.setBalance(Storage.getBalance());
         portfolioSection.setItems(Storage.getPortfolio());
         favoritesSection.setItems(Storage.getFavorites());
-        adapter.notifyDataSetChanged();
     }
 
     public void updateSections(Map<String, Double> lastPrices) {
-        Map<String, Integer> stocks = updatePortfolioSection(lastPrices);
-        updateFavoritesSection(lastPrices, stocks);
-        adapter.notifyDataSetChanged();
+        portfolioSection.updateItems(lastPrices);
+        notifySectionItemsChanged(portfolioSection);
+        notifySectionHeaderChanged(portfolioSection);
+
+        Map<String, Integer> stocks = portfolioSection.getItems().stream().collect(
+                Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
+
+        favoritesSection.updateItems(lastPrices, stocks);
+        notifySectionItemsChanged(favoritesSection);
     }
 
-    private Map<String, Integer> updatePortfolioSection(Map<String, Double> lastPrices) {
-        List<PortfolioItem> items = portfolioSection.getItems();
-        items.forEach(item -> item.setLastPrice(lastPrices.get(item.getTicker())));
-        return items.stream().collect(Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
+    private void notifySectionItemsChanged(Section section) {
+        SectionAdapter sectionAdapter = adapter.getAdapterForSection(section);
+        sectionAdapter.notifyAllItemsChanged();
+        sectionAdapter.notifyHeaderChanged();
     }
 
-    private void updateFavoritesSection(Map<String, Double> lastPrices, Map<String, Integer> stocks) {
-        List<FavoritesItem> items = favoritesSection.getItems();
-        items.forEach(item -> {
-            String ticker = item.getTicker();
-            item.setLastPrice(lastPrices.get(ticker));
-            item.setStocks(stocks.get(ticker));
-        });
+    private void notifySectionHeaderChanged(Section section) {
+        SectionAdapter sectionAdapter = adapter.getAdapterForSection(section);
+        sectionAdapter.notifyHeaderChanged();
     }
 
     public List<String> getTickers() {

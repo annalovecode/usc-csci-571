@@ -12,13 +12,14 @@ import com.rochakgupta.stocktrading.common.Formatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
-import io.github.luizgrp.sectionedrecyclerviewadapter.utils.EmptyViewHolder;
 
 public class PortfolioSection extends Section {
     private final Context context;
+    private Double balance;
     private List<PortfolioItem> items;
     private final OnClickHandler clickHandler;
 
@@ -32,12 +33,21 @@ public class PortfolioSection extends Section {
                                .headerResourceId(R.layout.portfolio_header)
                                .build());
         this.context = context;
+        this.balance = null;
         this.items = new ArrayList<>();
         this.clickHandler = clickHandler;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     public void setItems(List<PortfolioItem> items) {
         this.items = items;
+    }
+
+    public void updateItems(Map<String, Double> lastPrices) {
+        items.forEach(item -> item.setLastPrice(lastPrices.get(item.getTicker())));
     }
 
     public List<PortfolioItem> getItems() {
@@ -66,6 +76,11 @@ public class PortfolioSection extends Section {
         return new PortfolioItemViewHolder(view);
     }
 
+    @Override
+    public RecyclerView.ViewHolder getHeaderViewHolder(View view) {
+        return new PortfolioHeaderViewHolder(view);
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -88,7 +103,25 @@ public class PortfolioSection extends Section {
     }
 
     @Override
-    public RecyclerView.ViewHolder getHeaderViewHolder(View view) {
-        return new EmptyViewHolder(view);
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        PortfolioHeaderViewHolder viewHolder = (PortfolioHeaderViewHolder) holder;
+        Double netWorth = getNetWorth();
+        if (netWorth != null) {
+            viewHolder.netWorthView.setText(Formatter.getPriceString(netWorth));
+        }
+    }
+
+    private Double getNetWorth() {
+        if (balance == null) {
+            return null;
+        }
+        double netWorth = balance;
+        for (PortfolioItem item: items) {
+            if (!item.hasLastPrice()) {
+                return null;
+            }
+            netWorth += item.getTotalLastPrice();
+        }
+        return netWorth;
     }
 }
