@@ -125,17 +125,11 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     private Set<String> getPortfolioTickers() {
-        return portfolioSection
-                .getItems()
-                .stream().map(PortfolioItem::getTicker)
-                .collect(Collectors.toSet());
+        return portfolioSection.getItems().stream().map(PortfolioItem::getTicker).collect(Collectors.toSet());
     }
 
     private Set<String> getFavoritesTickers() {
-        return favoritesSection
-                .getItems()
-                .stream().map(FavoritesItem::getTicker)
-                .collect(Collectors.toSet());
+        return favoritesSection.getItems().stream().map(FavoritesItem::getTicker).collect(Collectors.toSet());
     }
 
     private void startDetailActivity(String ticker) {
