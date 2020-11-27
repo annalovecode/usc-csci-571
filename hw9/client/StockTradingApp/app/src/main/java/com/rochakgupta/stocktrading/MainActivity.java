@@ -170,12 +170,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         sectionsManager.initializeSections();
         lastPricesFetchStatus = new ApiStatus();
         lastPricesFetchStatus.loading();
         showLoadingLayout();
         startLastPricesFetchTimer();
-        super.onResume();
     }
 
     @Override
