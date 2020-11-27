@@ -43,6 +43,14 @@ public class FavoritesSection extends Section {
         return items;
     }
 
+    public FavoritesItem getItem(int position) {
+        return items.get(position);
+    }
+
+    public void removeItem(int position) {
+        items.remove(position);
+    }
+
     @Override
     public int getContentItemsTotal() {
         return items.size();

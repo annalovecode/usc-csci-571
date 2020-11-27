@@ -65,7 +65,14 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
         SectionTouchCallback callback = new SectionTouchCallback(context) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
+                int position = viewHolder.getAdapterPosition();
+                if (isFavoritesViewHolder(viewHolder)) {
+                    int positionInSection = adapter.getPositionInSection(position);
+                    FavoritesItem item = favoritesSection.getItem(positionInSection);
+                    favoritesSection.removeItem(positionInSection);
+                    adapter.notifyItemRemoved(position);
+                    Storage.removeFromFavorites(item.getTicker());
+                }
             }
         };
         ItemTouchHelper helper = new ItemTouchHelper(callback);
