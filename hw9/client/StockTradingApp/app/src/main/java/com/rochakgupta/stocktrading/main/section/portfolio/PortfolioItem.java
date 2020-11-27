@@ -43,7 +43,7 @@ public class PortfolioItem {
         this.lastPrice = lastPrice;
     }
 
-    public boolean isLastPriceSet() {
+    public boolean hasLastPrice() {
         return this.lastPrice != null;
     }
 
@@ -65,21 +65,21 @@ public class PortfolioItem {
     }
 
     public Double getChange() {
-        if (!isLastPriceSet()) {
+        if (!hasLastPrice()) {
             return null;
         }
         return lastPrice - price;
     }
 
-    public Boolean showTrending() {
-        if (!isLastPriceSet()) {
+    public Boolean hasTrendingDrawable() {
+        if (!hasLastPrice()) {
             return null;
         }
         return getChange() != 0;
     }
 
     public Integer getTrendingDrawable() {
-        if (!isLastPriceSet()) {
+        if (!hasLastPrice()) {
             return null;
         }
         double change = getChange();
