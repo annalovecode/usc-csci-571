@@ -127,7 +127,7 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && isSectionViewHolder(viewHolder)) {
-            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.darkGray));
+            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.grayDark));
         }
         super.onSelectedChanged(viewHolder, actionState);
     }

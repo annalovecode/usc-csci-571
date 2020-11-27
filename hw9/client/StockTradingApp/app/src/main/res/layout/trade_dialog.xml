@@ -33,7 +33,7 @@
             android:backgroundTint="@color/deepPurple"
             android:hint="0"
             android:inputType="number"
-            android:textColor="@color/darkGray"
+            android:textColor="@color/grayDark"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/shares"
@@ -71,7 +71,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:textColor="@color/darkGray"
+        android:textColor="@color/grayDark"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="$8591.27 available to buy AMZN" />

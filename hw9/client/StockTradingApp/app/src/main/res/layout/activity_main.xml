@@ -76,10 +76,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/main_tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                tools:text="November 1, 2020"
+                android:textSize="24sp"
+                android:textColor="@color/gray"
+                android:textStyle="bold"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/main_rv_success"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
 
             <TextView
                 android:id="@+id/main_tv_footer"

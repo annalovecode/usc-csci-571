@@ -35,6 +35,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout loadingLayout;
     private TextView errorView;
     private NestedScrollView successLayout;
+
+    private TextView dateView;
 
     private ToastManager toastManager;
 
@@ -73,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         loadingLayout = findViewById(R.id.main_cl_loading);
         errorView = findViewById(R.id.main_tv_error);
         successLayout = findViewById(R.id.main_nsv_success);
+
+        dateView = findViewById(R.id.main_tv_date);
 
         toastManager = new ToastManager(this);
 
@@ -141,9 +149,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onLastPricesFetchSuccess(Map<String, Double> lastPrices) {
+        initializeDateView();
         sectionsManager.updateSections(lastPrices);
         showSuccessLayout();
         lastPricesFetchStatus.success();
+    }
+
+    private void initializeDateView() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("America/Los_Angeles"));
+        String dateString = zonedDateTime.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"));
+        dateView.setText(dateString);
     }
 
     private void showSuccessLayout() {
