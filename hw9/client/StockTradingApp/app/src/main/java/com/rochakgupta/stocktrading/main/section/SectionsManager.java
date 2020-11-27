@@ -62,14 +62,14 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     private void initializeTouchActions() {
-        SectionViewHolderTouchCallback touchCallback = new SectionViewHolderTouchCallback(context) {
+        SectionViewHolderTouchCallback callback = new SectionViewHolderTouchCallback(context) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             }
         };
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(touchCallback);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
     }
 
     public void initializeSections() {
