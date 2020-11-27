@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rochakgupta.stocktrading.DetailActivity;
 import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.common.Storage;
-import com.rochakgupta.stocktrading.main.section.common.SectionViewHolderTouchCallback;
+import com.rochakgupta.stocktrading.main.section.common.SectionTouchCallback;
 import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.section.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
@@ -62,7 +62,7 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     private void initializeTouchActions() {
-        SectionViewHolderTouchCallback callback = new SectionViewHolderTouchCallback(context) {
+        SectionTouchCallback callback = new SectionTouchCallback(context) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 

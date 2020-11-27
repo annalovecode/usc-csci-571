@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
 
-public abstract class SectionViewHolderTouchCallback extends ItemTouchHelper.Callback {
+public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
 
     Context context;
 
@@ -34,7 +34,7 @@ public abstract class SectionViewHolderTouchCallback extends ItemTouchHelper.Cal
     private final int intrinsicHeight;
 
 
-    public SectionViewHolderTouchCallback(Context context) {
+    public SectionTouchCallback(Context context) {
         this.context = context;
         background = new ColorDrawable();
         backgroundColor = Color.parseColor("#b80f0a");
