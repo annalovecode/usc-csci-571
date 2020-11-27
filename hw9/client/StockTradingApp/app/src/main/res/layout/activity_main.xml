@@ -80,7 +80,7 @@
                 android:id="@+id/main_tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
+                android:paddingStart="12dp"
                 tools:text="November 1, 2020"
                 android:textSize="24sp"
                 android:textColor="@color/gray"

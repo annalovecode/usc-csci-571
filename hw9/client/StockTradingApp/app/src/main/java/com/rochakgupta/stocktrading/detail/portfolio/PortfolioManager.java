@@ -48,7 +48,7 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
             stocksText = String.format("Shares owned: %s", Formatter.getQuantityString(item.getStocks()));
             item.setLastPrice(info.getLastPrice());
             marketPriceText = String
-                    .format("Market Value: %s", Formatter.getPriceString(item.getTotalLastPrice()));
+                    .format("Market Value: %s", Formatter.getPriceString(item.getWorth()));
         } else {
             stocksText = String.format("You have 0 shares of %s.", ticker);
             marketPriceText = "Start trading!";

@@ -76,33 +76,31 @@ public class FavoritesItem {
         return lastPrice - price;
     }
 
-    public Boolean hasTrendingDrawable() {
+    public Double getAbsoluteChange() {
         if (!hasLastPrice()) {
             return null;
         }
-        return getChange() != 0;
+        return Math.abs(lastPrice - price);
+    }
+
+    public Boolean hasPriceChanged() {
+        if (!hasLastPrice()) {
+            return false;
+        }
+        return Math.abs(lastPrice - price) >= 0.01;
     }
 
     public Integer getTrendingDrawable() {
-        if (!hasLastPrice()) {
+        if (!hasPriceChanged()) {
             return null;
         }
-        double change = getChange();
-        if (change < 0) {
-            return R.drawable.ic_baseline_trending_down_24;
-        } else if (change > 0) {
-            return R.drawable.ic_twotone_trending_up_24;
-        }
-        return null;
+        return getChange() < 0 ? R.drawable.ic_baseline_trending_down_24 : R.drawable.ic_twotone_trending_up_24;
     }
 
     public int getChangeColor() {
-        double change = getChange();
-        if (change < 0) {
-            return R.color.red;
-        } else if (change > 0) {
-            return R.color.green;
+        if (!hasPriceChanged()) {
+            return R.color.black;
         }
-        return R.color.black;
+        return getChange() < 0 ? R.color.red : R.color.green;
     }
 }

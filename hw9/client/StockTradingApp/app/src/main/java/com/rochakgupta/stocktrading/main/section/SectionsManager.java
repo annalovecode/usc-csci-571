@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class SectionsManager implements PortfolioSection.OnClickHandler, FavoritesSection.OnClickHandler {
@@ -101,29 +100,15 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
         portfolioSection.setBalance(Storage.getBalance());
         portfolioSection.setItems(Storage.getPortfolio());
         favoritesSection.setItems(Storage.getFavorites());
+        adapter.notifyDataSetChanged();
     }
 
     public void updateSections(Map<String, Double> lastPrices) {
         portfolioSection.updateItems(lastPrices);
-        notifySectionItemsChanged(portfolioSection);
-        notifySectionHeaderChanged(portfolioSection);
-
         Map<String, Integer> stocks = portfolioSection.getItems().stream().collect(
                 Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
-
         favoritesSection.updateItems(lastPrices, stocks);
-        notifySectionItemsChanged(favoritesSection);
-    }
-
-    private void notifySectionItemsChanged(Section section) {
-        SectionAdapter sectionAdapter = adapter.getAdapterForSection(section);
-        sectionAdapter.notifyAllItemsChanged();
-        sectionAdapter.notifyHeaderChanged();
-    }
-
-    private void notifySectionHeaderChanged(Section section) {
-        SectionAdapter sectionAdapter = adapter.getAdapterForSection(section);
-        sectionAdapter.notifyHeaderChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public List<String> getTickers() {

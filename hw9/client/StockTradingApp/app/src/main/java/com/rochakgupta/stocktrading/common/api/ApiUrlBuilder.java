@@ -3,9 +3,9 @@ package com.rochakgupta.stocktrading.common.api;
 import android.net.Uri;
 
 public class ApiUrlBuilder {
-    private static final String SCHEME = "http";
+    private static final String SCHEME = "https";
 
-    private static final String AUTHORITY = "usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com";
+    private static final String AUTHORITY = "usc-csci-571-hw9-r78bq3sp.wl.r.appspot.com";
 
     private final Uri.Builder uriBuilder;
 

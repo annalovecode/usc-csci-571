@@ -161,7 +161,7 @@ const App = (() => {
       }
     }
 
-    fetch(`http://usccsci571hw9-env.eba-6fuuwzjp.us-east-1.elasticbeanstalk.com/api/chart?ticker=${ticker}`)
+    fetch(`https://usc-csci-571-hw9-r78bq3sp.wl.r.appspot.com/api/chart?ticker=${ticker}`)
       .then((response) => {
         if (response.ok) {
           return response.json();

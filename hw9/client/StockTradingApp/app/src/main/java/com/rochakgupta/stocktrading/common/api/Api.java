@@ -3,9 +3,11 @@ package com.rochakgupta.stocktrading.common.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -39,6 +41,7 @@ public class Api {
                 .addQueryParameter("tickers", String.join(",", tickers))
                 .build();
         JsonObjectRequest request = buildRequest(url, listener, errorListener, LAST_PRICES_FETCH_REQUEST_TAG);
+        addRetryPolicyToRequest(request, 10);
         addRequestToQueue(request);
     }
 
@@ -61,6 +64,7 @@ public class Api {
                 .addQueryParameter("ticker", ticker)
                 .build();
         JsonObjectRequest request = buildRequest(url, listener, errorListener, DETAIL_FETCH_REQUEST_TAG);
+        addRetryPolicyToRequest(request, 30);
         addRequestToQueue(request);
     }
 
@@ -70,6 +74,13 @@ public class Api {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
         request.setTag(tag);
         return request;
+    }
+
+    private static void addRetryPolicyToRequest(JsonObjectRequest request, int retryTimeoutSeconds) {
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(
+                retryTimeoutSeconds * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        request.setRetryPolicy(retryPolicy);
     }
 
     synchronized private static void addRequestToQueue(JsonObjectRequest request) {

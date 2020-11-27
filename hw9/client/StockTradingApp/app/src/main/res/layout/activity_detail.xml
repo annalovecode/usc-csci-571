@@ -84,11 +84,13 @@
 
                 <TextView
                     android:id="@+id/detail_tv_info_ticker"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@id/detail_tv_info_last_price"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="AMZN" />
@@ -100,7 +102,9 @@
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    app:layout_constraintBaseline_toBaselineOf="@id/detail_tv_info_ticker"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/detail_tv_info_ticker"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="$312.45" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,14 +115,16 @@
 
                 <TextView
                     android:id="@+id/detail_tv_info_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grayDark"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@id/detail_tv_info_change"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Amazon.com Inc" />
+                    tools:text="Amazon.com" />
 
                 <TextView
                     android:id="@+id/detail_tv_info_change"
@@ -127,7 +133,9 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    app:layout_constraintBaseline_toBaselineOf="@id/detail_tv_info_name"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/detail_tv_info_name"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="-$312.45" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -144,9 +152,9 @@
             </FrameLayout>
 
             <TextView
-                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Portfolio"
                 android:textColor="@color/black"
                 android:textSize="18sp"
