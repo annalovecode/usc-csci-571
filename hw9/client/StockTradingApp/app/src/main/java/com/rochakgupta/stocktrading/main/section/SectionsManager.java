@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class SectionsManager implements PortfolioSection.OnClickHandler, FavoritesSection.OnClickHandler {
@@ -64,14 +64,31 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     private void initializeTouchActions() {
         SectionTouchCallback callback = new SectionTouchCallback(context) {
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onFavoriteItemSwipe(RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-                if (isFavoritesViewHolder(viewHolder)) {
-                    int positionInSection = adapter.getPositionInSection(position);
-                    FavoritesItem item = favoritesSection.getItem(positionInSection);
-                    favoritesSection.removeItem(positionInSection);
-                    adapter.notifyItemRemoved(position);
-                    Storage.removeFromFavorites(item.getTicker());
+                int positionInSection = adapter.getPositionInSection(position);
+                FavoritesItem item = favoritesSection.getItem(positionInSection);
+                favoritesSection.removeItem(positionInSection);
+                adapter.notifyItemRemoved(position);
+                Storage.removeFromFavorites(item.getTicker());
+            }
+
+            @Override
+            public void onItemMove(RecyclerView.ViewHolder viewHolder, int fromPosition, int toPosition) {
+                Section fromSection = adapter.getSectionForPosition(fromPosition);
+                Section toSection = adapter.getSectionForPosition(toPosition);
+                int toViewType = adapter.getSectionItemViewType(toPosition);
+                if (fromSection.equals(toSection) && toViewType == SectionedRecyclerViewAdapter.VIEW_TYPE_ITEM_LOADED) {
+                    int fromPositionInSection = adapter.getPositionInSection(fromPosition);
+                    int toPositionInSection = adapter.getPositionInSection(toPosition);
+                    if (isFavoritesViewHolder(viewHolder)) {
+                        favoritesSection.moveItem(fromPositionInSection, toPositionInSection);
+                        Storage.updateFavorites(favoritesSection.getItems());
+                    } else {
+                        portfolioSection.moveItem(fromPositionInSection, toPositionInSection);
+                        Storage.updatePortfolio(portfolioSection.getItems());
+                    }
+                    adapter.notifyItemMoved(fromPosition, toPosition);
                 }
             }
         };

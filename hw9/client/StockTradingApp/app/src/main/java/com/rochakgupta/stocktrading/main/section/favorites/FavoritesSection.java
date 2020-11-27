@@ -10,6 +10,7 @@ import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.common.Formatter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
@@ -49,6 +50,18 @@ public class FavoritesSection extends Section {
 
     public void removeItem(int position) {
         items.remove(position);
+    }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(items, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(items, i, i - 1);
+            }
+        }
     }
 
     @Override

@@ -11,11 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
+import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItemViewHolder;
 
 public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
 
@@ -33,7 +35,6 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
 
     private final int intrinsicHeight;
 
-
     public SectionTouchCallback(Context context) {
         this.context = context;
         background = new ColorDrawable();
@@ -46,15 +47,27 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public boolean isLongPressDragEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return true;
+    }
+
+    @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        SectionViewHolder holder = (SectionViewHolder) viewHolder;
-        return makeMovementFlags(0, isFavoritesViewHolder(viewHolder) ? ItemTouchHelper.START : 0);
+        int dragFlags = isSectionViewHolder(viewHolder) ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
+        int swipeFlags = isFavoritesViewHolder(viewHolder) ? ItemTouchHelper.START : 0;
+        return makeMovementFlags(dragFlags, swipeFlags);
     }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
                           @NonNull RecyclerView.ViewHolder target) {
-        return false;
+        onItemMove(viewHolder, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        return true;
     }
 
     @Override
@@ -103,7 +116,42 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
         return 0.7f;
     }
 
+    @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        if (isFavoritesViewHolder(viewHolder)) {
+            FavoritesItemViewHolder holder = (FavoritesItemViewHolder) viewHolder;
+            onFavoriteItemSwipe(holder);
+        }
+    }
+
+    @Override
+    public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && isSectionViewHolder(viewHolder)) {
+            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.darkGray));
+        }
+        super.onSelectedChanged(viewHolder, actionState);
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        if (isSectionViewHolder(viewHolder)) {
+            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.white));
+        }
+    }
+
+    public abstract void onFavoriteItemSwipe(RecyclerView.ViewHolder viewHolder);
+
+    public abstract void onItemMove(RecyclerView.ViewHolder viewHolder, int fromPosition, int toPosition);
+
+    private boolean isSectionViewHolder(RecyclerView.ViewHolder viewHolder) {
+        return viewHolder instanceof SectionViewHolder;
+    }
+
     public boolean isFavoritesViewHolder(RecyclerView.ViewHolder viewHolder) {
+        if (!isSectionViewHolder(viewHolder)) {
+            return false;
+        }
         SectionViewHolder holder = (SectionViewHolder) viewHolder;
         return holder.getType().equals(SectionViewHolderType.FAVORITES);
     }

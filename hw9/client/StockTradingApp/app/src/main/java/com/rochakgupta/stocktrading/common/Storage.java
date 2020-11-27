@@ -72,7 +72,6 @@ public class Storage {
     synchronized public static void addToFavorites(FavoritesItem item) {
         List<FavoritesItem> items = getFavorites();
         items.add(item);
-        items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
         updateFavorites(items);
     }
 
@@ -84,7 +83,7 @@ public class Storage {
         updateFavorites(items);
     }
 
-    private static void updateFavorites(List<FavoritesItem> items) {
+    public static void updateFavorites(List<FavoritesItem> items) {
         String json = Converter.favoritesToJson(items);
         updatePreference(FAVORITES_KEY, json);
     }
@@ -114,7 +113,6 @@ public class Storage {
     synchronized public static void addToPortfolio(PortfolioItem item) {
         List<PortfolioItem> items = getPortfolio();
         items.add(item);
-        items.sort((f, s) -> f.getTicker().compareTo(s.getTicker()));
         updatePortfolio(items);
     }
 
@@ -126,7 +124,7 @@ public class Storage {
         updatePortfolio(items);
     }
 
-    private static void updatePortfolio(List<PortfolioItem> items) {
+    public static void updatePortfolio(List<PortfolioItem> items) {
         String json = Converter.portfolioToJson(items);
         updatePreference(PORTFOLIO_KEY, json);
     }
