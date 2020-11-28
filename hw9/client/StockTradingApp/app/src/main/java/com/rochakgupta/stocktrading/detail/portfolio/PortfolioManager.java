@@ -6,11 +6,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.detail.common.Info;
 import com.rochakgupta.stocktrading.common.Formatter;
-import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
 import com.rochakgupta.stocktrading.common.Storage;
 import com.rochakgupta.stocktrading.common.ToastManager;
+import com.rochakgupta.stocktrading.detail.common.Info;
+import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
+
+import java.util.List;
 
 public class PortfolioManager implements TradeDialog.OnActionHandler {
     private final TextView stocksView;
@@ -79,13 +81,14 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
 
         PortfolioItem item;
         if (Storage.isPresentInPortfolio(ticker)) {
-            item = Storage.getPortfolioItem(ticker);
-            Storage.removeFromPortfolio(ticker);
+            List<PortfolioItem> items = Storage.getPortfolio();
+            item = findItem(items, ticker);
             item.buy(stocks, lastPrice);
+            Storage.updatePortfolio(items);
         } else {
             item = PortfolioItem.with(ticker, stocks, lastPrice);
+            Storage.addToPortfolio(item);
         }
-        Storage.addToPortfolio(item);
 
         Storage.updateBalance(Storage.getBalance() - getStocksPrice(stocks, lastPrice));
     }
@@ -116,13 +119,18 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         String ticker = info.getTicker();
         double lastPrice = info.getLastPrice();
 
-        PortfolioItem item = Storage.getPortfolioItem(ticker);
-        Storage.removeFromPortfolio(ticker);
+        List<PortfolioItem> items = Storage.getPortfolio();
+        PortfolioItem item = findItem(items, ticker);
         if (item.sell(stocks)) {
-            Storage.addToPortfolio(item);
+            items.remove(item);
         }
+        Storage.updatePortfolio(items);
 
         Storage.updateBalance(Storage.getBalance() + getStocksPrice(stocks, lastPrice));
+    }
+
+    private PortfolioItem findItem(List<PortfolioItem> items, String ticker) {
+        return items.stream().filter(item -> item.getTicker().equals(ticker)).findAny().orElse(null);
     }
 
     private void onTradeSuccess(TradeType tradeType, int stocks) {

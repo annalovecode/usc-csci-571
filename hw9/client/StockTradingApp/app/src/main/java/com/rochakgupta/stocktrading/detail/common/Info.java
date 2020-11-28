@@ -70,11 +70,9 @@ public class Info {
     }
 
     public int getChangeColor() {
-        if (change < 0) {
-            return R.color.red;
-        } else if (change > 0) {
-            return R.color.green;
+        if (Math.abs(change) < 0.01) {
+            return R.color.black;
         }
-        return R.color.black;
+        return change < 0 ? R.color.red : R.color.green;
     }
 }

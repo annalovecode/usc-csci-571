@@ -2,7 +2,6 @@ package com.rochakgupta.stocktrading;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,22 +17,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 
+import com.rochakgupta.stocktrading.common.Converter;
+import com.rochakgupta.stocktrading.common.Formatter;
+import com.rochakgupta.stocktrading.common.Logger;
+import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.common.ToastManager;
 import com.rochakgupta.stocktrading.common.api.Api;
 import com.rochakgupta.stocktrading.common.api.ApiStatus;
+import com.rochakgupta.stocktrading.detail.about.AboutManager;
 import com.rochakgupta.stocktrading.detail.common.Detail;
 import com.rochakgupta.stocktrading.detail.common.Info;
 import com.rochakgupta.stocktrading.detail.common.NewsItem;
-import com.rochakgupta.stocktrading.detail.about.AboutManager;
 import com.rochakgupta.stocktrading.detail.news.NewsManager;
 import com.rochakgupta.stocktrading.detail.portfolio.PortfolioManager;
 import com.rochakgupta.stocktrading.detail.stats.Stat;
 import com.rochakgupta.stocktrading.detail.stats.StatsAdapter;
-import com.rochakgupta.stocktrading.common.Formatter;
-import com.rochakgupta.stocktrading.common.Converter;
-import com.rochakgupta.stocktrading.common.Logger;
 import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
-import com.rochakgupta.stocktrading.common.Storage;
-import com.rochakgupta.stocktrading.common.ToastManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -253,11 +252,5 @@ public class DetailActivity extends AppCompatActivity {
 
     private int getFavoriteIcon(boolean isFavorite) {
         return isFavorite ? R.drawable.ic_baseline_star_24 : R.drawable.ic_baseline_star_border_24;
-    }
-
-    public void onFooterClick(View view) {
-        Uri uri = Uri.parse("https://www.tiingo.com");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
     }
 }
