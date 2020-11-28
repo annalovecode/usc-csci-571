@@ -222,15 +222,15 @@
             <com.rochakgupta.stocktrading.detail.stats.StatsGridView
                 android:id="@+id/detail_gv_stats"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:horizontalSpacing="4dp"
+                android:horizontalSpacing="8dp"
                 android:isScrollContainer="false"
                 android:numColumns="3"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="20dp" />
+                android:verticalSpacing="24dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -247,7 +247,7 @@
                 android:layout_marginTop="8dp"
                 android:inputType="none"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/detail_tv_about_toggler"
