@@ -31,24 +31,26 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
 
     private final Context context;
 
-    private PortfolioSection portfolioSection;
+    private final SectionedRecyclerViewAdapter adapter;
 
-    private FavoritesSection favoritesSection;
+    private final PortfolioSection portfolioSection;
 
-    private SectionedRecyclerViewAdapter adapter;
+    private final FavoritesSection favoritesSection;
+
+    private final SectionAdapter portfolioAdapter;
+
+    private final SectionAdapter favoritesAdapter;
 
     public SectionsManager(Activity activity, Context context) {
         this.context = context;
-        initializeAdapter();
-        initializeRecyclerView(activity);
-    }
-
-    private void initializeAdapter() {
         adapter = new SectionedRecyclerViewAdapter();
         portfolioSection = new PortfolioSection(context, this);
         favoritesSection = new FavoritesSection(context, this);
         adapter.addSection(portfolioSection);
         adapter.addSection(favoritesSection);
+        portfolioAdapter = adapter.getAdapterForSection(portfolioSection);
+        favoritesAdapter = adapter.getAdapterForSection(favoritesSection);
+        initializeRecyclerView(activity);
     }
 
     private void initializeRecyclerView(Activity activity) {
@@ -69,11 +71,21 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     public void updateSections(Map<String, Double> lastPrices) {
-        portfolioSection.updateItems(lastPrices);
+        updatePortfolio(lastPrices);
         Map<String, Integer> stocks = portfolioSection.getItems().stream().collect(
                 Collectors.toMap(PortfolioItem::getTicker, PortfolioItem::getStocks));
+        updateFavorites(lastPrices, stocks);
+    }
+
+    private void updatePortfolio(Map<String, Double> lastPrices) {
+        portfolioSection.updateItems(lastPrices);
+        portfolioAdapter.notifyAllItemsChanged();
+        portfolioAdapter.notifyHeaderChanged();
+    }
+
+    private void updateFavorites(Map<String, Double> lastPrices, Map<String, Integer> stocks) {
         favoritesSection.updateItems(lastPrices, stocks);
-        adapter.notifyDataSetChanged();
+        favoritesAdapter.notifyAllItemsChanged();
     }
 
     @Override
@@ -92,7 +104,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     public void onFavoritesItemSwipe(int position) {
         FavoritesItem item = favoritesSection.getItem(position);
         favoritesSection.removeItem(position);
-        SectionAdapter favoritesAdapter = adapter.getAdapterForSection(favoritesSection);
         favoritesAdapter.notifyItemRemoved(position);
         Storage.removeFromFavorites(item.getTicker());
     }
@@ -100,7 +111,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     @Override
     public void onFavoritesItemMove(int fromPosition, int toPosition) {
         favoritesSection.moveItem(fromPosition, toPosition);
-        SectionAdapter favoritesAdapter = adapter.getAdapterForSection(favoritesSection);
         favoritesAdapter.notifyItemMoved(fromPosition, toPosition);
         Storage.updateFavorites(favoritesSection.getItems());
     }
@@ -108,7 +118,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     @Override
     public void onPortfolioItemMove(int fromPosition, int toPosition) {
         portfolioSection.moveItem(fromPosition, toPosition);
-        SectionAdapter portfolioAdapter = adapter.getAdapterForSection(portfolioSection);
         portfolioAdapter.notifyItemMoved(fromPosition, toPosition);
         Storage.updatePortfolio(portfolioSection.getItems());
     }

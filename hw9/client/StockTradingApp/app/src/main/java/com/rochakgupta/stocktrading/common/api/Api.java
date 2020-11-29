@@ -41,7 +41,6 @@ public class Api {
                 .addQueryParameter("tickers", String.join(",", tickers))
                 .build();
         JsonObjectRequest request = buildRequest(url, listener, errorListener, LAST_PRICES_FETCH_REQUEST_TAG);
-        addRetryPolicyToRequest(request, 10);
         addRequestToQueue(request);
     }
 
