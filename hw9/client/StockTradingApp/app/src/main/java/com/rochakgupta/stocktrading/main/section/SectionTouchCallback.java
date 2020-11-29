@@ -1,4 +1,4 @@
-package com.rochakgupta.stocktrading.main.section.common;
+package com.rochakgupta.stocktrading.main.section;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,11 +17,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItemViewHolder;
+import com.rochakgupta.stocktrading.main.section.common.SectionViewHolder;
+import com.rochakgupta.stocktrading.main.section.common.SectionViewHolderType;
 
-public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-    Context context;
+public class SectionTouchCallback extends ItemTouchHelper.Callback {
+
+    private final Context context;
+
+    private final SectionedRecyclerViewAdapter adapter;
+
+    private final OnActionHandler actionHandler;
 
     private final Paint clearPaint;
 
@@ -35,8 +43,18 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
 
     private final int intrinsicHeight;
 
-    public SectionTouchCallback(Context context) {
+    public interface OnActionHandler {
+        void onFavoritesItemSwipe(int position);
+
+        void onFavoritesItemMove(int fromPosition, int toPosition);
+
+        void onPortfolioItemMove(int fromPosition, int toPosition);
+    }
+
+    public SectionTouchCallback(Context context, SectionedRecyclerViewAdapter adapter, OnActionHandler actionHandler) {
         this.context = context;
+        this.adapter = adapter;
+        this.actionHandler = actionHandler;
         background = new ColorDrawable();
         backgroundColor = Color.parseColor("#b80f0a");
         clearPaint = new Paint();
@@ -66,7 +84,24 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
                           @NonNull RecyclerView.ViewHolder target) {
-        onItemMove(viewHolder, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        int fromPosition = viewHolder.getAdapterPosition();
+        int toPosition = target.getAdapterPosition();
+
+        Section fromSection = adapter.getSectionForPosition(fromPosition);
+        Section toSection = adapter.getSectionForPosition(toPosition);
+
+        int toViewType = adapter.getSectionItemViewType(toPosition);
+
+        if (fromSection.equals(toSection) && toViewType == SectionedRecyclerViewAdapter.VIEW_TYPE_ITEM_LOADED) {
+            int fromPositionInSection = adapter.getPositionInSection(fromPosition);
+            int toPositionInSection = adapter.getPositionInSection(toPosition);
+            if (isFavoritesViewHolder(viewHolder)) {
+                actionHandler.onFavoritesItemMove(fromPositionInSection, toPositionInSection);
+            } else {
+                actionHandler.onPortfolioItemMove(fromPositionInSection, toPositionInSection);
+            }
+        }
+
         return true;
     }
 
@@ -119,8 +154,9 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         if (isFavoritesViewHolder(viewHolder)) {
-            FavoritesItemViewHolder holder = (FavoritesItemViewHolder) viewHolder;
-            onFavoritesItemSwipe(holder);
+            int position = viewHolder.getAdapterPosition();
+            int positionInSection = adapter.getPositionInSection(position);
+            actionHandler.onFavoritesItemSwipe(positionInSection);
         }
     }
 
@@ -140,15 +176,11 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
         }
     }
 
-    public abstract void onFavoritesItemSwipe(RecyclerView.ViewHolder viewHolder);
-
-    public abstract void onItemMove(RecyclerView.ViewHolder viewHolder, int fromPosition, int toPosition);
-
     private boolean isSectionViewHolder(RecyclerView.ViewHolder viewHolder) {
         return viewHolder instanceof SectionViewHolder;
     }
 
-    public boolean isFavoritesViewHolder(RecyclerView.ViewHolder viewHolder) {
+    private boolean isFavoritesViewHolder(RecyclerView.ViewHolder viewHolder) {
         if (!isSectionViewHolder(viewHolder)) {
             return false;
         }

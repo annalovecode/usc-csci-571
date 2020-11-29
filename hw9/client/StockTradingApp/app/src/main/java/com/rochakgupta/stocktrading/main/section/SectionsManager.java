@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rochakgupta.stocktrading.DetailActivity;
 import com.rochakgupta.stocktrading.R;
 import com.rochakgupta.stocktrading.common.Storage;
-import com.rochakgupta.stocktrading.main.section.common.SectionTouchCallback;
 import com.rochakgupta.stocktrading.main.section.favorites.FavoritesItem;
 import com.rochakgupta.stocktrading.main.section.favorites.FavoritesSection;
 import com.rochakgupta.stocktrading.main.section.portfolio.PortfolioItem;
@@ -24,10 +23,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class SectionsManager implements PortfolioSection.OnClickHandler, FavoritesSection.OnClickHandler {
+public class SectionsManager implements PortfolioSection.OnClickHandler, FavoritesSection.OnClickHandler,
+        SectionTouchCallback.OnActionHandler {
 
     private final Context context;
 
@@ -60,36 +60,7 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     private void initializeTouchActions(RecyclerView recyclerView) {
-        SectionTouchCallback callback = new SectionTouchCallback(context) {
-            @Override
-            public void onFavoritesItemSwipe(RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                int positionInSection = adapter.getPositionInSection(position);
-                FavoritesItem item = favoritesSection.getItem(positionInSection);
-                favoritesSection.removeItem(positionInSection);
-                adapter.notifyItemRemoved(position);
-                Storage.removeFromFavorites(item.getTicker());
-            }
-
-            @Override
-            public void onItemMove(RecyclerView.ViewHolder viewHolder, int fromPosition, int toPosition) {
-                Section fromSection = adapter.getSectionForPosition(fromPosition);
-                Section toSection = adapter.getSectionForPosition(toPosition);
-                int toViewType = adapter.getSectionItemViewType(toPosition);
-                if (fromSection.equals(toSection) && toViewType == SectionedRecyclerViewAdapter.VIEW_TYPE_ITEM_LOADED) {
-                    int fromPositionInSection = adapter.getPositionInSection(fromPosition);
-                    int toPositionInSection = adapter.getPositionInSection(toPosition);
-                    if (isFavoritesViewHolder(viewHolder)) {
-                        favoritesSection.moveItem(fromPositionInSection, toPositionInSection);
-                        Storage.updateFavorites(favoritesSection.getItems());
-                    } else {
-                        portfolioSection.moveItem(fromPositionInSection, toPositionInSection);
-                        Storage.updatePortfolio(portfolioSection.getItems());
-                    }
-                    adapter.notifyItemMoved(fromPosition, toPosition);
-                }
-            }
-        };
+        SectionTouchCallback callback = new SectionTouchCallback(context, adapter, this);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerView);
     }
@@ -109,12 +80,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
         adapter.notifyDataSetChanged();
     }
 
-    public List<String> getTickers() {
-        Set<String> tickers = getPortfolioTickers();
-        tickers.addAll(getFavoritesTickers());
-        return new ArrayList<>(tickers);
-    }
-
     @Override
     public void onFavoritesItemClick(FavoritesItem item) {
         String ticker = item.getTicker();
@@ -125,6 +90,37 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     public void onPortfolioItemClick(PortfolioItem item) {
         String ticker = item.getTicker();
         startDetailActivity(ticker);
+    }
+
+    @Override
+    public void onFavoritesItemSwipe(int position) {
+        FavoritesItem item = favoritesSection.getItem(position);
+        favoritesSection.removeItem(position);
+        SectionAdapter favoritesAdapter = adapter.getAdapterForSection(favoritesSection);
+        favoritesAdapter.notifyItemRemoved(position);
+        Storage.removeFromFavorites(item.getTicker());
+    }
+
+    @Override
+    public void onFavoritesItemMove(int fromPosition, int toPosition) {
+        favoritesSection.moveItem(fromPosition, toPosition);
+        SectionAdapter favoritesAdapter = adapter.getAdapterForSection(favoritesSection);
+        favoritesAdapter.notifyItemMoved(fromPosition, toPosition);
+        Storage.updateFavorites(favoritesSection.getItems());
+    }
+
+    @Override
+    public void onPortfolioItemMove(int fromPosition, int toPosition) {
+        portfolioSection.moveItem(fromPosition, toPosition);
+        SectionAdapter portfolioAdapter = adapter.getAdapterForSection(portfolioSection);
+        portfolioAdapter.notifyItemMoved(fromPosition, toPosition);
+        Storage.updatePortfolio(portfolioSection.getItems());
+    }
+
+    public List<String> getTickers() {
+        Set<String> tickers = getPortfolioTickers();
+        tickers.addAll(getFavoritesTickers());
+        return new ArrayList<>(tickers);
     }
 
     private Set<String> getPortfolioTickers() {
