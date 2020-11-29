@@ -56,10 +56,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
-        initializeTouchActions(recyclerView);
-    }
-
-    private void initializeTouchActions(RecyclerView recyclerView) {
         SectionTouchCallback callback = new SectionTouchCallback(context, adapter, this);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerView);
