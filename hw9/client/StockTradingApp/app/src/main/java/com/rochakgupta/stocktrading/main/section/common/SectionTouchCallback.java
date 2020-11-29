@@ -120,7 +120,7 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         if (isFavoritesViewHolder(viewHolder)) {
             FavoritesItemViewHolder holder = (FavoritesItemViewHolder) viewHolder;
-            onFavoriteItemSwipe(holder);
+            onFavoritesItemSwipe(holder);
         }
     }
 
@@ -140,7 +140,7 @@ public abstract class SectionTouchCallback extends ItemTouchHelper.Callback {
         }
     }
 
-    public abstract void onFavoriteItemSwipe(RecyclerView.ViewHolder viewHolder);
+    public abstract void onFavoritesItemSwipe(RecyclerView.ViewHolder viewHolder);
 
     public abstract void onItemMove(RecyclerView.ViewHolder viewHolder, int fromPosition, int toPosition);
 

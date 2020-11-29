@@ -37,8 +37,6 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
 
     private SectionedRecyclerViewAdapter adapter;
 
-    private RecyclerView recyclerView;
-
     public SectionsManager(Activity activity, Context context) {
         this.context = context;
         initializeAdapter();
@@ -54,17 +52,17 @@ public class SectionsManager implements PortfolioSection.OnClickHandler, Favorit
     }
 
     private void initializeRecyclerView(Activity activity) {
-        recyclerView = activity.findViewById(R.id.main_rv_success);
+        RecyclerView recyclerView = activity.findViewById(R.id.main_rv_success);
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
-        initializeTouchActions();
+        initializeTouchActions(recyclerView);
     }
 
-    private void initializeTouchActions() {
+    private void initializeTouchActions(RecyclerView recyclerView) {
         SectionTouchCallback callback = new SectionTouchCallback(context) {
             @Override
-            public void onFavoriteItemSwipe(RecyclerView.ViewHolder viewHolder) {
+            public void onFavoritesItemSwipe(RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
                 int positionInSection = adapter.getPositionInSection(position);
                 FavoritesItem item = favoritesSection.getItem(positionInSection);
