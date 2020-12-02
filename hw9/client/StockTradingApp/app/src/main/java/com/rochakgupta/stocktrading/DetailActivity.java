@@ -68,7 +68,6 @@ public class DetailActivity extends AppCompatActivity {
         if (!intent.hasExtra("ticker")) {
             throw new RuntimeException("DetailActivity needs ticker data in intent to run");
         }
-
         ticker = intent.getStringExtra("ticker");
 
         loadingLayout = findViewById(R.id.detail_cl_loading);
@@ -78,7 +77,6 @@ public class DetailActivity extends AppCompatActivity {
         toastManager = new ToastManager(this);
 
         Storage.initialize(this);
-
         Api.initialize(this);
 
         initializeChartView();
@@ -134,7 +132,7 @@ public class DetailActivity extends AppCompatActivity {
         info = detail.getInfo();
         initializeInfoView();
         initializePortfolioView();
-        initializeStatsGrid();
+        initializeStatsView();
         initializeAboutView();
         initializeNewsView(detail.getNews());
         showSuccessLayout();
@@ -168,7 +166,7 @@ public class DetailActivity extends AppCompatActivity {
         portfolioManager.display();
     }
 
-    private void initializeStatsGrid() {
+    private void initializeStatsView() {
         List<Stat> stats = Arrays.asList(
                 Stat.ofPrice("Current Price", info.getLastPrice()),
                 Stat.ofPrice("Low", info.getLowPrice()),

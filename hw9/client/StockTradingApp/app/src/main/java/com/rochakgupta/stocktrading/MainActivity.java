@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         toastManager = new ToastManager(this);
 
         Storage.initialize(this);
-
         Api.initialize(this);
 
         sectionsManager = new SectionsManager(this, this);

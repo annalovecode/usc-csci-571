@@ -32,9 +32,7 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         marketPriceView = activity.findViewById(R.id.detail_tv_portfolio_market_value);
         tradeDialog = new TradeDialog(activity, info, this);
         Button tradeButton = activity.findViewById(R.id.detail_b_portfolio_trade);
-        tradeButton.setOnClickListener(v -> {
-            tradeDialog.show();
-        });
+        tradeButton.setOnClickListener(v -> tradeDialog.show());
         tradeSuccessDialog = new TradeSuccessDialog(activity, info.getTicker());
         this.toastManager = toastManager;
         this.info = info;
