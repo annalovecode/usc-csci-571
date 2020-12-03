@@ -53,7 +53,8 @@ public class PortfolioItem {
 
     @SuppressLint("DefaultLocale")
     public String getDescription() {
-        return String.format("%s shares", Formatter.getQuantityString(stocks));
+        String sharesString = stocks < 2 ? "share" : "shares";
+        return String.format("%s %s", Formatter.getQuantityString(stocks, 1), sharesString);
     }
 
     public int getStocks() {
@@ -94,7 +95,7 @@ public class PortfolioItem {
 
     public int getChangeColor() {
         if (!hasPriceChanged()) {
-            return R.color.black;
+            return R.color.grayDark;
         }
         return getChange() < 0 ? R.color.red : R.color.green;
     }

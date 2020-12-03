@@ -45,7 +45,7 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         String ticker = info.getTicker();
         if (Storage.isPresentInPortfolio(ticker)) {
             PortfolioItem item = Storage.getPortfolioItem(ticker);
-            stocksText = String.format("Shares owned: %s", Formatter.getQuantityString(item.getStocks()));
+            stocksText = String.format("Shares owned: %s", Formatter.getQuantityString(item.getStocks(), 4));
             item.setLastPrice(info.getLastPrice());
             marketPriceText = String
                     .format("Market Value: %s", Formatter.getPriceString(item.getWorth()));
@@ -58,8 +58,10 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
     }
 
     @Override
-    public void onStockBuy(int stocks) {
-        if (stocks == 0) {
+    public void onStockBuy(Integer stocks) {
+        if (stocks == null) {
+            toastManager.show("Please enter valid amount");
+        } else if (stocks == 0) {
             toastManager.show("Cannot buy less than 0 shares");
         } else {
             double balance = Storage.getBalance();
@@ -73,7 +75,7 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         }
     }
 
-    private void buyStocks(int stocks) {
+    private void buyStocks(Integer stocks) {
         String ticker = info.getTicker();
         double lastPrice = info.getLastPrice();
 
@@ -92,8 +94,10 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
     }
 
     @Override
-    public void onStockSell(int stocks) {
-        if (stocks == 0) {
+    public void onStockSell(Integer stocks) {
+        if (stocks == null) {
+            toastManager.show("Please enter valid amount");
+        } else if (stocks == 0) {
             toastManager.show("Cannot sell less than 0 shares");
         } else {
             String ticker = info.getTicker();
@@ -113,7 +117,7 @@ public class PortfolioManager implements TradeDialog.OnActionHandler {
         }
     }
 
-    private void sellStocks(int stocks) {
+    private void sellStocks(Integer stocks) {
         String ticker = info.getTicker();
         double lastPrice = info.getLastPrice();
 

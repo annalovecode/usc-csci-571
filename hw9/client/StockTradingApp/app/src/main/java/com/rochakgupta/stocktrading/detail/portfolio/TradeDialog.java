@@ -12,9 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.rochakgupta.stocktrading.R;
-import com.rochakgupta.stocktrading.detail.common.Info;
 import com.rochakgupta.stocktrading.common.Formatter;
 import com.rochakgupta.stocktrading.common.Storage;
+import com.rochakgupta.stocktrading.detail.common.Info;
 
 public class TradeDialog {
     private final Dialog dialog;
@@ -27,11 +27,12 @@ public class TradeDialog {
 
     private final Info info;
 
-    private int stocks;
+    private Integer stocks;
 
     interface OnActionHandler {
-        void onStockBuy(int stocks);
-        void onStockSell(int stocks);
+        void onStockBuy(Integer stocks);
+
+        void onStockSell(Integer stocks);
     }
 
     public TradeDialog(Context context, Info info, OnActionHandler actionHandler) {
@@ -56,7 +57,7 @@ public class TradeDialog {
     }
 
     private void reset() {
-        stocks = 0;
+        stocks = null;
         stocksEditText.setText("");
         initializeAvailableAmountView();
     }
@@ -85,9 +86,13 @@ public class TradeDialog {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    stocks = 0;
+                    stocks = null;
                 } else {
-                    stocks = Integer.parseInt(s.toString());
+                    try {
+                        stocks = Integer.parseInt(s.toString());
+                    } catch (NumberFormatException e) {
+                        stocks = null;
+                    }
                 }
                 initializeStocksPriceView();
             }
@@ -102,8 +107,9 @@ public class TradeDialog {
     @SuppressLint("DefaultLocale")
     private void initializeStocksPriceView() {
         String lastPriceString = Formatter.getPriceStringWithSymbol(info.getLastPrice());
-        String stocksPriceString = Formatter.getPriceStringWithSymbol(stocks * info.getLastPrice());
-        stocksPriceView.setText(String.format("%d x %s/share = %s", stocks, lastPriceString, stocksPriceString));
+        int displayStocks = stocks == null ? 0 : stocks;
+        String stocksPriceString = Formatter.getPriceStringWithSymbol(displayStocks * info.getLastPrice());
+        stocksPriceView.setText(String.format("%d x %s/share = %s", displayStocks, lastPriceString, stocksPriceString));
     }
 
     private void initializeAvailableAmountView() {

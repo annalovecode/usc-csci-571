@@ -60,7 +60,8 @@ public class FavoritesItem {
     @SuppressLint("DefaultLocale")
     public String getDescription() {
         if (stocks != null && stocks > 0) {
-            return String.format("%s shares", Formatter.getQuantityString(stocks));
+            String sharesString = stocks < 2 ? "share" : "shares";
+            return String.format("%s %s", Formatter.getQuantityString(stocks, 1), sharesString);
         }
         return name;
     }
@@ -99,7 +100,7 @@ public class FavoritesItem {
 
     public int getChangeColor() {
         if (!hasPriceChanged()) {
-            return R.color.black;
+            return R.color.grayDark;
         }
         return getChange() < 0 ? R.color.red : R.color.green;
     }

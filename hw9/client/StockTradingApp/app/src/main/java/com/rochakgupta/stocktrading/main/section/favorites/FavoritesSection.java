@@ -101,7 +101,7 @@ public class FavoritesSection extends Section {
                 viewHolder.trendingView.setVisibility(View.INVISIBLE);
             }
         }
-        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onFavoritesItemClick(item));
+        viewHolder.itemView.setOnClickListener(v -> clickHandler.onFavoritesItemClick(item));
     }
 
     @Override

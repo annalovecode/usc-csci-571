@@ -71,7 +71,7 @@ public class Info {
 
     public int getChangeColor() {
         if (Math.abs(change) < 0.01) {
-            return R.color.black;
+            return R.color.grayDark;
         }
         return change < 0 ? R.color.red : R.color.green;
     }

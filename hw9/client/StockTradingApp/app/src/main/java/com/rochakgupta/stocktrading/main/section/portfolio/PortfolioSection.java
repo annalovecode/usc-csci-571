@@ -99,7 +99,7 @@ public class PortfolioSection extends Section {
                 viewHolder.trendingView.setVisibility(View.INVISIBLE);
             }
         }
-        viewHolder.arrowView.setOnClickListener(v -> clickHandler.onPortfolioItemClick(item));
+        viewHolder.itemView.setOnClickListener(v -> clickHandler.onPortfolioItemClick(item));
     }
 
     @Override

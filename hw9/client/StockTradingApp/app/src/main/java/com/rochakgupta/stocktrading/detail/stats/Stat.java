@@ -52,7 +52,7 @@ public class Stat {
     public String getFormattedStat() {
         String stringValue = "";
         if (isValueQuantity) {
-            stringValue = Formatter.getQuantityString((int) value);
+            stringValue = Formatter.getQuantityString((int) value, 2);
         } else {
             stringValue = Formatter.getPriceString(value);
         }

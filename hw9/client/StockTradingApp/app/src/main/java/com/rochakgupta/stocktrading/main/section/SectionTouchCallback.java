@@ -82,9 +82,9 @@ public class SectionTouchCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
-                          @NonNull RecyclerView.ViewHolder target) {
-        int fromPosition = viewHolder.getAdapterPosition();
+    public boolean canDropOver(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder current,
+                               @NonNull RecyclerView.ViewHolder target) {
+        int fromPosition = current.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
 
         Section fromSection = adapter.getSectionForPosition(fromPosition);
@@ -92,14 +92,22 @@ public class SectionTouchCallback extends ItemTouchHelper.Callback {
 
         int toViewType = adapter.getSectionItemViewType(toPosition);
 
-        if (fromSection.equals(toSection) && toViewType == SectionedRecyclerViewAdapter.VIEW_TYPE_ITEM_LOADED) {
-            int fromPositionInSection = adapter.getPositionInSection(fromPosition);
-            int toPositionInSection = adapter.getPositionInSection(toPosition);
-            if (isFavoritesViewHolder(viewHolder)) {
-                actionHandler.onFavoritesItemMove(fromPositionInSection, toPositionInSection);
-            } else {
-                actionHandler.onPortfolioItemMove(fromPositionInSection, toPositionInSection);
-            }
+        return fromSection.equals(toSection) && toViewType == SectionedRecyclerViewAdapter.VIEW_TYPE_ITEM_LOADED;
+    }
+
+    @Override
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                          @NonNull RecyclerView.ViewHolder target) {
+        int fromPosition = viewHolder.getAdapterPosition();
+        int toPosition = target.getAdapterPosition();
+
+        int fromPositionInSection = adapter.getPositionInSection(fromPosition);
+        int toPositionInSection = adapter.getPositionInSection(toPosition);
+
+        if (isFavoritesViewHolder(viewHolder)) {
+            actionHandler.onFavoritesItemMove(fromPositionInSection, toPositionInSection);
+        } else {
+            actionHandler.onPortfolioItemMove(fromPositionInSection, toPositionInSection);
         }
 
         return true;
