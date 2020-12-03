@@ -180,7 +180,7 @@ public class SectionTouchCallback extends ItemTouchHelper.Callback {
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
         if (isSectionViewHolder(viewHolder)) {
-            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.white));
+            viewHolder.itemView.setBackgroundColor(context.getColor(R.color.grayLighter));
         }
     }
 
