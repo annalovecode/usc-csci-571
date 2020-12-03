@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         lastPricesFetchTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                Log.d(TAG, "Fetching last prices");
                 Api.cancelLastPricesFetchRequest();
                 List<String> tickers = sectionsManager.getTickers();
                 if (tickers.size() > 0) {
