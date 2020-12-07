@@ -1,13 +1,14 @@
-from datetime import datetime, date
+from datetime import datetime
 import pytz
 from dateutil.relativedelta import relativedelta
 
 from modules.request import Request
+from modules.secrets import TIINGO_API_TOKEN
 
 
 class Tiingo:
     BASE_URL = 'https://api.tiingo.com'
-    TOKEN = '79455133c32a6429cfac6c56469a919a11b5041e'
+    TOKEN = TIINGO_API_TOKEN
 
     @staticmethod
     def _build_url(resource):

@@ -1,9 +1,12 @@
 ### Prerequisites
 
-Node >= 12
+- Node >= 12
+- [Tiingo](https://api.tiingo.com/) API Token
+- [NewsAPI](https://newsapi.org/) API Key
 
 ### Development
 
+- Update Tiingo API Token and NewsAPI API Key in `server/src/secrets/index.ts`.
 - Install dependencies using `npm install`.
 - Build application using `npm run build`.
 - Start application using `npm run start`.
@@ -13,6 +16,7 @@ Node >= 12
 
 #### AWS
 
+- Update Tiingo API Token and NewsAPI API Key in `server/src/secrets/index.ts`.
 - Install dependencies using `npm install`.
 - Build application using `npm run build`.
 - Build `eb-deploy.zip` using `npm run build-zip:aws`. Deploy it by uploading manually. Remove it using `npm run clean-zip:aws`.
@@ -20,6 +24,7 @@ Node >= 12
 
 #### Azure
 
+- Update Tiingo API Token and NewsAPI API Key in `server/src/secrets/index.ts`.
 - Install dependencies using `npm install`.
 - Build application using `npm run build`.
 - Delete `node_modules` using `npx rimraf node_modules` because the next command uploads the entire project directory.
@@ -29,6 +34,7 @@ Node >= 12
 
 #### Google Cloud
 
+- Update Tiingo API Token and NewsAPI API Key in `server/src/secrets/index.ts`.
 - Install dependencies using `npm install`.
 - Build application using `npm run build`.
 - Create project using `gcloud projects create usc-csci-571-hw8-<unique> --set-as-default` in `us-west-2` region.

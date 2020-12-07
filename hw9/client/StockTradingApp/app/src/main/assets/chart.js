@@ -9,6 +9,8 @@ const App = (() => {
   let messageContainer = null;
   let chartContainer = null;
 
+  const baseUrl = "BASE_URL";
+
   const show = (element) => {
     element.classList.remove(hideClass);
   };
@@ -161,7 +163,7 @@ const App = (() => {
       }
     }
 
-    fetch(`https://usc-csci-571-hw9-r78bq3sp.wl.r.appspot.com/api/chart?ticker=${ticker}`)
+    fetch(`${baseUrl}/chart?ticker=${ticker}`)
       .then((response) => {
         if (response.ok) {
           return response.json();

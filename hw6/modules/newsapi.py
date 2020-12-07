@@ -1,9 +1,10 @@
 from modules.request import Request
+from modules.secrets import NEWSAPI_API_KEY
 
 
 class NewsAPI:
     BASE_URL = 'https://newsapi.org/v2'
-    API_KEY = 'fdf56dd5e25046118f12c4626ceac170'
+    API_KEY = NEWSAPI_API_KEY
 
     @staticmethod
     def _build_url(resource):

@@ -3,14 +3,12 @@ package com.rochakgupta.stocktrading.common.api;
 import android.net.Uri;
 
 public class ApiUrlBuilder {
-    private static final String SCHEME = "https";
-
-    private static final String AUTHORITY = "usc-csci-571-hw9-r78bq3sp.wl.r.appspot.com";
+    private static final String BASE_URL = "BASE_URL";
 
     private final Uri.Builder uriBuilder;
 
     public ApiUrlBuilder() {
-        uriBuilder = (new Uri.Builder()).scheme(SCHEME).encodedAuthority(AUTHORITY);
+        uriBuilder = Uri.parse(BASE_URL).buildUpon();
     }
 
     public ApiUrlBuilder path(String path) {
